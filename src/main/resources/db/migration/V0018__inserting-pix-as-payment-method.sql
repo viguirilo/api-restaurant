@@ -1,0 +1,1 @@
+INSERT INTO payment_method (description) VALUES ('PIX');
