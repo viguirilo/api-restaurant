@@ -31,6 +31,7 @@ public class StateController {
     }
 
     // TODO(colocar paginação neste endpoint)
+    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<State>> findAll() {
         return ResponseEntity.ok().body(stateService.findAll());
@@ -47,6 +48,7 @@ public class StateController {
     }
 
     // TODO(colocar este método para retornar um VO)
+    // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH.)
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
