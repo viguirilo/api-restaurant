@@ -60,11 +60,7 @@ public class StateController {
         else return ResponseEntity.ok().body(state);
     }
 
-    // TODO(colocar este método para retornar um VO)
-    @DeleteMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             State state = stateService.delete(id);
