@@ -32,23 +32,36 @@ public class RestaurantService {
         if (kitchenOptional.isPresent() && cityOptional.isPresent()) {
             Kitchen kitchen = kitchenOptional.get();
             City city = cityOptional.get();
-            logger.info("Creating a new Restaurant");
-            return new RestaurantResponseVO(restaurantRepository.save(new Restaurant(restaurantRequestVO, kitchen, city)));
+            Restaurant restaurant = restaurantRepository.save(new Restaurant(restaurantRequestVO, kitchen, city));
+            logger.info(restaurant + " CREATED SUCCESSFULLY");
+            return new RestaurantResponseVO(restaurant);
         } else {
-            logger.info("The kitchenId or/and addressCityId informed weren't found");
+            logger.warning("THE KITCHEN OR/AND CITY INFORMED WEREN'T FOUND");
             return null;
         }
     }
 
     public List<RestaurantResponseVO> findAll() {
-        logger.info("Returning Restaurants, if exists");
-        return restaurantRepository.findAll().stream().map(RestaurantResponseVO::new).toList();
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        if (!restaurants.isEmpty()) {
+            logger.info("FOUND " + restaurants.size() + " CITIES");
+            return restaurants.stream().map(RestaurantResponseVO::new).toList();
+        } else {
+            logger.warning("RESTAURANTS NOT FOUND");
+            return null;
+        }
     }
 
     public RestaurantResponseVO findById(Long id) {
-        logger.info("Returning Restaurant id = " + id + ", if exists");
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
-        return restaurantOptional.map(RestaurantResponseVO::new).orElse(null);
+        if (restaurantOptional.isPresent()) {
+            Restaurant restaurant = restaurantOptional.get();
+            logger.info(restaurant + " FOUND SUCCESSFULLY");
+            return new RestaurantResponseVO(restaurant);
+        } else {
+            logger.warning("RESTAURANT NOT FOUND");
+            return null;
+        }
     }
 
     public RestaurantResponseVO update(Long id, RestaurantRequestVO restaurantRequestVO) {
@@ -56,10 +69,11 @@ public class RestaurantService {
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
             BeanUtils.copyProperties(restaurantRequestVO, restaurant, "id");
-            logger.info("Updating Restaurant id = " + id);
-            return new RestaurantResponseVO(restaurantRepository.save(restaurant));
+            restaurant = restaurantRepository.save(restaurant);
+            logger.info(restaurant + " UPDATED SUCCESSFULLY");
+            return new RestaurantResponseVO(restaurant);
         } else {
-            logger.info("Couldn't update Restaurant id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT UPDATE: RESTAURANT " + id + " NOT FOUND");
             return null;
         }
     }
@@ -70,9 +84,10 @@ public class RestaurantService {
             Restaurant restaurant = restaurantOptional.get();
             logger.info("Deleting Restaurant id = " + id);
             restaurantRepository.delete(restaurant);
+            logger.info(restaurant + " DELETED SUCCESSFULLY");
             return new RestaurantResponseVO(restaurant);
         } else {
-            logger.info("Couldn't delete Restaurant id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: RESTAURANT " + id + " NOT FOUND");
             return null;
         }
     }

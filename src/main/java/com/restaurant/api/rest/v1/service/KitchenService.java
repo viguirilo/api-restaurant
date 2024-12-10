@@ -20,19 +20,32 @@ public class KitchenService {
     private final Logger logger = Logger.getLogger(KitchenService.class.getName());
 
     public KitchenResponseVO save(KitchenRequestVO kitchenRequestVO) {
-        logger.info("Creating a new Kitchen");
-        return new KitchenResponseVO(kitchenRepository.save(new Kitchen(kitchenRequestVO)));
+        Kitchen kitchen = kitchenRepository.save(new Kitchen(kitchenRequestVO));
+        logger.info(kitchen + " CREATED SUCCESSFULLY");
+        return new KitchenResponseVO(kitchen);
     }
 
     public List<KitchenResponseVO> findAll() {
-        logger.info("Returning Kitchens, if exists");
-        return kitchenRepository.findAll().stream().map(KitchenResponseVO::new).toList();
+        List<Kitchen> kitchens = kitchenRepository.findAll();
+        if (!kitchens.isEmpty()) {
+            logger.info("FOUND " + kitchens.size() + " KITCHENS");
+            return kitchens.stream().map(KitchenResponseVO::new).toList();
+        } else {
+            logger.warning("KITCHENS NOT FOUND");
+            return null;
+        }
     }
 
     public KitchenResponseVO findById(Long id) {
-        logger.info("Returning Kitchen id = " + id + ", if exists");
         Optional<Kitchen> kitchenOptional = kitchenRepository.findById(id);
-        return kitchenOptional.map(KitchenResponseVO::new).orElse(null);
+        if (kitchenOptional.isPresent()) {
+            Kitchen kitchen = kitchenOptional.get();
+            logger.info(kitchen + " FOUND SUCCESSFULLY");
+            return new KitchenResponseVO(kitchen);
+        } else {
+            logger.warning("KITCHEN NOT FOUND");
+            return null;
+        }
     }
 
     public KitchenResponseVO update(Long id, KitchenRequestVO kitchenRequestVO) {
@@ -40,10 +53,11 @@ public class KitchenService {
         if (kitchenOptional.isPresent()) {
             Kitchen kitchen = kitchenOptional.get();
             BeanUtils.copyProperties(kitchenRequestVO, kitchen, "id");
-            logger.info("Updating Kitchen id = " + id);
-            return new KitchenResponseVO(kitchenRepository.save(kitchen));
+            kitchen = kitchenRepository.save(kitchen);
+            logger.info(kitchen + " UPDATED SUCCESSFULLY");
+            return new KitchenResponseVO(kitchen);
         } else {
-            logger.info("Couldn't update Kitchen id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT UPDATE: KITCHEN " + id + " NOT FOUND");
             return null;
         }
     }
@@ -53,10 +67,10 @@ public class KitchenService {
         if (kitchenOptional.isPresent()) {
             Kitchen kitchen = kitchenOptional.get();
             kitchenRepository.delete(kitchen);
-            logger.info("Deleting Kitchen id = " + id);
+            logger.info(kitchen + " DELETED SUCCESSFULLY");
             return new KitchenResponseVO(kitchen);
         } else {
-            logger.info("Couldn't delete City id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: KITCHEN " + id + " NOT FOUND");
             return null;
         }
     }

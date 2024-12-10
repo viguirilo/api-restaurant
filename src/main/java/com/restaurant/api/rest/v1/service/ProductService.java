@@ -26,23 +26,36 @@ public class ProductService {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(productRequestVO.getRestaurantId());
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
-            logger.info("Creating a new Product");
-            return new ProductResponseVO(productRepository.save(new Product(productRequestVO, restaurant)));
+            Product product = productRepository.save(new Product(productRequestVO, restaurant));
+            logger.info(product + " CREATED SUCCESSFULLY");
+            return new ProductResponseVO(product);
         } else {
-            logger.info("The restaurantId informed wasn't found");
+            logger.warning("THE RESTAURANT INFORMED WASN'T FOUND");
             return null;
         }
     }
 
     public List<ProductResponseVO> findAll() {
-        logger.info("Returning Products, if exists");
-        return productRepository.findAll().stream().map(ProductResponseVO::new).toList();
+        List<Product> products = productRepository.findAll();
+        if (!products.isEmpty()) {
+            logger.info("FOUND " + products.size() + " CITIES");
+            return products.stream().map(ProductResponseVO::new).toList();
+        } else {
+            logger.warning("CITIES NOT FOUND");
+            return null;
+        }
     }
 
     public ProductResponseVO findById(Long id) {
-        logger.info("Returning Product id = " + id + ", if exists");
         Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.map(ProductResponseVO::new).orElse(null);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            logger.info(product + " FOUND SUCCESSFULLY");
+            return new ProductResponseVO(product);
+        } else {
+            logger.warning("PRODUCT NOT FOUND");
+            return null;
+        }
     }
 
     public ProductResponseVO update(Long id, ProductRequestVO productRequestVO) {
@@ -53,10 +66,11 @@ public class ProductService {
             Restaurant restaurant = restaurantOptional.get();
             BeanUtils.copyProperties(productRequestVO, product, "id", "restaurant");
             product.setRestaurant(restaurant);
-            logger.info("Updating Product id = " + id);
-            return new ProductResponseVO(productRepository.save(product));
+            product = productRepository.save(product);
+            logger.info(product + " UPDATED SUCCESSFULLY");
+            return new ProductResponseVO(product);
         } else {
-            logger.info("Couldn't update Product id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT UPDATE: PRODUCT " + id + " NOT FOUND");
             return null;
         }
     }
@@ -66,10 +80,10 @@ public class ProductService {
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
             productRepository.delete(product);
-            logger.info("Deleting Product id = " + id);
+            logger.info(product + " DELETED SUCCESSFULLY");
             return new ProductResponseVO(product);
         } else {
-            logger.info("Couldn't delete Product id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: PRODUCT " + id + " NOT FOUND");
             return null;
         }
     }

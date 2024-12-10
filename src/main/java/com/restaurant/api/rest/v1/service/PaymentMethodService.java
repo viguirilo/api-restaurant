@@ -20,19 +20,32 @@ public class PaymentMethodService {
     private final Logger logger = Logger.getLogger(PaymentMethodService.class.getName());
 
     public PaymentMethodResponseVO save(PaymentMethodRequestVO paymentMethodRequestVO) {
-        logger.info("Creating a new Payment Method");
-        return new PaymentMethodResponseVO(paymentMethodRepository.save(new PaymentMethod(paymentMethodRequestVO)));
+        PaymentMethod paymentMethod = paymentMethodRepository.save(new PaymentMethod(paymentMethodRequestVO));
+        logger.info(paymentMethod + " CREATED SUCCESSFULLY");
+        return new PaymentMethodResponseVO(paymentMethod);
     }
 
     public List<PaymentMethodResponseVO> findAll() {
-        logger.info("Returning Payment Methods, if exists");
-        return paymentMethodRepository.findAll().stream().map(PaymentMethodResponseVO::new).toList();
+        List<PaymentMethod> paymentMethods = paymentMethodRepository.findAll();
+        if (!paymentMethods.isEmpty()) {
+            logger.info("FOUND " + paymentMethods.size() + " PAYMENT METHODS");
+            return paymentMethods.stream().map(PaymentMethodResponseVO::new).toList();
+        } else {
+            logger.warning("PAYMENT METHODS NOT FOUND");
+            return null;
+        }
     }
 
     public PaymentMethodResponseVO findById(Long id) {
-        logger.info("Returning Payment Method id = " + id + ", if exists");
-        Optional<PaymentMethod> paymentMethodById = paymentMethodRepository.findById(id);
-        return paymentMethodById.map(PaymentMethodResponseVO::new).orElse(null);
+        Optional<PaymentMethod> paymentMethodOptional = paymentMethodRepository.findById(id);
+        if (paymentMethodOptional.isPresent()) {
+            PaymentMethod paymentMethod = paymentMethodOptional.get();
+            logger.info(paymentMethod + " FOUND SUCCESSFULLY");
+            return new PaymentMethodResponseVO(paymentMethod);
+        } else {
+            logger.warning("PAYMENT METHOD NOT FOUND");
+            return null;
+        }
     }
 
     public PaymentMethodResponseVO update(Long id, PaymentMethodRequestVO paymentMethodRequestVO) {
@@ -40,10 +53,11 @@ public class PaymentMethodService {
         if (paymentMethodOptional.isPresent()) {
             PaymentMethod paymentMethod = paymentMethodOptional.get();
             BeanUtils.copyProperties(paymentMethodRequestVO, paymentMethod, "id");
-            logger.info("Updating Payment Method id = " + id);
-            return new PaymentMethodResponseVO(paymentMethodRepository.save(paymentMethod));
+            paymentMethod = paymentMethodRepository.save(paymentMethod);
+            logger.info(paymentMethod + " UPDATED SUCCESSFULLY");
+            return new PaymentMethodResponseVO(paymentMethod);
         } else {
-            logger.info("Couldn't update Payment Method id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT UPDATE: PAYMENT METHOD " + id + " NOT FOUND");
             return null;
         }
     }
@@ -53,10 +67,10 @@ public class PaymentMethodService {
         if (paymentMethodOptional.isPresent()) {
             PaymentMethod paymentMethod = paymentMethodOptional.get();
             paymentMethodRepository.delete(paymentMethod);
-            logger.info("Deleting Payment Method id = " + id);
+            logger.info(paymentMethod + " DELETED SUCCESSFULLY");
             return new PaymentMethodResponseVO(paymentMethod);
         } else {
-            logger.info("Couldn't delete Payment Method id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: PAYMENT METHOD " + id + " NOT FOUND");
             return null;
         }
     }

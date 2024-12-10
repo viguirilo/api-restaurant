@@ -26,23 +26,36 @@ public class CityService {
         Optional<State> stateOptional = stateRepository.findById(cityRequestVO.getStateId());
         if (stateOptional.isPresent()) {
             State state = stateOptional.get();
-            logger.info("Creating a new City");
-            return new CityResponseVO(cityRepository.save(new City(cityRequestVO, state)));
+            City city = cityRepository.save(new City(cityRequestVO, state));
+            logger.info(city + " CREATED SUCCESSFULLY");
+            return new CityResponseVO(city);
         } else {
-            logger.info("The stateId informed wasn't found");
+            logger.warning("THE STATE INFORMED WASN'T FOUND");
             return null;
         }
     }
 
     public List<CityResponseVO> findAll() {
-        logger.info("Returning Cities, if exists");
-        return cityRepository.findAll().stream().map(CityResponseVO::new).toList();
+        List<City> cities = cityRepository.findAll();
+        if (!cities.isEmpty()) {
+            logger.info("FOUND " + cities.size() + " CITIES");
+            return cities.stream().map(CityResponseVO::new).toList();
+        } else {
+            logger.warning("CITIES NOT FOUND");
+            return null;
+        }
     }
 
     public CityResponseVO findById(Long id) {
-        logger.info("Returning City id = " + id + ", if exists");
         Optional<City> cityOptional = cityRepository.findById(id);
-        return cityOptional.map(CityResponseVO::new).orElse(null);
+        if (cityOptional.isPresent()) {
+            City city = cityOptional.get();
+            logger.info(city + " FOUND SUCCESSFULLY");
+            return new CityResponseVO(city);
+        } else {
+            logger.warning("CITY NOT FOUND");
+            return null;
+        }
     }
 
     // TODO(revisar como o estado é atualizado)
@@ -51,10 +64,11 @@ public class CityService {
         if (cityOptional.isPresent()) {
             City city = cityOptional.get();
             BeanUtils.copyProperties(cityRequestVO, city, "id");
-            logger.info("Updating City id = " + id);
-            return new CityResponseVO(cityRepository.save(city));
+            city = cityRepository.save(city);
+            logger.info(city + " UPDATED SUCCESSFULLY");
+            return new CityResponseVO(city);
         } else {
-            logger.info("Couldn't update City id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT UPDATE: CITY " + id + " NOT FOUND");
             return null;
         }
     }
@@ -64,10 +78,10 @@ public class CityService {
         if (cityOptional.isPresent()) {
             City city = cityOptional.get();
             cityRepository.delete(city);
-            logger.info("Deleting City id = " + id);
+            logger.info(city + " DELETED SUCCESSFULLY");
             return new CityResponseVO(city);
         } else {
-            logger.info("Couldn't delete City id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: CITY " + id + " NOT FOUND");
             return null;
         }
     }

@@ -22,9 +22,10 @@ public class UserService {
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     public UserResponseVO save(UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
-        logger.info("Creating a new User");
         userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
-        return new UserResponseVO(userRepository.save(new User(userRequestVO)));
+        User user = userRepository.save(new User(userRequestVO));
+        logger.info(user + " CREATED SUCCESSFULLY");
+        return new UserResponseVO(user);
     }
 
     private String getPasswordHash(String password) throws NoSuchAlgorithmException {
@@ -34,26 +35,40 @@ public class UserService {
     }
 
     public List<UserResponseVO> findAll() {
-        logger.info("Returning User, if exists");
-        return userRepository.findAll().stream().map(UserResponseVO::new).toList();
+        List<User> users = userRepository.findAll();
+        if (!users.isEmpty()) {
+            logger.info("FOUND " + users.size() + " CITIES");
+            return users.stream().map(UserResponseVO::new).toList();
+        } else {
+            logger.warning("USERS NOT FOUND");
+            return null;
+        }
     }
 
     public UserResponseVO findById(Long id) {
-        logger.info("Returning User id = " + id + ", if exists");
-        Optional<User> userOptional = userRepository.findById(id);
-        return userOptional.map(UserResponseVO::new).orElse(null);
-    }
-
-    // TODO(Ver como a atualização do password pode prejudicar o Hash)
-    public UserResponseVO update(Long id, UserRequestVO userRequestVO) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            BeanUtils.copyProperties(userRequestVO, user, "id", "creationDate");
-            logger.info("Updating User id = " + id);
-            return new UserResponseVO(userRepository.save(user));
+            logger.info(user + " FOUND SUCCESSFULLY");
+            return new UserResponseVO(user);
         } else {
-            logger.info("Couldn't update User id = " + id + " because it doesn't exists");
+            logger.warning("USER NOT FOUND");
+            return null;
+        }
+    }
+
+    // TODO(Ver como a atualização do password pode prejudicar o Hash)
+    public UserResponseVO update(Long id, UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
+            BeanUtils.copyProperties(userRequestVO, user, "id", "creationDate");
+            user = userRepository.save(user);
+            logger.info(user + " UPDATED SUCCESSFULLY");
+            return new UserResponseVO(user);
+        } else {
+            logger.warning("CAN NOT UPDATE: USER " + id + " NOT FOUND");
             return null;
         }
     }
@@ -63,10 +78,10 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             userRepository.delete(user);
-            logger.info("Deleting User id = " + id);
+            logger.info(user + " DELETED SUCCESSFULLY");
             return new UserResponseVO(user);
         } else {
-            logger.info("Couldn't delete User id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: USER " + id + " NOT FOUND");
             return null;
         }
     }
