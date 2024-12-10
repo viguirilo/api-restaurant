@@ -20,20 +20,18 @@ public class KitchenController {
 
     private final KitchenService kitchenService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public Kitchen save(@RequestBody KitchenRequestVO kitchenRequestVO) {
-        return kitchenService.save(kitchenRequestVO);
+    public KitchenResponseVO save(@RequestBody KitchenRequestVO kitchenRequestVO) {
+        return new KitchenResponseVO(kitchenService.save(kitchenRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Kitchen>> findAll() {
+    public ResponseEntity<List<KitchenResponseVO>> findAll() {
         return ResponseEntity.ok().body(kitchenService.findAll());
     }
 
@@ -47,17 +45,16 @@ public class KitchenController {
         return ResponseEntity.ok().body(kitchenResponseVO);
     }
 
-    // TODO(colocar este método para retornar um VO)
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody KitchenRequestVO kitchenRequestVO) {
+    public ResponseEntity<KitchenResponseVO> update(@PathVariable Long id, @RequestBody KitchenRequestVO kitchenRequestVO) {
         Kitchen kitchen = kitchenService.update(id, kitchenRequestVO);
         if (kitchen == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(kitchen);
+        else return ResponseEntity.ok().body(new KitchenResponseVO(kitchen));
     }
 
     @DeleteMapping(value = "/{id}")
@@ -70,8 +67,5 @@ public class KitchenController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
-
-    //    Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH.
-
 
 }

@@ -20,20 +20,18 @@ public class PermissionController {
 
     private final PermissionService permissionService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public Permission save(@RequestBody PermissionRequestVO permissionRequestVO) {
-        return permissionService.save(permissionRequestVO);
+    public PermissionResponseVO save(@RequestBody PermissionRequestVO permissionRequestVO) {
+        return new PermissionResponseVO(permissionService.save(permissionRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Permission>> findAll() {
+    public ResponseEntity<List<PermissionResponseVO>> findAll() {
         return ResponseEntity.ok().body(permissionService.findAll());
     }
 
@@ -47,17 +45,16 @@ public class PermissionController {
         return ResponseEntity.ok().body(permissionResponseVO);
     }
 
-    // TODO(colocar este método para retornar um VO)
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Permission> update(@PathVariable Long id, @RequestBody PermissionRequestVO permissionRequestVO) {
+    public ResponseEntity<PermissionResponseVO> update(@PathVariable Long id, @RequestBody PermissionRequestVO permissionRequestVO) {
         Permission permission = permissionService.update(id, permissionRequestVO);
         if (permission == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(permission);
+        else return ResponseEntity.ok().body(new PermissionResponseVO(permission));
     }
 
     @DeleteMapping(value = "/{id}")

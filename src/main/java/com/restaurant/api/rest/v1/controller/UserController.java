@@ -20,7 +20,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -31,9 +30,8 @@ public class UserController {
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> findAll() {
+    public ResponseEntity<List<UserResponseVO>> findAll() {
         return ResponseEntity.ok().body(userService.findAll());
     }
 
@@ -47,17 +45,16 @@ public class UserController {
         else return ResponseEntity.ok().body(userResponseVO);
     }
 
-    // TODO(colocar este método para retornar um VO)
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserRequestVO userRequestVO) {
+    public ResponseEntity<UserResponseVO> update(@PathVariable Long id, @RequestBody UserRequestVO userRequestVO) {
         User user = userService.update(id, userRequestVO);
         if (user == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(user);
+        else return ResponseEntity.ok().body(new UserResponseVO(user));
     }
 
     @DeleteMapping(value = "/{id}")

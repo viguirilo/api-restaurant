@@ -10,22 +10,27 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class GroupService {
 
     private final GroupRepository groupRepository;
+    private final Logger logger = Logger.getLogger(GroupService.class.getName());
 
     public Group save(GroupRequestVO groupRequestVO) {
+        logger.info("Creating a new Group");
         return groupRepository.save(new Group(groupRequestVO));
     }
 
-    public List<Group> findAll() {
-        return groupRepository.findAll();
+    public List<GroupResponseVO> findAll() {
+        logger.info("Returning Groups, if exists");
+        return groupRepository.findAll().stream().map(GroupResponseVO::new).toList();
     }
 
     public GroupResponseVO findById(Long id) {
+        logger.info("Returning Group id = " + id + ", if exists");
         Optional<Group> optionalGroup = groupRepository.findById(id);
         return optionalGroup.map(GroupResponseVO::new).orElse(null);
     }
@@ -35,8 +40,12 @@ public class GroupService {
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
             BeanUtils.copyProperties(groupRequestVO, group, "id");
+            logger.info("Updating Group id = " + id);
             return groupRepository.save(group);
-        } else return null;
+        } else {
+            logger.info("Couldn't update Group id = " + id + " because it doesn't exists");
+            return null;
+        }
     }
 
     public Group delete(Long id) {
@@ -44,8 +53,12 @@ public class GroupService {
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
             groupRepository.delete(group);
+            logger.info("Updating Group id = " + id);
             return group;
-        } else return null;
+        } else {
+            logger.info("Couldn't delete Group id = " + id + " because it doesn't exists");
+            return null;
+        }
     }
 
 }

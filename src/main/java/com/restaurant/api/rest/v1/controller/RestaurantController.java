@@ -20,22 +20,20 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> save(@RequestBody RestaurantRequestVO restaurantRequestVO) {
+    public ResponseEntity<RestaurantResponseVO> save(@RequestBody RestaurantRequestVO restaurantRequestVO) {
         Restaurant restaurant = restaurantService.save(restaurantRequestVO);
         if (restaurant == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(restaurant);
+        else return ResponseEntity.ok().body(new RestaurantResponseVO(restaurant));
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Restaurant>> findAll() {
+    public ResponseEntity<List<RestaurantResponseVO>> findAll() {
         return ResponseEntity.ok().body(restaurantService.findAll());
     }
 
@@ -49,17 +47,16 @@ public class RestaurantController {
         return ResponseEntity.ok().body(restaurantResponseVO);
     }
 
-    // TODO(colocar este método para retornar um VO)
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody RestaurantRequestVO restaurantRequestVO) {
+    public ResponseEntity<RestaurantResponseVO> update(@PathVariable Long id, @RequestBody RestaurantRequestVO restaurantRequestVO) {
         Restaurant restaurant = restaurantService.update(id, restaurantRequestVO);
         if (restaurant == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(restaurant);
+        else return ResponseEntity.ok().body(new RestaurantResponseVO(restaurant));
     }
 
     @DeleteMapping(value = "/{id}")
