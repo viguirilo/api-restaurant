@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 @Data
@@ -46,6 +47,43 @@ public class Address implements Serializable {
         this.addressNeighborhood = restaurantRequestVO.getAddressNeighborhood();
         this.addressZipCode = restaurantRequestVO.getAddressZipCode();
         this.city = city;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "addressStreetOrAvenue='" + addressStreetOrAvenue + '\'' +
+                ", addressNumber='" + addressNumber + '\'' +
+                ", addressComplement='" + addressComplement + '\'' +
+                ", addressNeighborhood='" + addressNeighborhood + '\'' +
+                ", addressZipCode='" + addressZipCode + '\'' +
+                ", city=" + city.toString() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(addressStreetOrAvenue, address.addressStreetOrAvenue) &&
+                Objects.equals(addressNumber, address.addressNumber) &&
+                Objects.equals(addressComplement, address.addressComplement) &&
+                Objects.equals(addressNeighborhood, address.addressNeighborhood) &&
+                Objects.equals(addressZipCode, address.addressZipCode) &&
+                Objects.equals(city, address.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                addressStreetOrAvenue,
+                addressNumber,
+                addressComplement,
+                addressNeighborhood,
+                addressZipCode,
+                city
+        );
     }
 
 }
