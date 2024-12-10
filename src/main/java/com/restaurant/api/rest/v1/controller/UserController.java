@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.User;
 import com.restaurant.api.rest.v1.service.UserService;
 import com.restaurant.api.rest.v1.vo.UserRequestVO;
 import com.restaurant.api.rest.v1.vo.UserResponseVO;
@@ -26,7 +25,7 @@ public class UserController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponseVO> save(@RequestBody UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
-        return ResponseEntity.ok().body(new UserResponseVO(userService.save(userRequestVO)));
+        return ResponseEntity.ok().body(userService.save(userRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
@@ -52,15 +51,15 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<UserResponseVO> update(@PathVariable Long id, @RequestBody UserRequestVO userRequestVO) {
-        User user = userService.update(id, userRequestVO);
-        if (user == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new UserResponseVO(user));
+        UserResponseVO userResponseVO = userService.update(id, userRequestVO);
+        if (userResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(userResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        User user = userService.delete(id);
-        if (user == null) return ResponseEntity.notFound().build();
+        UserResponseVO userResponseVO = userService.delete(id);
+        if (userResponseVO == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().build();
     }
 

@@ -19,9 +19,9 @@ public class PermissionService {
     private final PermissionRepository permissionRepository;
     private final Logger logger = Logger.getLogger(PermissionService.class.getName());
 
-    public Permission save(PermissionRequestVO permissionRequestVO) {
+    public PermissionResponseVO save(PermissionRequestVO permissionRequestVO) {
         logger.info("Creating a new Permission");
-        return permissionRepository.save(new Permission(permissionRequestVO));
+        return new PermissionResponseVO(permissionRepository.save(new Permission(permissionRequestVO)));
     }
 
     public List<PermissionResponseVO> findAll() {
@@ -35,26 +35,26 @@ public class PermissionService {
         return permissionOptional.map(PermissionResponseVO::new).orElse(null);
     }
 
-    public Permission update(Long id, PermissionRequestVO permissionRequestVO) {
+    public PermissionResponseVO update(Long id, PermissionRequestVO permissionRequestVO) {
         Optional<Permission> permissionOptional = permissionRepository.findById(id);
         if (permissionOptional.isPresent()) {
             Permission permission = permissionOptional.get();
             BeanUtils.copyProperties(permissionRequestVO, permission, "id");
             logger.info("Updating Permission id = " + id);
-            return permissionRepository.save(permission);
+            return new PermissionResponseVO(permissionRepository.save(permission));
         } else {
             logger.info("Couldn't update Permission id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public Permission delete(Long id) {
+    public PermissionResponseVO delete(Long id) {
         Optional<Permission> permissionOptionalOptional = permissionRepository.findById(id);
         if (permissionOptionalOptional.isPresent()) {
             Permission permission = permissionOptionalOptional.get();
             permissionRepository.delete(permission);
             logger.info("Deleting Permission id = " + id);
-            return permission;
+            return new PermissionResponseVO(permission);
         } else {
             logger.info("Couldn't delete Permission id = " + id + " because it doesn't exists");
             return null;

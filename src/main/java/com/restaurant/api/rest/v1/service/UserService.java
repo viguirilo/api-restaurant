@@ -21,10 +21,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
-    public User save(UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
+    public UserResponseVO save(UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
         logger.info("Creating a new User");
         userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
-        return userRepository.save(new User(userRequestVO));
+        return new UserResponseVO(userRepository.save(new User(userRequestVO)));
     }
 
     private String getPasswordHash(String password) throws NoSuchAlgorithmException {
@@ -45,26 +45,26 @@ public class UserService {
     }
 
     // TODO(Ver como a atualização do password pode prejudicar o Hash)
-    public User update(Long id, UserRequestVO userRequestVO) {
+    public UserResponseVO update(Long id, UserRequestVO userRequestVO) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             BeanUtils.copyProperties(userRequestVO, user, "id", "creationDate");
             logger.info("Updating User id = " + id);
-            return userRepository.save(user);
+            return new UserResponseVO(userRepository.save(user));
         } else {
             logger.info("Couldn't update User id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public User delete(Long id) {
+    public UserResponseVO delete(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             userRepository.delete(user);
             logger.info("Deleting User id = " + id);
-            return user;
+            return new UserResponseVO(user);
         } else {
             logger.info("Couldn't delete User id = " + id + " because it doesn't exists");
             return null;

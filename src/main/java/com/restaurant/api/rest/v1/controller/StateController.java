@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.State;
 import com.restaurant.api.rest.v1.service.StateService;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
@@ -26,7 +25,7 @@ public class StateController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StateResponseVO> save(@RequestBody StateRequestVO stateRequestVO) {
-        return ResponseEntity.ok().body(new StateResponseVO(stateService.save(stateRequestVO)));
+        return ResponseEntity.ok().body(stateService.save(stateRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
@@ -45,7 +44,6 @@ public class StateController {
         return ResponseEntity.ok().body(stateResponseVO);
     }
 
-    // TODO(colocar este método para retornar um VO)
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH.)
     @PutMapping(
             value = "/{id}",
@@ -53,16 +51,16 @@ public class StateController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<StateResponseVO> update(@PathVariable Long id, @RequestBody StateRequestVO stateRequestVO) {
-        State state = stateService.update(id, stateRequestVO);
-        if (state == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new StateResponseVO(state));
+        StateResponseVO stateResponseVO = stateService.update(id, stateRequestVO);
+        if (stateResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(stateResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            State state = stateService.delete(id);
-            if (state == null) return ResponseEntity.notFound().build();
+            StateResponseVO stateResponseVO = stateService.delete(id);
+            if (stateResponseVO == null) return ResponseEntity.notFound().build();
             else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

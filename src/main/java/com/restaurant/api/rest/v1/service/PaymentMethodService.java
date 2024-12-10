@@ -19,9 +19,9 @@ public class PaymentMethodService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final Logger logger = Logger.getLogger(PaymentMethodService.class.getName());
 
-    public PaymentMethod save(PaymentMethodRequestVO paymentMethodRequestVO) {
+    public PaymentMethodResponseVO save(PaymentMethodRequestVO paymentMethodRequestVO) {
         logger.info("Creating a new Payment Method");
-        return paymentMethodRepository.save(new PaymentMethod(paymentMethodRequestVO));
+        return new PaymentMethodResponseVO(paymentMethodRepository.save(new PaymentMethod(paymentMethodRequestVO)));
     }
 
     public List<PaymentMethodResponseVO> findAll() {
@@ -35,26 +35,26 @@ public class PaymentMethodService {
         return paymentMethodById.map(PaymentMethodResponseVO::new).orElse(null);
     }
 
-    public PaymentMethod update(Long id, PaymentMethodRequestVO paymentMethodRequestVO) {
+    public PaymentMethodResponseVO update(Long id, PaymentMethodRequestVO paymentMethodRequestVO) {
         Optional<PaymentMethod> paymentMethodOptional = paymentMethodRepository.findById(id);
         if (paymentMethodOptional.isPresent()) {
             PaymentMethod paymentMethod = paymentMethodOptional.get();
             BeanUtils.copyProperties(paymentMethodRequestVO, paymentMethod, "id");
             logger.info("Updating Payment Method id = " + id);
-            return paymentMethodRepository.save(paymentMethod);
+            return new PaymentMethodResponseVO(paymentMethodRepository.save(paymentMethod));
         } else {
             logger.info("Couldn't update Payment Method id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public PaymentMethod delete(Long id) {
+    public PaymentMethodResponseVO delete(Long id) {
         Optional<PaymentMethod> paymentMethodOptional = paymentMethodRepository.findById(id);
         if (paymentMethodOptional.isPresent()) {
             PaymentMethod paymentMethod = paymentMethodOptional.get();
             paymentMethodRepository.delete(paymentMethod);
             logger.info("Deleting Payment Method id = " + id);
-            return paymentMethod;
+            return new PaymentMethodResponseVO(paymentMethod);
         } else {
             logger.info("Couldn't delete Payment Method id = " + id + " because it doesn't exists");
             return null;

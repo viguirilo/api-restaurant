@@ -19,9 +19,9 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final Logger logger = Logger.getLogger(GroupService.class.getName());
 
-    public Group save(GroupRequestVO groupRequestVO) {
+    public GroupResponseVO save(GroupRequestVO groupRequestVO) {
         logger.info("Creating a new Group");
-        return groupRepository.save(new Group(groupRequestVO));
+        return new GroupResponseVO(groupRepository.save(new Group(groupRequestVO)));
     }
 
     public List<GroupResponseVO> findAll() {

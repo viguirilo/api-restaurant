@@ -26,14 +26,14 @@ public class RestaurantService {
     private final Logger logger = Logger.getLogger(RestaurantService.class.getName());
 
     // TODO(Rever aula 4.30 para adequar como ele implementa esse método)
-    public Restaurant save(RestaurantRequestVO restaurantRequestVO) {
+    public RestaurantResponseVO save(RestaurantRequestVO restaurantRequestVO) {
         Optional<Kitchen> kitchenOptional = kitchenRepository.findById(restaurantRequestVO.getKitchenId());
         Optional<City> cityOptional = cityRepository.findById(restaurantRequestVO.getAddressCityId());
         if (kitchenOptional.isPresent() && cityOptional.isPresent()) {
             Kitchen kitchen = kitchenOptional.get();
             City city = cityOptional.get();
             logger.info("Creating a new Restaurant");
-            return restaurantRepository.save(new Restaurant(restaurantRequestVO, kitchen, city));
+            return new RestaurantResponseVO(restaurantRepository.save(new Restaurant(restaurantRequestVO, kitchen, city)));
         } else {
             logger.info("The kitchenId or/and addressCityId informed weren't found");
             return null;
@@ -51,26 +51,26 @@ public class RestaurantService {
         return restaurantOptional.map(RestaurantResponseVO::new).orElse(null);
     }
 
-    public Restaurant update(Long id, RestaurantRequestVO restaurantRequestVO) {
+    public RestaurantResponseVO update(Long id, RestaurantRequestVO restaurantRequestVO) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
             BeanUtils.copyProperties(restaurantRequestVO, restaurant, "id");
             logger.info("Updating Restaurant id = " + id);
-            return restaurantRepository.save(restaurant);
+            return new RestaurantResponseVO(restaurantRepository.save(restaurant));
         } else {
             logger.info("Couldn't update Restaurant id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public Restaurant delete(Long id) {
+    public RestaurantResponseVO delete(Long id) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
             logger.info("Deleting Restaurant id = " + id);
             restaurantRepository.delete(restaurant);
-            return restaurant;
+            return new RestaurantResponseVO(restaurant);
         } else {
             logger.info("Couldn't delete Restaurant id = " + id + " because it doesn't exists");
             return null;

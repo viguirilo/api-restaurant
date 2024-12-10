@@ -19,9 +19,9 @@ public class StateService {
     private final StateRepository stateRepository;
     private final Logger logger = Logger.getLogger(StateService.class.getName());
 
-    public State save(StateRequestVO stepRequestVO) {
+    public StateResponseVO save(StateRequestVO stepRequestVO) {
         logger.info("Creating a new State");
-        return stateRepository.save(new State(stepRequestVO));
+        return new StateResponseVO(stateRepository.save(new State(stepRequestVO)));
     }
 
     public List<StateResponseVO> findAll() {
@@ -35,26 +35,26 @@ public class StateService {
         return stateOptional.map(StateResponseVO::new).orElse(null);
     }
 
-    public State update(Long id, StateRequestVO stateRequestVO) {
+    public StateResponseVO update(Long id, StateRequestVO stateRequestVO) {
         Optional<State> stateOptional = stateRepository.findById(id);
         if (stateOptional.isPresent()) {
             State state = stateOptional.get();
             BeanUtils.copyProperties(stateRequestVO, state, "id");
             logger.info("Updating State id = " + id);
-            return stateRepository.save(state);
+            return new StateResponseVO(stateRepository.save(state));
         } else {
             logger.info("Couldn't update State id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public State delete(Long id) {
+    public StateResponseVO delete(Long id) {
         Optional<State> stateOptional = stateRepository.findById(id);
         if (stateOptional.isPresent()) {
             State state = stateOptional.get();
             stateRepository.delete(state);
             logger.info("Deleting State id = " + id);
-            return state;
+            return new StateResponseVO(state);
         } else {
             logger.info("Couldn't delete State id = " + id + " because it doesn't exists");
             return null;

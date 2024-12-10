@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.City;
 import com.restaurant.api.rest.v1.service.CityService;
 import com.restaurant.api.rest.v1.vo.CityRequestVO;
 import com.restaurant.api.rest.v1.vo.CityResponseVO;
@@ -26,9 +25,9 @@ public class CityController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CityResponseVO> save(@RequestBody CityRequestVO cityRequestVO) {
-        City city = cityService.save(cityRequestVO);
-        if (city == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new CityResponseVO(city));
+        CityResponseVO cityResponseVO = cityService.save(cityRequestVO);
+        if (cityResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(cityResponseVO);
     }
 
     // TODO(colocar paginação neste endpoint)
@@ -54,16 +53,16 @@ public class CityController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<CityResponseVO> update(@PathVariable Long id, @RequestBody CityRequestVO cityRequestVO) {
-        City city = cityService.update(id, cityRequestVO);
-        if (city == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new CityResponseVO(city));
+        CityResponseVO cityResponseVO = cityService.update(id, cityRequestVO);
+        if (cityResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(cityResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            City city = cityService.delete(id);
-            if (city == null) return ResponseEntity.notFound().build();
+            CityResponseVO cityResponseVO = cityService.delete(id);
+            if (cityResponseVO == null) return ResponseEntity.notFound().build();
             else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
