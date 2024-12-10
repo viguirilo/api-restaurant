@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.PaymentMethod;
 import com.restaurant.api.rest.v1.service.PaymentMethodService;
 import com.restaurant.api.rest.v1.vo.PaymentMethodRequestVO;
 import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
@@ -26,7 +25,7 @@ public class PaymentMethodController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public PaymentMethodResponseVO save(@RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
-        return new PaymentMethodResponseVO(paymentMethodService.save(paymentMethodRequestVO));
+        return paymentMethodService.save(paymentMethodRequestVO);
     }
 
     // TODO(colocar paginação neste endpoint)
@@ -52,16 +51,16 @@ public class PaymentMethodController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<PaymentMethodResponseVO> update(@PathVariable Long id, @RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
-        PaymentMethod paymentMethod = paymentMethodService.update(id, paymentMethodRequestVO);
-        if (paymentMethod == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new PaymentMethodResponseVO(paymentMethod));
+        PaymentMethodResponseVO paymentMethodResponseVO = paymentMethodService.update(id, paymentMethodRequestVO);
+        if (paymentMethodResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(paymentMethodResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            PaymentMethod paymentMethod = paymentMethodService.delete(id);
-            if (paymentMethod == null) return ResponseEntity.notFound().build();
+            PaymentMethodResponseVO paymentMethodResponseVO = paymentMethodService.delete(id);
+            if (paymentMethodResponseVO == null) return ResponseEntity.notFound().build();
             else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

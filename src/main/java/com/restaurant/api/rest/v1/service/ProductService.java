@@ -22,12 +22,12 @@ public class ProductService {
     private final RestaurantRepository restaurantRepository;
     private final Logger logger = Logger.getLogger(ProductService.class.getName());
 
-    public Product save(ProductRequestVO productRequestVO) {
+    public ProductResponseVO save(ProductRequestVO productRequestVO) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(productRequestVO.getRestaurantId());
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
             logger.info("Creating a new Product");
-            return productRepository.save(new Product(productRequestVO, restaurant));
+            return new ProductResponseVO(productRepository.save(new Product(productRequestVO, restaurant)));
         } else {
             logger.info("The restaurantId informed wasn't found");
             return null;
@@ -45,7 +45,7 @@ public class ProductService {
         return productOptional.map(ProductResponseVO::new).orElse(null);
     }
 
-    public Product update(Long id, ProductRequestVO productRequestVO) {
+    public ProductResponseVO update(Long id, ProductRequestVO productRequestVO) {
         Optional<Product> productOptional = productRepository.findById(id);
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(productRequestVO.getRestaurantId());
         if (productOptional.isPresent() && restaurantOptional.isPresent()) {
@@ -54,20 +54,20 @@ public class ProductService {
             BeanUtils.copyProperties(productRequestVO, product, "id", "restaurant");
             product.setRestaurant(restaurant);
             logger.info("Updating Product id = " + id);
-            return productRepository.save(product);
+            return new ProductResponseVO(productRepository.save(product));
         } else {
             logger.info("Couldn't update Product id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public Product delete(Long id) {
+    public ProductResponseVO delete(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
             productRepository.delete(product);
             logger.info("Deleting Product id = " + id);
-            return product;
+            return new ProductResponseVO(product);
         } else {
             logger.info("Couldn't delete Product id = " + id + " because it doesn't exists");
             return null;

@@ -19,9 +19,9 @@ public class KitchenService {
     private final KitchenRepository kitchenRepository;
     private final Logger logger = Logger.getLogger(KitchenService.class.getName());
 
-    public Kitchen save(KitchenRequestVO kitchenRequestVO) {
+    public KitchenResponseVO save(KitchenRequestVO kitchenRequestVO) {
         logger.info("Creating a new Kitchen");
-        return kitchenRepository.save(new Kitchen(kitchenRequestVO));
+        return new KitchenResponseVO(kitchenRepository.save(new Kitchen(kitchenRequestVO)));
     }
 
     public List<KitchenResponseVO> findAll() {
@@ -35,26 +35,26 @@ public class KitchenService {
         return kitchenOptional.map(KitchenResponseVO::new).orElse(null);
     }
 
-    public Kitchen update(Long id, KitchenRequestVO kitchenRequestVO) {
+    public KitchenResponseVO update(Long id, KitchenRequestVO kitchenRequestVO) {
         Optional<Kitchen> kitchenOptional = kitchenRepository.findById(id);
         if (kitchenOptional.isPresent()) {
             Kitchen kitchen = kitchenOptional.get();
             BeanUtils.copyProperties(kitchenRequestVO, kitchen, "id");
             logger.info("Updating Kitchen id = " + id);
-            return kitchenRepository.save(kitchen);
+            return new KitchenResponseVO(kitchenRepository.save(kitchen));
         } else {
             logger.info("Couldn't update Kitchen id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public Kitchen delete(Long id) {
+    public KitchenResponseVO delete(Long id) {
         Optional<Kitchen> kitchenOptional = kitchenRepository.findById(id);
         if (kitchenOptional.isPresent()) {
             Kitchen kitchen = kitchenOptional.get();
             kitchenRepository.delete(kitchen);
             logger.info("Deleting Kitchen id = " + id);
-            return kitchen;
+            return new KitchenResponseVO(kitchen);
         } else {
             logger.info("Couldn't delete City id = " + id + " because it doesn't exists");
             return null;

@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.Kitchen;
 import com.restaurant.api.rest.v1.service.KitchenService;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
@@ -26,7 +25,7 @@ public class KitchenController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public KitchenResponseVO save(@RequestBody KitchenRequestVO kitchenRequestVO) {
-        return new KitchenResponseVO(kitchenService.save(kitchenRequestVO));
+        return kitchenService.save(kitchenRequestVO);
     }
 
     // TODO(colocar paginação neste endpoint)
@@ -52,16 +51,16 @@ public class KitchenController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<KitchenResponseVO> update(@PathVariable Long id, @RequestBody KitchenRequestVO kitchenRequestVO) {
-        Kitchen kitchen = kitchenService.update(id, kitchenRequestVO);
-        if (kitchen == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new KitchenResponseVO(kitchen));
+        KitchenResponseVO kitchenResponseVO = kitchenService.update(id, kitchenRequestVO);
+        if (kitchenResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(kitchenResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            Kitchen kitchen = kitchenService.delete(id);
-            if (kitchen == null) return ResponseEntity.notFound().build();
+            KitchenResponseVO kitchenResponseVO = kitchenService.delete(id);
+            if (kitchenResponseVO == null) return ResponseEntity.notFound().build();
             else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

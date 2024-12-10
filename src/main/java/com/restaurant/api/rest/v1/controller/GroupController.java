@@ -25,8 +25,8 @@ public class GroupController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public GroupResponseVO save(@RequestBody GroupRequestVO groupRequestVO) {
-        return new GroupResponseVO(groupService.save(groupRequestVO));
+    public ResponseEntity<GroupResponseVO> save(@RequestBody GroupRequestVO groupRequestVO) {
+        return ResponseEntity.ok().body(groupService.save(groupRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)

@@ -22,12 +22,12 @@ public class CityService {
     private final StateRepository stateRepository;
     private final Logger logger = Logger.getLogger(CityService.class.getName());
 
-    public City save(CityRequestVO cityRequestVO) {
+    public CityResponseVO save(CityRequestVO cityRequestVO) {
         Optional<State> stateOptional = stateRepository.findById(cityRequestVO.getStateId());
         if (stateOptional.isPresent()) {
             State state = stateOptional.get();
             logger.info("Creating a new City");
-            return cityRepository.save(new City(cityRequestVO, state));
+            return new CityResponseVO(cityRepository.save(new City(cityRequestVO, state)));
         } else {
             logger.info("The stateId informed wasn't found");
             return null;
@@ -46,26 +46,26 @@ public class CityService {
     }
 
     // TODO(revisar como o estado é atualizado)
-    public City update(Long id, CityRequestVO cityRequestVO) {
+    public CityResponseVO update(Long id, CityRequestVO cityRequestVO) {
         Optional<City> cityOptional = cityRepository.findById(id);
         if (cityOptional.isPresent()) {
             City city = cityOptional.get();
             BeanUtils.copyProperties(cityRequestVO, city, "id");
             logger.info("Updating City id = " + id);
-            return cityRepository.save(city);
+            return new CityResponseVO(cityRepository.save(city));
         } else {
             logger.info("Couldn't update City id = " + id + " because it doesn't exists");
             return null;
         }
     }
 
-    public City delete(Long id) {
+    public CityResponseVO delete(Long id) {
         Optional<City> cityOptional = cityRepository.findById(id);
         if (cityOptional.isPresent()) {
             City city = cityOptional.get();
             cityRepository.delete(city);
             logger.info("Deleting City id = " + id);
-            return city;
+            return new CityResponseVO(city);
         } else {
             logger.info("Couldn't delete City id = " + id + " because it doesn't exists");
             return null;

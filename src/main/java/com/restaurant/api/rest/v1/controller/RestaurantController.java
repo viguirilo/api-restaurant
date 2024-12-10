@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.Restaurant;
 import com.restaurant.api.rest.v1.service.RestaurantService;
 import com.restaurant.api.rest.v1.vo.RestaurantRequestVO;
 import com.restaurant.api.rest.v1.vo.RestaurantResponseVO;
@@ -26,9 +25,9 @@ public class RestaurantController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<RestaurantResponseVO> save(@RequestBody RestaurantRequestVO restaurantRequestVO) {
-        Restaurant restaurant = restaurantService.save(restaurantRequestVO);
-        if (restaurant == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new RestaurantResponseVO(restaurant));
+        RestaurantResponseVO restaurantResponseVO = restaurantService.save(restaurantRequestVO);
+        if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(restaurantResponseVO);
     }
 
     // TODO(colocar paginação neste endpoint)
@@ -54,16 +53,16 @@ public class RestaurantController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<RestaurantResponseVO> update(@PathVariable Long id, @RequestBody RestaurantRequestVO restaurantRequestVO) {
-        Restaurant restaurant = restaurantService.update(id, restaurantRequestVO);
-        if (restaurant == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new RestaurantResponseVO(restaurant));
+        RestaurantResponseVO restaurantResponseVO = restaurantService.update(id, restaurantRequestVO);
+        if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(restaurantResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            Restaurant restaurant = restaurantService.delete(id);
-            if (restaurant == null) return ResponseEntity.notFound().build();
+            RestaurantResponseVO restaurantResponseVO = restaurantService.delete(id);
+            if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
             else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
