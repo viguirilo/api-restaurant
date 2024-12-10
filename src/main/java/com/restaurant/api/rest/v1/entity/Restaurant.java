@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "restaurant")
@@ -90,4 +91,33 @@ public class Restaurant implements Serializable {
         this.address = new Address(restaurantRequestVO, city);
     }
 
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", shipRate=" + shipRate +
+                ", active=" + active +
+                ", open=" + open +
+                ", creationDate=" + creationDate +
+                ", updateDate=" + updateDate +
+                ", kitchen=" + kitchen.toString() +
+                ", paymentMethods=" + paymentMethods.toString() +
+                ", address=" + address.toString() +
+                ", products=" + products.toString() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurant that = (Restaurant) o;
+        return Objects.equals(name, that.name) && Objects.equals(address, that.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, address);
+    }
 }

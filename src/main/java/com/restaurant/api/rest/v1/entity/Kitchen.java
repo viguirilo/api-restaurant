@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "kitchen")
@@ -36,6 +37,27 @@ public class Kitchen implements Serializable {
 
     public Kitchen(KitchenRequestVO kitchenRequestVO) {
         this.name = kitchenRequestVO.getName();
+    }
+
+    @Override
+    public String toString() {
+        return "Kitchen{" +
+                "name='" + name + '\'' +
+                ", restaurants=" + restaurants.toString() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Kitchen kitchen = (Kitchen) o;
+        return Objects.equals(name, kitchen.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 
 }

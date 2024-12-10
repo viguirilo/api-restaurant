@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "state")
@@ -29,6 +30,27 @@ public class State implements Serializable {
 
     public State(StateRequestVO stateRequestVO) {
         this.name = stateRequestVO.getName();
+    }
+
+    @Override
+    public String toString() {
+        return "State{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        State state = (State) o;
+        return Objects.equals(name, state.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 
 }

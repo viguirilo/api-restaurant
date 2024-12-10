@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "item_ordered")
@@ -48,5 +49,31 @@ public class ItemOrdered implements Serializable {
     @JoinColumn(name = "product_id", nullable = false)
     @JsonProperty("product")
     private Product product;
+
+    @Override
+    public String toString() {
+        return "ItemOrdered{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                ", totalPrice=" + totalPrice +
+                ", observation='" + observation + '\'' +
+                ", order=" + order.toString() +
+                ", product=" + product.toString() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemOrdered that = (ItemOrdered) o;
+        return Objects.equals(order.getId(), that.order.getId()) && Objects.equals(product.getId(), that.product.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(order.getId(), product.getId());
+    }
 
 }

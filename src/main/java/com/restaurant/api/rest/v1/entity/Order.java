@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "order")
@@ -80,8 +81,44 @@ public class Order implements Serializable {
     @JsonProperty(value = "status")
     private OrderStatus status;
 
-    @JsonIgnore
+    @JsonIgnore // TODO(Por que tem JsonIgnore neste campo?)
     @OneToMany(mappedBy = "order")
     private List<ItemOrdered> itemsOrdered = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", subTotal=" + subTotal +
+                ", shipRate=" + shipRate +
+                ", totalValue=" + totalValue +
+                ", creationDate=" + creationDate +
+                ", confirmationDate=" + confirmationDate +
+                ", cancellationDate=" + cancellationDate +
+                ", deliveryDate=" + deliveryDate +
+                ", restaurant=" + restaurant.toString() +
+                ", customer=" + customer.toString() +
+                ", paymentMethod=" + paymentMethod.toString() +
+                ", address=" + address.toString() +
+                ", status=" + status +
+                ", itemsOrdered=" + itemsOrdered.toString() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(creationDate, order.creationDate) &&
+                Objects.equals(restaurant.getId(), order.restaurant.getId()) &&
+                Objects.equals(customer.getId(), order.customer.getId()) &&
+                Objects.equals(itemsOrdered, order.itemsOrdered);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(creationDate, restaurant.getId(), customer.getId(), itemsOrdered);
+    }
 
 }
