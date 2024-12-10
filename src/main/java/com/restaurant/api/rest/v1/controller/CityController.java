@@ -33,7 +33,9 @@ public class CityController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CityResponseVO>> findAll() {
-        return ResponseEntity.ok().body(cityService.findAll());
+        List<CityResponseVO> cityResponseVOS = cityService.findAll();
+        if (cityResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(cityResponseVOS);
     }
 
     @GetMapping(
