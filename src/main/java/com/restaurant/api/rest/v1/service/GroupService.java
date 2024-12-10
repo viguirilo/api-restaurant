@@ -20,43 +20,58 @@ public class GroupService {
     private final Logger logger = Logger.getLogger(GroupService.class.getName());
 
     public GroupResponseVO save(GroupRequestVO groupRequestVO) {
-        logger.info("Creating a new Group");
-        return new GroupResponseVO(groupRepository.save(new Group(groupRequestVO)));
+        Group group = groupRepository.save(new Group(groupRequestVO));
+        logger.info(group + " CREATED SUCCESSFULLY");
+        return new GroupResponseVO(group);
     }
 
     public List<GroupResponseVO> findAll() {
-        logger.info("Returning Groups, if exists");
-        return groupRepository.findAll().stream().map(GroupResponseVO::new).toList();
-    }
-
-    public GroupResponseVO findById(Long id) {
-        logger.info("Returning Group id = " + id + ", if exists");
-        Optional<Group> optionalGroup = groupRepository.findById(id);
-        return optionalGroup.map(GroupResponseVO::new).orElse(null);
-    }
-
-    public Group update(Long id, GroupRequestVO groupRequestVO) {
-        Optional<Group> optionalGroup = groupRepository.findById(id);
-        if (optionalGroup.isPresent()) {
-            Group group = optionalGroup.get();
-            BeanUtils.copyProperties(groupRequestVO, group, "id");
-            logger.info("Updating Group id = " + id);
-            return groupRepository.save(group);
+        List<Group> groups = groupRepository.findAll();
+        if (!groups.isEmpty()) {
+            logger.info("FOUND " + groups.size() + " GROUPS");
+            return groups.stream().map(GroupResponseVO::new).toList();
         } else {
-            logger.info("Couldn't update Group id = " + id + " because it doesn't exists");
+            logger.warning("GROUPS NOT FOUND");
             return null;
         }
     }
 
-    public Group delete(Long id) {
+    public GroupResponseVO findById(Long id) {
+        Optional<Group> optionalGroup = groupRepository.findById(id);
+        if (optionalGroup.isPresent()) {
+            Group group = optionalGroup.get();
+            logger.info(group + " FOUND SUCCESSFULLY");
+            return new GroupResponseVO(group);
+        } else {
+            logger.warning("GROUP NOT FOUND");
+            return null;
+        }
+
+    }
+
+    public GroupResponseVO update(Long id, GroupRequestVO groupRequestVO) {
+        Optional<Group> optionalGroup = groupRepository.findById(id);
+        if (optionalGroup.isPresent()) {
+            Group group = optionalGroup.get();
+            BeanUtils.copyProperties(groupRequestVO, group, "id");
+            group = groupRepository.save(group);
+            logger.info(group + " UPDATED SUCCESSFULLY");
+            return new GroupResponseVO(group);
+        } else {
+            logger.warning("CAN NOT UPDATE: GROUP " + id + " NOT FOUND");
+            return null;
+        }
+    }
+
+    public GroupResponseVO delete(Long id) {
         Optional<Group> optionalGroup = groupRepository.findById(id);
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
             groupRepository.delete(group);
-            logger.info("Updating Group id = " + id);
-            return group;
+            logger.info(group + " DELETED SUCCESSFULLY");
+            return new GroupResponseVO(group);
         } else {
-            logger.info("Couldn't delete Group id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: GROUP " + id + " NOT FOUND");
             return null;
         }
     }

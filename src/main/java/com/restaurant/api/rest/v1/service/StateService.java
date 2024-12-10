@@ -20,19 +20,32 @@ public class StateService {
     private final Logger logger = Logger.getLogger(StateService.class.getName());
 
     public StateResponseVO save(StateRequestVO stepRequestVO) {
-        logger.info("Creating a new State");
-        return new StateResponseVO(stateRepository.save(new State(stepRequestVO)));
+        State state = stateRepository.save(new State(stepRequestVO));
+        logger.info(state + " CREATED SUCCESSFULLY");
+        return new StateResponseVO(state);
     }
 
     public List<StateResponseVO> findAll() {
-        logger.info("Returning States, if exists");
-        return stateRepository.findAll().stream().map(StateResponseVO::new).toList();
+        List<State> states = stateRepository.findAll();
+        if (!states.isEmpty()) {
+            logger.info("FOUND " + states.size() + " CITIES");
+            return states.stream().map(StateResponseVO::new).toList();
+        } else {
+            logger.warning("STATES NOT FOUND");
+            return null;
+        }
     }
 
     public StateResponseVO findById(Long id) {
-        logger.info("Returning State id = " + id + ", if exists");
         Optional<State> stateOptional = stateRepository.findById(id);
-        return stateOptional.map(StateResponseVO::new).orElse(null);
+        if (stateOptional.isPresent()) {
+            State state = stateOptional.get();
+            logger.info(state + " FOUND SUCCESSFULLY");
+            return new StateResponseVO(state);
+        } else {
+            logger.warning("STATE NOT FOUND");
+            return null;
+        }
     }
 
     public StateResponseVO update(Long id, StateRequestVO stateRequestVO) {
@@ -40,10 +53,11 @@ public class StateService {
         if (stateOptional.isPresent()) {
             State state = stateOptional.get();
             BeanUtils.copyProperties(stateRequestVO, state, "id");
-            logger.info("Updating State id = " + id);
+            state = stateRepository.save(state);
+            logger.info(state + " UPDATED SUCCESSFULLY");
             return new StateResponseVO(stateRepository.save(state));
         } else {
-            logger.info("Couldn't update State id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT UPDATE: STATE " + id + " NOT FOUND");
             return null;
         }
     }
@@ -53,10 +67,10 @@ public class StateService {
         if (stateOptional.isPresent()) {
             State state = stateOptional.get();
             stateRepository.delete(state);
-            logger.info("Deleting State id = " + id);
+            logger.info(state + " DELETED SUCCESSFULLY");
             return new StateResponseVO(state);
         } else {
-            logger.info("Couldn't delete State id = " + id + " because it doesn't exists");
+            logger.warning("CAN NOT DELETE: STATE " + id + " NOT FOUND");
             return null;
         }
     }
