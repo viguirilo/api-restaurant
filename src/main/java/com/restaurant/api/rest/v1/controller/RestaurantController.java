@@ -33,7 +33,9 @@ public class RestaurantController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RestaurantResponseVO>> findAll() {
-        return ResponseEntity.ok().body(restaurantService.findAll());
+        List<RestaurantResponseVO> restaurantResponseVOS = restaurantService.findAll();
+        if (restaurantResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(restaurantResponseVOS);
     }
 
     @GetMapping(

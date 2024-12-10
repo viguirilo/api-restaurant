@@ -31,7 +31,9 @@ public class KitchenController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<KitchenResponseVO>> findAll() {
-        return ResponseEntity.ok().body(kitchenService.findAll());
+        List<KitchenResponseVO> kitchenResponseVOS = kitchenService.findAll();
+        if (kitchenResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(kitchenResponseVOS);
     }
 
     @GetMapping(

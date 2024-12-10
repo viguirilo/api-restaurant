@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.controller;
 
-import com.restaurant.api.rest.v1.entity.Group;
 import com.restaurant.api.rest.v1.service.GroupService;
 import com.restaurant.api.rest.v1.vo.GroupRequestVO;
 import com.restaurant.api.rest.v1.vo.GroupResponseVO;
@@ -32,7 +31,9 @@ public class GroupController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupResponseVO>> findAll() {
-        return ResponseEntity.ok().body(groupService.findAll());
+        List<GroupResponseVO> groupResponseVOS = groupService.findAll();
+        if (groupResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(groupResponseVOS);
     }
 
     @GetMapping(
@@ -52,16 +53,16 @@ public class GroupController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<GroupResponseVO> update(@PathVariable Long id, @RequestBody GroupRequestVO groupRequestVO) {
-        Group group = groupService.update(id, groupRequestVO);
-        if (group == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(new GroupResponseVO(group));
+        GroupResponseVO groupResponseVO = groupService.update(id, groupRequestVO);
+        if (groupResponseVO == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(groupResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            Group group = groupService.delete(id);
-            if (group == null) return ResponseEntity.notFound().build();
+            GroupResponseVO groupResponseVO = groupService.delete(id);
+            if (groupResponseVO == null) return ResponseEntity.notFound().build();
             else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

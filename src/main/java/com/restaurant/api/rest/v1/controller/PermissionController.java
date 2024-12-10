@@ -31,7 +31,9 @@ public class PermissionController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PermissionResponseVO>> findAll() {
-        return ResponseEntity.ok().body(permissionService.findAll());
+        List<PermissionResponseVO> permissionResponseVOS = permissionService.findAll();
+        if (permissionResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(permissionResponseVOS);
     }
 
     @GetMapping(

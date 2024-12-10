@@ -31,7 +31,9 @@ public class StateController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StateResponseVO>> findAll() {
-        return ResponseEntity.ok().body(stateService.findAll());
+        List<StateResponseVO> stateResponseVOS = stateService.findAll();
+        if (stateResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(stateResponseVOS);
     }
 
     @GetMapping(

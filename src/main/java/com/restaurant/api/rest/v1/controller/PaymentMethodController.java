@@ -31,7 +31,9 @@ public class PaymentMethodController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PaymentMethodResponseVO>> findAll() {
-        return ResponseEntity.ok().body(paymentMethodService.findAll());
+        List<PaymentMethodResponseVO> paymentMethodResponseVOS = paymentMethodService.findAll();
+        if (paymentMethodResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(paymentMethodResponseVOS);
     }
 
     @GetMapping(

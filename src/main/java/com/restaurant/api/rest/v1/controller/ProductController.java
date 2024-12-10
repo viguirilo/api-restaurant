@@ -33,7 +33,9 @@ public class ProductController {
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponseVO>> findAll() {
-        return ResponseEntity.ok().body(productService.findAll());
+        List<ProductResponseVO> productResponseVOS = productService.findAll();
+        if (productResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok().body(productResponseVOS);
     }
 
     @GetMapping(
