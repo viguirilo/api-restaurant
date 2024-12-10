@@ -20,20 +20,18 @@ public class StateController {
 
     private final StateService stateService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public State save(@RequestBody StateRequestVO stepRequestVO) {
-        return stateService.save(stepRequestVO);
+    public ResponseEntity<StateResponseVO> save(@RequestBody StateRequestVO stateRequestVO) {
+        return ResponseEntity.ok().body(new StateResponseVO(stateService.save(stateRequestVO)));
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<State>> findAll() {
+    public ResponseEntity<List<StateResponseVO>> findAll() {
         return ResponseEntity.ok().body(stateService.findAll());
     }
 
@@ -54,10 +52,10 @@ public class StateController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody StateRequestVO stateRequestVO) {
+    public ResponseEntity<StateResponseVO> update(@PathVariable Long id, @RequestBody StateRequestVO stateRequestVO) {
         State state = stateService.update(id, stateRequestVO);
         if (state == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(state);
+        else return ResponseEntity.ok().body(new StateResponseVO(state));
     }
 
     @DeleteMapping(value = "/{id}")

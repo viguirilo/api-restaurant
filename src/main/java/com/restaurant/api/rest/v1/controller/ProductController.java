@@ -20,22 +20,20 @@ public class ProductController {
 
     private final ProductService productService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Product> save(@RequestBody ProductRequestVO permissionRequestVO) {
+    public ResponseEntity<ProductResponseVO> save(@RequestBody ProductRequestVO permissionRequestVO) {
         Product product = productService.save(permissionRequestVO);
         if (product == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(product);
+        else return ResponseEntity.ok().body(new ProductResponseVO(product));
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Product>> findAll() {
+    public ResponseEntity<List<ProductResponseVO>> findAll() {
         return ResponseEntity.ok().body(productService.findAll());
     }
 
@@ -56,10 +54,10 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody ProductRequestVO productRequestVO) {
+    public ResponseEntity<ProductResponseVO> update(@PathVariable Long id, @RequestBody ProductRequestVO productRequestVO) {
         Product product = productService.update(id, productRequestVO);
         if (product == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(product);
+        else return ResponseEntity.ok().body(new ProductResponseVO(product));
     }
 
     @DeleteMapping(value = "/{id}")

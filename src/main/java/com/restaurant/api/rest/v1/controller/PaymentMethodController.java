@@ -25,14 +25,13 @@ public class PaymentMethodController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public PaymentMethod save(@RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
-        return paymentMethodService.save(paymentMethodRequestVO);
+    public PaymentMethodResponseVO save(@RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
+        return new PaymentMethodResponseVO(paymentMethodService.save(paymentMethodRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
-    // TODO(colocar este método para retornar um VO)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PaymentMethod>> findAll() {
+    public ResponseEntity<List<PaymentMethodResponseVO>> findAll() {
         return ResponseEntity.ok().body(paymentMethodService.findAll());
     }
 
@@ -46,17 +45,16 @@ public class PaymentMethodController {
         return ResponseEntity.ok().body(paymentMethodResponseVO);
     }
 
-    // TODO(colocar este método para retornar um VO)
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PaymentMethod> update(@PathVariable Long id, @RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
+    public ResponseEntity<PaymentMethodResponseVO> update(@PathVariable Long id, @RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
         PaymentMethod paymentMethod = paymentMethodService.update(id, paymentMethodRequestVO);
         if (paymentMethod == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(paymentMethod);
+        else return ResponseEntity.ok().body(new PaymentMethodResponseVO(paymentMethod));
     }
 
     @DeleteMapping(value = "/{id}")

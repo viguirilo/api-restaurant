@@ -10,22 +10,27 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentMethodService {
 
     private final PaymentMethodRepository paymentMethodRepository;
+    private final Logger logger = Logger.getLogger(PaymentMethodService.class.getName());
 
     public PaymentMethod save(PaymentMethodRequestVO paymentMethodRequestVO) {
+        logger.info("Creating a new Payment Method");
         return paymentMethodRepository.save(new PaymentMethod(paymentMethodRequestVO));
     }
 
-    public List<PaymentMethod> findAll() {
-        return paymentMethodRepository.findAll();
+    public List<PaymentMethodResponseVO> findAll() {
+        logger.info("Returning Payment Methods, if exists");
+        return paymentMethodRepository.findAll().stream().map(PaymentMethodResponseVO::new).toList();
     }
 
     public PaymentMethodResponseVO findById(Long id) {
+        logger.info("Returning Payment Method id = " + id + ", if exists");
         Optional<PaymentMethod> paymentMethodById = paymentMethodRepository.findById(id);
         return paymentMethodById.map(PaymentMethodResponseVO::new).orElse(null);
     }
@@ -35,8 +40,12 @@ public class PaymentMethodService {
         if (paymentMethodOptional.isPresent()) {
             PaymentMethod paymentMethod = paymentMethodOptional.get();
             BeanUtils.copyProperties(paymentMethodRequestVO, paymentMethod, "id");
+            logger.info("Updating Payment Method id = " + id);
             return paymentMethodRepository.save(paymentMethod);
-        } else return null;
+        } else {
+            logger.info("Couldn't update Payment Method id = " + id + " because it doesn't exists");
+            return null;
+        }
     }
 
     public PaymentMethod delete(Long id) {
@@ -44,8 +53,12 @@ public class PaymentMethodService {
         if (paymentMethodOptional.isPresent()) {
             PaymentMethod paymentMethod = paymentMethodOptional.get();
             paymentMethodRepository.delete(paymentMethod);
+            logger.info("Deleting Payment Method id = " + id);
             return paymentMethod;
-        } else return null;
+        } else {
+            logger.info("Couldn't delete Payment Method id = " + id + " because it doesn't exists");
+            return null;
+        }
     }
 
 }
