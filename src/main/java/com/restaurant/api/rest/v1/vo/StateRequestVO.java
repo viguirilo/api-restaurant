@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class StateRequestVO {
 
     public String name;
+    public String abbreviation;
+    public String country;
 
 }

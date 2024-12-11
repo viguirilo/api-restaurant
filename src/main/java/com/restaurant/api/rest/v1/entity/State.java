@@ -28,8 +28,18 @@ public class State implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @JsonProperty(value = "name")
+    @Column(name = "name", length = 2, nullable = false)
+    private String abbreviation;
+
+    @JsonProperty(value = "name")
+    @Column(name = "name", nullable = false)
+    private String country;
+
     public State(StateRequestVO stateRequestVO) {
         this.name = stateRequestVO.getName();
+        this.abbreviation = stateRequestVO.getAbbreviation();
+        this.country = stateRequestVO.getCountry();
     }
 
     @Override
@@ -37,6 +47,8 @@ public class State implements Serializable {
         return "State{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", abbreviation='" + abbreviation + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
 
@@ -45,12 +57,12 @@ public class State implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         State state = (State) o;
-        return Objects.equals(name, state.name);
+        return Objects.equals(name, state.name) && Objects.equals(abbreviation, state.abbreviation) && Objects.equals(country, state.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hash(name, abbreviation, country);
     }
 
 }
