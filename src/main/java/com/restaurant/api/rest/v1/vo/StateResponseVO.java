@@ -12,10 +12,14 @@ public class StateResponseVO {
 
     public Long id;
     public String name;
+    public String abbreviation;
+    public String country;
 
     public StateResponseVO(State state) {
         this.id = state.getId();
         this.name = state.getName();
+        this.abbreviation = state.getAbbreviation();
+        this.country = state.getCountry();
     }
 
 }
