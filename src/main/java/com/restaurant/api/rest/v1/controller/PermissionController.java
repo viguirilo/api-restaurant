@@ -24,8 +24,8 @@ public class PermissionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public PermissionResponseVO save(@RequestBody PermissionRequestVO permissionRequestVO) {
-        return permissionService.save(permissionRequestVO);
+    public ResponseEntity<PermissionResponseVO> save(@RequestBody PermissionRequestVO permissionRequestVO) {
+        return ResponseEntity.ok().body(permissionService.save(permissionRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)

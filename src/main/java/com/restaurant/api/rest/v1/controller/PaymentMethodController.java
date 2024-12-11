@@ -19,13 +19,12 @@ public class PaymentMethodController {
 
     private final PaymentMethodService paymentMethodService;
 
-    // TODO(colocar este método para retornar um VO)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public PaymentMethodResponseVO save(@RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
-        return paymentMethodService.save(paymentMethodRequestVO);
+    public ResponseEntity<PaymentMethodResponseVO> save(@RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
+        return ResponseEntity.ok().body(paymentMethodService.save(paymentMethodRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)

@@ -24,8 +24,8 @@ public class KitchenController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public KitchenResponseVO save(@RequestBody KitchenRequestVO kitchenRequestVO) {
-        return kitchenService.save(kitchenRequestVO);
+    public ResponseEntity<KitchenResponseVO> save(@RequestBody KitchenRequestVO kitchenRequestVO) {
+        return ResponseEntity.ok().body(kitchenService.save(kitchenRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
