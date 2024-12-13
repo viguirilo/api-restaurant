@@ -68,7 +68,11 @@ public class RestaurantService {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
-            BeanUtils.copyProperties(restaurantRequestVO, restaurant, "id");
+            BeanUtils.copyProperties(
+                    restaurantRequestVO,
+                    restaurant,
+                    "id", "address", "paymentMethods", "creationDate"
+            );
             restaurant = restaurantRepository.save(restaurant);
             logger.info(restaurant + " UPDATED SUCCESSFULLY");
             return new RestaurantResponseVO(restaurant);

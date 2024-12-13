@@ -28,12 +28,12 @@ public class State implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @JsonProperty(value = "name")
-    @Column(name = "name", length = 2, nullable = false)
+    @JsonProperty(value = "abbreviation")
+    @Column(name = "abbreviation", length = 2, nullable = false)
     private String abbreviation;
 
-    @JsonProperty(value = "name")
-    @Column(name = "name", nullable = false)
+    @JsonProperty(value = "country")
+    @Column(name = "country", nullable = false)
     private String country;
 
     public State(StateRequestVO stateRequestVO) {
