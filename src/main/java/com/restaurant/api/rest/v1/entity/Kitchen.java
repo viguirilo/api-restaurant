@@ -43,7 +43,6 @@ public class Kitchen implements Serializable {
     public String toString() {
         return "Kitchen{" +
                 "name='" + name + '\'' +
-                ", restaurants=" + restaurants.toString() +
                 '}';
     }
 
