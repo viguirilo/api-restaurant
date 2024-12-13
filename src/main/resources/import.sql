@@ -1,81 +1,9 @@
 --INSERÇÃO DE DADOS APENAS VIA MIGRATION OU VIA ENDPOINTS
 
-INSERT INTO kitchen (name) VALUES ('Thai');
-INSERT INTO kitchen (name) VALUES ('Indian');
-INSERT INTO kitchen (name) VALUES ('Brazilian');
-INSERT INTO kitchen (name) VALUES ('Japanese');
-INSERT INTO kitchen (name) VALUES ('Italian');
-
-INSERT INTO payment_method (description) VALUES ('CREDIT_CARD');
-INSERT INTO payment_method (description) VALUES ('DEBIT_CARD');
-INSERT INTO payment_method (description) VALUES ('CASH');
-INSERT INTO payment_method (description) VALUES ('CHECK');
-INSERT INTO payment_method (description) VALUES ('CRYPTO_COINS');
-
-INSERT INTO permission (name, description) VALUES ('CREATE_ORDER', 'Allow an user to create an order');
-INSERT INTO permission (name, description) VALUES ('READ_ORDER', 'Allow an user to read an order');
-INSERT INTO permission (name, description) VALUES ('UPDATE_ORDER', 'Allow an user to update an order');
-INSERT INTO permission (name, description) VALUES ('DELETE_ORDER', 'Allow an user to delete an order');
-
 INSERT INTO restaurant(name, ship_rate, active, open, creation_date, update_date, kitchen_id) VALUES ('Thai Delivery', 2.9, true, true, now(), now(), 1);
 INSERT INTO restaurant(name, ship_rate, active, open, creation_date, update_date, kitchen_id) VALUES ('Fast Indian', 1.0, true, true, now(), now(), 2);
 INSERT INTO restaurant(name, ship_rate, active, open, creation_date, update_date, kitchen_id) VALUES ('BrazFood', 1.9, true, true, now(), now(), 3);
 INSERT INTO restaurant(name, ship_rate, active, open, creation_date, update_date, kitchen_id) VALUES ('Sushi Moto', 3.9, true, true, now(), now(), 4);
 INSERT INTO restaurant(name, ship_rate, active, open, creation_date, update_date, kitchen_id) VALUES ('Italin House', 2.0, true, true, now(), now(), 5);
-
-INSERT INTO state (name, abbreviation, country) VALUES ('Acre', 'AC', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Rio Branco', 1);
-INSERT INTO state (name, abbreviation, country) VALUES ('Alagoas', 'AL', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Maceió', 2);
-INSERT INTO state (name, abbreviation, country) VALUES ('Amapá', 'AP', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Macapá', 3);
-INSERT INTO state (name, abbreviation, country) VALUES ('Amazonas', 'AM', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Manaus', 4);
-INSERT INTO state (name, abbreviation, country) VALUES ('Bahia', 'BA', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Salvador', 5);
-INSERT INTO state (name, abbreviation, country) VALUES ('Ceará', 'CE', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Fortaleza', 6);
-INSERT INTO state (name, abbreviation, country) VALUES ('Distrito Federal', 'DF', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Brasília', 7);
-INSERT INTO state (name, abbreviation, country) VALUES ('Espírito Santo', 'ES', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Vitória', 8);
-INSERT INTO state (name, abbreviation, country) VALUES ('Goiás', 'GO', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Goiânia', 9);
-INSERT INTO state (name, abbreviation, country) VALUES ('Maranhão', 'MA', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('São Luís', 10);
-INSERT INTO state (name, abbreviation, country) VALUES ('Mato Grosso', 'MT', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Cuiabá', 11);
-INSERT INTO state (name, abbreviation, country) VALUES ('Mato Grosso do Sul', 'MS', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Campo Grande', 12);
-INSERT INTO state (name, abbreviation, country) VALUES ('Minas Gerais', 'MG', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Belo Horizonte', 13);
-INSERT INTO state (name, abbreviation, country) VALUES ('Pará', 'PA', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Belém', 14);
-INSERT INTO state (name, abbreviation, country) VALUES ('Paraíba', 'PB', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('João Pessoa', 15);
-INSERT INTO state (name, abbreviation, country) VALUES ('Paraná', 'PR', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Curitiba', 16);
-INSERT INTO state (name, abbreviation, country) VALUES ('Pernambuco', 'PE', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Recife', 17);
-INSERT INTO state (name, abbreviation, country) VALUES ('Piauí', 'PI', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Recife', 18);
-INSERT INTO state (name, abbreviation, country) VALUES ('Rio de Janeiro', 'RJ', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Rio de Janeiro', 19);
-INSERT INTO state (name, abbreviation, country) VALUES ('Rio Grande do Norte', 'RN', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Natal', 20);
-INSERT INTO state (name, abbreviation, country) VALUES ('Rio Grande do Sul', 'RS', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Porto Alegre', 21);
-INSERT INTO state (name, abbreviation, country) VALUES ('Rondônia', 'RO', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Porto Velho', 22);
-INSERT INTO state (name, abbreviation, country) VALUES ('Roraima', 'RR', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Boa Vista', 23);
-INSERT INTO state (name, abbreviation, country) VALUES ('Santa Catarina', 'SC', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Florianópolis', 24);
-INSERT INTO state (name, abbreviation, country) VALUES ('São Paulo', 'SP', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('São Paulo', 25);
-INSERT INTO state (name, abbreviation, country) VALUES ('Sergipe', 'SE', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Aracaju', 26);
-INSERT INTO state (name, abbreviation, country) VALUES ('Tocantins', 'TO', 'Brasil');
-INSERT INTO city (name, state_id) VALUES ('Palmas', 27);
 
 INSERT INTO restaurant_payment_method (restaurant_id, payment_method_id) VALUES (1,1), (1,2), (1,3), (1,4), (1,5), (2,1), (2,2), (2,3), (2,4), (2,5), (3,1), (3,2), (3,3), (3,4), (3,5), (4,1), (4,2), (4,3), (4,4), (4,5), (5,1), (5,2), (5,3), (5,4), (5,5);

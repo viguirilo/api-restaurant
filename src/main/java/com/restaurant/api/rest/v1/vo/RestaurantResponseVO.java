@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.vo;
 
+import com.restaurant.api.rest.v1.entity.Address;
 import com.restaurant.api.rest.v1.entity.Kitchen;
 import com.restaurant.api.rest.v1.entity.Restaurant;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class RestaurantResponseVO {
     public LocalDateTime creationDate;
     public LocalDateTime updateDate;
     public Kitchen kitchen;
+    public Address address;
 
     public RestaurantResponseVO(Restaurant restaurant) {
         this.id = restaurant.getId();
@@ -32,6 +34,7 @@ public class RestaurantResponseVO {
         this.creationDate = restaurant.getCreationDate();
         this.updateDate = restaurant.getUpdateDate();
         this.kitchen = restaurant.getKitchen();
+        this.address = restaurant.getAddress();
     }
 
 }
