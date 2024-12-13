@@ -1,6 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 notes.md
+*.ods
 
 ### Spring Tool Suit ###
 .apt_generated
