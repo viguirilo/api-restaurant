@@ -4,3 +4,6 @@ INSERT INTO payment_method (description) VALUES ('CREDIT_CARD');
 INSERT INTO payment_method (description) VALUES ('PIX');
 INSERT INTO payment_method (description) VALUES ('CHECK');
 INSERT INTO payment_method (description) VALUES ('CRYPTO_COINS');
+INSERT INTO payment_method (description) VALUES ('ALELO');
+INSERT INTO payment_method (description) VALUES ('VALE_REFEIÇÃO');
+INSERT INTO payment_method (description) VALUES ('FLASH');
