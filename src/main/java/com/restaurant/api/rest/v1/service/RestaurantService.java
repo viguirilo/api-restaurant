@@ -44,7 +44,7 @@ public class RestaurantService {
     public List<RestaurantResponseVO> findAll() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         if (!restaurants.isEmpty()) {
-            logger.info("FOUND " + restaurants.size() + " CITIES");
+            logger.info("FOUND " + restaurants.size() + " RESTAURANTS");
             return restaurants.stream().map(RestaurantResponseVO::new).toList();
         } else {
             logger.warning("RESTAURANTS NOT FOUND");
@@ -64,20 +64,24 @@ public class RestaurantService {
         }
     }
 
+    //    TODO(ver como fica o BeanUtils.copyProperties em relação a atualização das entidades internas como kitchen, city, products)
     public RestaurantResponseVO update(Long id, RestaurantRequestVO restaurantRequestVO) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
-        if (restaurantOptional.isPresent()) {
+        Optional<Kitchen> kitchenOptional = kitchenRepository.findById(restaurantRequestVO.kitchenId);
+        if (restaurantOptional.isPresent() && kitchenOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
+            Kitchen kitchen = kitchenOptional.get();
             BeanUtils.copyProperties(
                     restaurantRequestVO,
                     restaurant,
                     "id", "address", "paymentMethods", "creationDate"
             );
+            restaurant.setKitchen(kitchen);
             restaurant = restaurantRepository.save(restaurant);
             logger.info(restaurant + " UPDATED SUCCESSFULLY");
             return new RestaurantResponseVO(restaurant);
         } else {
-            logger.warning("CAN NOT UPDATE: RESTAURANT " + id + " NOT FOUND");
+            logger.warning("CAN NOT UPDATE: RESTAURANT " + id + " AND/OR KITCHEN " + restaurantRequestVO.getKitchenId() + " NOT FOUND");
             return null;
         }
     }

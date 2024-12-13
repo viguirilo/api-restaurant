@@ -37,7 +37,7 @@ public class UserService {
     public List<UserResponseVO> findAll() {
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
-            logger.info("FOUND " + users.size() + " CITIES");
+            logger.info("FOUND " + users.size() + " USERS");
             return users.stream().map(UserResponseVO::new).toList();
         } else {
             logger.warning("USERS NOT FOUND");

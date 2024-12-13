@@ -28,7 +28,7 @@ public class StateService {
     public List<StateResponseVO> findAll() {
         List<State> states = stateRepository.findAll();
         if (!states.isEmpty()) {
-            logger.info("FOUND " + states.size() + " CITIES");
+            logger.info("FOUND " + states.size() + " STATES");
             return states.stream().map(StateResponseVO::new).toList();
         } else {
             logger.warning("STATES NOT FOUND");
