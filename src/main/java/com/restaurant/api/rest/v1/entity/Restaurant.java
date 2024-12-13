@@ -47,13 +47,11 @@ public class Restaurant implements Serializable {
     @JsonProperty(value = "open")
     private Boolean open = Boolean.TRUE;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(name = "creation_date", nullable = false, columnDefinition = "datetime")
     @JsonProperty(value = "creationDate")
     private LocalDateTime creationDate;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(name = "update_date", nullable = false, columnDefinition = "datetime")
     @JsonProperty(value = "updateDate")
@@ -85,8 +83,6 @@ public class Restaurant implements Serializable {
         this.shipRate = restaurantRequestVO.getShipRate();
         this.active = restaurantRequestVO.getActive();
         this.open = restaurantRequestVO.getOpen();
-        this.creationDate = restaurantRequestVO.getCreationDate();
-        this.updateDate = restaurantRequestVO.getUpdateDate();
         this.kitchen = kitchen;
         this.address = new Address(restaurantRequestVO, city);
     }
