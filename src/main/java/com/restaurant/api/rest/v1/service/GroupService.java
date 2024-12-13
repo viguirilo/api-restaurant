@@ -19,6 +19,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final Logger logger = Logger.getLogger(GroupService.class.getName());
 
+    //    TODO(ver como criar permissions diretamente dentro do save)
     public GroupResponseVO save(GroupRequestVO groupRequestVO) {
         Group group = groupRepository.save(new Group(groupRequestVO));
         logger.info(group + " CREATED SUCCESSFULLY");
@@ -49,6 +50,7 @@ public class GroupService {
 
     }
 
+    //    TODO(ver como passar permissions diretamente dentro do update)
     public GroupResponseVO update(Long id, GroupRequestVO groupRequestVO) {
         Optional<Group> optionalGroup = groupRepository.findById(id);
         if (optionalGroup.isPresent()) {
