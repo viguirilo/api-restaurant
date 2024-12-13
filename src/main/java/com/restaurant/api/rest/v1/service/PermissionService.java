@@ -28,7 +28,7 @@ public class PermissionService {
     public List<PermissionResponseVO> findAll() {
         List<Permission> permissions = permissionRepository.findAll();
         if (!permissions.isEmpty()) {
-            logger.info("FOUND " + permissions.size() + " CITIES");
+            logger.info("FOUND " + permissions.size() + " PERMISSIONS");
             return permissions.stream().map(PermissionResponseVO::new).toList();
         } else {
             logger.warning("PERMISSIONS NOT FOUND");
@@ -43,7 +43,7 @@ public class PermissionService {
             logger.info(permission + " FOUND SUCCESSFULLY");
             return new PermissionResponseVO(permission);
         } else {
-            logger.warning("CITY NOT FOUND");
+            logger.warning("PERMISSION NOT FOUND");
             return null;
         }
     }

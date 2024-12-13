@@ -41,7 +41,7 @@ public class ProductService {
             logger.info("FOUND " + products.size() + " CITIES");
             return products.stream().map(ProductResponseVO::new).toList();
         } else {
-            logger.warning("CITIES NOT FOUND");
+            logger.warning("PRODUCTS NOT FOUND");
             return null;
         }
     }
@@ -70,7 +70,7 @@ public class ProductService {
             logger.info(product + " UPDATED SUCCESSFULLY");
             return new ProductResponseVO(product);
         } else {
-            logger.warning("CAN NOT UPDATE: PRODUCT " + id + " NOT FOUND");
+            logger.warning("CAN NOT UPDATE: PRODUCT " + id + " AND/OR RESTAURANT " + productRequestVO.getRestaurantId() + " NOT FOUND");
             return null;
         }
     }
