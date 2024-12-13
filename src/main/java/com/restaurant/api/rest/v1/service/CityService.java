@@ -58,17 +58,19 @@ public class CityService {
         }
     }
 
-    // TODO(revisar como o estado é atualizado)
     public CityResponseVO update(Long id, CityRequestVO cityRequestVO) {
         Optional<City> cityOptional = cityRepository.findById(id);
-        if (cityOptional.isPresent()) {
+        Optional<State> stateOptional = stateRepository.findById(cityRequestVO.getStateId());
+        if (cityOptional.isPresent() && stateOptional.isPresent()) {
             City city = cityOptional.get();
+            State state = stateOptional.get();
             BeanUtils.copyProperties(cityRequestVO, city, "id");
+            city.setState(state);
             city = cityRepository.save(city);
             logger.info(city + " UPDATED SUCCESSFULLY");
             return new CityResponseVO(city);
         } else {
-            logger.warning("CAN NOT UPDATE: CITY " + id + " NOT FOUND");
+            logger.warning("CAN NOT UPDATE: CITY " + id + " AND/OR STATE " + cityRequestVO.getStateId() + " NOT FOUND");
             return null;
         }
     }
