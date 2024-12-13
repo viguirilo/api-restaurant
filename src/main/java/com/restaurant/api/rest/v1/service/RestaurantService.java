@@ -65,6 +65,7 @@ public class RestaurantService {
     }
 
     //    TODO(ver como fica o BeanUtils.copyProperties em relação a atualização das entidades internas como kitchen, city, products)
+    //    TODO(implementar a parte de atualização de endereço)
     public RestaurantResponseVO update(Long id, RestaurantRequestVO restaurantRequestVO) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
         Optional<Kitchen> kitchenOptional = kitchenRepository.findById(restaurantRequestVO.kitchenId);
