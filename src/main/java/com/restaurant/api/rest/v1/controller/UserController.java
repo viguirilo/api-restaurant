@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserResponseVO>> findAll() {
         List<UserResponseVO> userResponseVOS = userService.findAll();
-        if (userResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (userResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(userResponseVOS);
     }
 
@@ -72,7 +72,7 @@ public class UserController {
         try {
             UserResponseVO userResponseVO = userService.delete(id);
             if (userResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.ok().build();
+            else return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }

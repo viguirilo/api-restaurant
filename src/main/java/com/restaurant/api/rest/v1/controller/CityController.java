@@ -34,7 +34,7 @@ public class CityController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CityResponseVO>> findAll() {
         List<CityResponseVO> cityResponseVOS = cityService.findAll();
-        if (cityResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (cityResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(cityResponseVOS);
     }
 

@@ -31,7 +31,7 @@ public class PaymentMethodController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PaymentMethodResponseVO>> findAll() {
         List<PaymentMethodResponseVO> paymentMethodResponseVOS = paymentMethodService.findAll();
-        if (paymentMethodResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (paymentMethodResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(paymentMethodResponseVOS);
     }
 

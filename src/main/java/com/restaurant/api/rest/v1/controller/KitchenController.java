@@ -32,7 +32,7 @@ public class KitchenController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<KitchenResponseVO>> findAll() {
         List<KitchenResponseVO> kitchenResponseVOS = kitchenService.findAll();
-        if (kitchenResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (kitchenResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(kitchenResponseVOS);
     }
 
