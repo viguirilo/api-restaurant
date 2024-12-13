@@ -32,7 +32,7 @@ public class PermissionController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PermissionResponseVO>> findAll() {
         List<PermissionResponseVO> permissionResponseVOS = permissionService.findAll();
-        if (permissionResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (permissionResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(permissionResponseVOS);
     }
 

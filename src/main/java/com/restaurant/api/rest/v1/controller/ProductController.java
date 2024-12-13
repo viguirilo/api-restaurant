@@ -34,7 +34,7 @@ public class ProductController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponseVO>> findAll() {
         List<ProductResponseVO> productResponseVOS = productService.findAll();
-        if (productResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (productResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(productResponseVOS);
     }
 

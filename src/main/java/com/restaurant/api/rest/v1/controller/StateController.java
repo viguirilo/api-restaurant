@@ -32,7 +32,7 @@ public class StateController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StateResponseVO>> findAll() {
         List<StateResponseVO> stateResponseVOS = stateService.findAll();
-        if (stateResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (stateResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(stateResponseVOS);
     }
 

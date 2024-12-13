@@ -32,7 +32,7 @@ public class GroupController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupResponseVO>> findAll() {
         List<GroupResponseVO> groupResponseVOS = groupService.findAll();
-        if (groupResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (groupResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(groupResponseVOS);
     }
 

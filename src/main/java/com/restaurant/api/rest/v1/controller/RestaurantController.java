@@ -34,7 +34,7 @@ public class RestaurantController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RestaurantResponseVO>> findAll() {
         List<RestaurantResponseVO> restaurantResponseVOS = restaurantService.findAll();
-        if (restaurantResponseVOS.isEmpty()) return ResponseEntity.notFound().build();
+        if (restaurantResponseVOS == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok().body(restaurantResponseVOS);
     }
 
