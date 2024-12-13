@@ -91,6 +91,8 @@ public class Restaurant implements Serializable {
         this.address = new Address(restaurantRequestVO, city);
     }
 
+    //    TODO(ver pq paymentMethods.toString() está causando erros no delete quando vai logar. Talvez seja necessário
+//     implementar a entidade que mapeia a tabela restaurant_payment_method)
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -102,9 +104,8 @@ public class Restaurant implements Serializable {
                 ", creationDate=" + creationDate +
                 ", updateDate=" + updateDate +
                 ", kitchen=" + kitchen.toString() +
-                ", paymentMethods=" + paymentMethods.toString() +
+//                ", paymentMethods=" + paymentMethods.toString() +
                 ", address=" + address.toString() +
-                ", products=" + products.toString() +
                 '}';
     }
 

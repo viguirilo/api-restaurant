@@ -13,7 +13,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,7 +68,7 @@ public class User implements Serializable {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", creationDate=" + creationDate +
-                ", groups=" + Arrays.toString(groups.toArray()) +
+//                ", groups=" + groups +
                 '}';
     }
 
