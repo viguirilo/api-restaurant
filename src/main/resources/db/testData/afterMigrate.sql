@@ -1,3 +1,62 @@
+SET foreign_key_checks = 0;
+
+DELETE FROM `city`;
+DELETE FROM `group`;
+DELETE FROM `group_permission`;
+DELETE FROM `item_ordered`;
+DELETE FROM `kitchen`;
+DELETE FROM `order`;
+DELETE FROM `payment_method`;
+DELETE FROM `permission`;
+DELETE FROM `product`;
+DELETE FROM `restaurant`;
+DELETE FROM `restaurant_payment_method`;
+DELETE FROM `state`;
+DELETE FROM `user`;
+DELETE FROM `user_group`;
+
+SET foreign_key_checks = 1;
+
+ALTER TABLE `city` AUTO_INCREMENT = 1;
+ALTER TABLE `group` AUTO_INCREMENT = 1;
+ALTER TABLE `group_permission` AUTO_INCREMENT = 1;
+ALTER TABLE `item_ordered` AUTO_INCREMENT = 1;
+ALTER TABLE `kitchen` AUTO_INCREMENT = 1;
+ALTER TABLE `order` AUTO_INCREMENT = 1;
+ALTER TABLE `payment_method` AUTO_INCREMENT = 1;
+ALTER TABLE `permission` AUTO_INCREMENT = 1;
+ALTER TABLE `product` AUTO_INCREMENT = 1;
+ALTER TABLE `restaurant` AUTO_INCREMENT = 1;
+ALTER TABLE `restaurant_payment_method` AUTO_INCREMENT = 1;
+ALTER TABLE `state` AUTO_INCREMENT = 1;
+ALTER TABLE `user` AUTO_INCREMENT = 1;
+ALTER TABLE `user_group` AUTO_INCREMENT = 1;
+
+INSERT INTO kitchen (name) VALUES ('Thai');
+INSERT INTO kitchen (name) VALUES ('Indian');
+INSERT INTO kitchen (name) VALUES ('Brazilian');
+INSERT INTO kitchen (name) VALUES ('Japanese');
+INSERT INTO kitchen (name) VALUES ('Italian');
+INSERT INTO kitchen (name) VALUES ('Australian');
+INSERT INTO kitchen (name) VALUES ('Mexican');
+INSERT INTO kitchen (name) VALUES ('Chilean');
+
+INSERT INTO payment_method (description) VALUES ('CASH');
+INSERT INTO payment_method (description) VALUES ('DEBIT_CARD');
+INSERT INTO payment_method (description) VALUES ('CREDIT_CARD');
+INSERT INTO payment_method (description) VALUES ('PIX');
+INSERT INTO payment_method (description) VALUES ('CHECK');
+INSERT INTO payment_method (description) VALUES ('CRYPTO_COINS');
+INSERT INTO payment_method (description) VALUES ('ALELO');
+INSERT INTO payment_method (description) VALUES ('VALE_REFEIÇÃO');
+INSERT INTO payment_method (description) VALUES ('VALE_ALIMENTAÇÃO');
+INSERT INTO payment_method (description) VALUES ('FLASH');
+
+INSERT INTO permission (name, description) VALUES ('CREATE_ORDER', 'Allow an user to create an order');
+INSERT INTO permission (name, description) VALUES ('READ_ORDER', 'Allow an user to read an order');
+INSERT INTO permission (name, description) VALUES ('UPDATE_ORDER', 'Allow an user to update an order');
+INSERT INTO permission (name, description) VALUES ('DELETE_ORDER', 'Allow an user to delete an order');
+
 INSERT INTO state (name, abbreviation, country) VALUES ('Acre', 'AC', 'Brasil');
 INSERT INTO city (name, state_id) VALUES ('Rio Branco', 1);
 INSERT INTO state (name, abbreviation, country) VALUES ('Alagoas', 'AL', 'Brasil');
