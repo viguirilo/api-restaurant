@@ -34,6 +34,10 @@ public class ItemOrdered implements Serializable {
     @JsonProperty("product")
     private Product product;
 
+    @Column(name = "observation")
+    @JsonProperty(value = "observation")
+    private String observation;
+
     @Column(name = "quantity", nullable = false)
     @JsonProperty(value = "quantity")
     private Integer quantity;
@@ -46,20 +50,16 @@ public class ItemOrdered implements Serializable {
     @JsonProperty(value = "total_price")
     private BigDecimal totalPrice;
 
-    @Column(name = "observation")
-    @JsonProperty(value = "observation")
-    private String observation;
-
     @Override
     public String toString() {
         return "ItemOrdered{" +
                 "id=" + id +
                 ", order=" + order.toString() +
                 ", product=" + product.toString() +
+                ", observation='" + observation + '\'' +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
                 ", totalPrice=" + totalPrice +
-                ", observation='" + observation + '\'' +
                 '}';
     }
 
