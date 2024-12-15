@@ -23,17 +23,15 @@ public class GroupController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GroupResponseVO> save(@RequestBody GroupRequestVO groupRequestVO) {
-        return ResponseEntity.ok().body(groupService.save(groupRequestVO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.save(groupRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupResponseVO>> findAll() {
         List<GroupResponseVO> groupResponseVOS = groupService.findAll();
-        if (groupResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(groupResponseVOS);
+        return ResponseEntity.ok().body(groupResponseVOS);
     }
 
     @GetMapping(
@@ -42,8 +40,7 @@ public class GroupController {
     )
     public ResponseEntity<GroupResponseVO> findById(@PathVariable Long id) {
         GroupResponseVO groupResponseVO = groupService.findById(id);
-        if (groupResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(groupResponseVO);
+        return ResponseEntity.ok().body(groupResponseVO);
     }
 
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
@@ -54,16 +51,14 @@ public class GroupController {
     )
     public ResponseEntity<GroupResponseVO> update(@PathVariable Long id, @RequestBody GroupRequestVO groupRequestVO) {
         GroupResponseVO groupResponseVO = groupService.update(id, groupRequestVO);
-        if (groupResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(groupResponseVO);
+        return ResponseEntity.ok().body(groupResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            GroupResponseVO groupResponseVO = groupService.delete(id);
-            if (groupResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            groupService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
