@@ -23,19 +23,16 @@ public class CityController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CityResponseVO> save(@RequestBody CityRequestVO cityRequestVO) {
         CityResponseVO cityResponseVO = cityService.save(cityRequestVO);
-        if (cityResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(cityResponseVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cityResponseVO);
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CityResponseVO>> findAll() {
         List<CityResponseVO> cityResponseVOS = cityService.findAll();
-        if (cityResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(cityResponseVOS);
+        return ResponseEntity.ok().body(cityResponseVOS);
     }
 
     @GetMapping(
@@ -44,7 +41,6 @@ public class CityController {
     )
     public ResponseEntity<CityResponseVO> findById(@PathVariable Long id) {
         CityResponseVO cityResponseVO = cityService.findById(id);
-        if (cityResponseVO == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(cityResponseVO);
     }
 
@@ -56,16 +52,14 @@ public class CityController {
     )
     public ResponseEntity<CityResponseVO> update(@PathVariable Long id, @RequestBody CityRequestVO cityRequestVO) {
         CityResponseVO cityResponseVO = cityService.update(id, cityRequestVO);
-        if (cityResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(cityResponseVO);
+        return ResponseEntity.ok().body(cityResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            CityResponseVO cityResponseVO = cityService.delete(id);
-            if (cityResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            cityService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
