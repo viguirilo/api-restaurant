@@ -40,7 +40,7 @@ public class CityService {
             return cities.stream().map(CityResponseVO::new).toList();
         } else {
             logger.warning("CITIES NOT FOUND");
-            throw new EntityNotFoundException("City(ies) not found");
+            throw new EntityNotFoundException("Cities not found");
         }
     }
 
