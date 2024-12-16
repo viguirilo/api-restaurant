@@ -23,17 +23,15 @@ public class PermissionController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PermissionResponseVO> save(@RequestBody PermissionRequestVO permissionRequestVO) {
-        return ResponseEntity.ok().body(permissionService.save(permissionRequestVO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.save(permissionRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PermissionResponseVO>> findAll() {
         List<PermissionResponseVO> permissionResponseVOS = permissionService.findAll();
-        if (permissionResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(permissionResponseVOS);
+        return ResponseEntity.ok().body(permissionResponseVOS);
     }
 
     @GetMapping(
@@ -42,7 +40,6 @@ public class PermissionController {
     )
     public ResponseEntity<PermissionResponseVO> findById(@PathVariable Long id) {
         PermissionResponseVO permissionResponseVO = permissionService.findById(id);
-        if (permissionResponseVO == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(permissionResponseVO);
     }
 
@@ -54,16 +51,14 @@ public class PermissionController {
     )
     public ResponseEntity<PermissionResponseVO> update(@PathVariable Long id, @RequestBody PermissionRequestVO permissionRequestVO) {
         PermissionResponseVO permissionResponseVO = permissionService.update(id, permissionRequestVO);
-        if (permissionResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(permissionResponseVO);
+        return ResponseEntity.ok().body(permissionResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            PermissionResponseVO permissionResponseVO = permissionService.delete(id);
-            if (permissionResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            permissionService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
