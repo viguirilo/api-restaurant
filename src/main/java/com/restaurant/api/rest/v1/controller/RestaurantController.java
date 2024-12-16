@@ -23,19 +23,16 @@ public class RestaurantController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<RestaurantResponseVO> save(@RequestBody RestaurantRequestVO restaurantRequestVO) {
         RestaurantResponseVO restaurantResponseVO = restaurantService.save(restaurantRequestVO);
-        if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(restaurantResponseVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantResponseVO);
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RestaurantResponseVO>> findAll() {
         List<RestaurantResponseVO> restaurantResponseVOS = restaurantService.findAll();
-        if (restaurantResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(restaurantResponseVOS);
+        return ResponseEntity.ok().body(restaurantResponseVOS);
     }
 
     @GetMapping(
@@ -44,7 +41,6 @@ public class RestaurantController {
     )
     public ResponseEntity<RestaurantResponseVO> findById(@PathVariable Long id) {
         RestaurantResponseVO restaurantResponseVO = restaurantService.findById(id);
-        if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(restaurantResponseVO);
     }
 
@@ -56,16 +52,14 @@ public class RestaurantController {
     )
     public ResponseEntity<RestaurantResponseVO> update(@PathVariable Long id, @RequestBody RestaurantRequestVO restaurantRequestVO) {
         RestaurantResponseVO restaurantResponseVO = restaurantService.update(id, restaurantRequestVO);
-        if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(restaurantResponseVO);
+        return ResponseEntity.ok().body(restaurantResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            RestaurantResponseVO restaurantResponseVO = restaurantService.delete(id);
-            if (restaurantResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            restaurantService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
