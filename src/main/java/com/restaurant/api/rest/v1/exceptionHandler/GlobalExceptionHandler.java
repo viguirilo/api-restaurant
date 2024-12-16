@@ -2,6 +2,7 @@ package com.restaurant.api.rest.v1.exceptionHandler;
 
 import com.restaurant.api.rest.v1.exception.BadRequestException;
 import com.restaurant.api.rest.v1.exception.EntityAlreadyExistsException;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -19,7 +20,7 @@ import static com.restaurant.api.rest.v1.exceptionHandler.ProblemType.*;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<?> handleMyBadRequestException(BadRequestException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleBadRequestException(BadRequestException ex, WebRequest webRequest) {
         ProblemDetail problemDetail = new ProblemDetail(
                 BAD_REQUEST.getStatus().value(),
                 BAD_REQUEST.getType(),
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<?> handleMyEntityAlreadyExistsException(EntityAlreadyExistsException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex, WebRequest webRequest) {
         ProblemDetail problemDetail = new ProblemDetail(
                 ENTITY_ALREADY_EXISTS.getStatus().value(),
                 ENTITY_ALREADY_EXISTS.getType(),
@@ -44,8 +45,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_ALREADY_EXISTS.getStatus(), webRequest);
     }
 
+    @ExceptionHandler(EntityInUseException.class)
+    public ResponseEntity<?> handleEntityInUseException(EntityInUseException ex, WebRequest webRequest) {
+        ProblemDetail problemDetail = new ProblemDetail(
+                ENTITY_IN_USE.getStatus().value(),
+                ENTITY_IN_USE.getType(),
+                ENTITY_IN_USE.getTitle(),
+                ex.getMessage(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_IN_USE.getStatus(), webRequest);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleMyEntityNotFoundException(EntityNotFoundException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest webRequest) {
         ProblemDetail problemDetail = new ProblemDetail(
                 ENTITY_NOT_FOUND.getStatus().value(),
                 ENTITY_NOT_FOUND.getType(),
@@ -57,9 +71,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_NOT_FOUND.getStatus(), webRequest);
     }
 
-//        criar um enum na pasta exceptionHandler chamado ProblemType para abrigar os diversos tipos de problema
 
-//    TODO(ver aulas 10, 12, 13, 18)
+//    TODO(ver aulas 14, 15, 18)
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {

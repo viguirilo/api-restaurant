@@ -4,7 +4,6 @@ import com.restaurant.api.rest.v1.service.CityService;
 import com.restaurant.api.rest.v1.vo.CityRequestVO;
 import com.restaurant.api.rest.v1.vo.CityResponseVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,12 +56,8 @@ public class CityController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            cityService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        cityService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

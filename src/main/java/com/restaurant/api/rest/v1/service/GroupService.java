@@ -1,12 +1,15 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.Group;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.GroupRepository;
 import com.restaurant.api.rest.v1.vo.GroupRequestVO;
 import com.restaurant.api.rest.v1.vo.GroupResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,16 +60,21 @@ public class GroupService {
         logger.info(group + " UPDATED SUCCESSFULLY");
         return new GroupResponseVO(group);
     }
-// erro: failed to lazily initialize a collection: could not initialize proxy - no Session
+
+    // erro: failed to lazily initialize a collection: could not initialize proxy - no Session
 // ver: https://stackoverflow.com/questions/22821695/how-to-fix-hibernate-lazyinitializationexception-failed-to-lazily-initialize-a
 //  deve estar ligado ao relacionamento ManyToMany com permissions
     public void delete(Long id) {
-        Group group = groupRepository.findById(id).orElseThrow(() -> {
+        try {
+            groupRepository.deleteById(id);
+            logger.info("GROUP ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: GROUP " + id + " NOT FOUND");
-            return new EntityNotFoundException("The group requested was not found");
-        });
-        groupRepository.delete(group);
-        logger.info(group + " DELETED SUCCESSFULLY");
+            throw new EntityNotFoundException("The group requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (GROUP ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("GROUP = " + id);
+        }
     }
 
 }

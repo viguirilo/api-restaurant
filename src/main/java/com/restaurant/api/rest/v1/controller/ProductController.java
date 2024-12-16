@@ -4,7 +4,6 @@ import com.restaurant.api.rest.v1.service.ProductService;
 import com.restaurant.api.rest.v1.vo.ProductRequestVO;
 import com.restaurant.api.rest.v1.vo.ProductResponseVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,12 +56,8 @@ public class ProductController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            productService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

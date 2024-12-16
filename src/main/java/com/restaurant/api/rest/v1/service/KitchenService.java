@@ -1,12 +1,15 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.Kitchen;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.KitchenRepository;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,12 +60,16 @@ public class KitchenService {
     }
 
     public void delete(Long id) {
-        Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
+        try {
+            kitchenRepository.deleteById(id);
+            logger.info("KITCHEN ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: KITCHEN " + id + " NOT FOUND");
-            return new EntityNotFoundException("The kitchen requested was not found");
-        });
-        kitchenRepository.delete(kitchen);
-        logger.info(kitchen + " DELETED SUCCESSFULLY");
+            throw new EntityNotFoundException("The kitchen requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (KITCHEN ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("KITCHEN = " + id);
+        }
     }
 
 }

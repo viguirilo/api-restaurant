@@ -1,12 +1,15 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.Permission;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.PermissionRepository;
 import com.restaurant.api.rest.v1.vo.PermissionRequestVO;
 import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,14 +59,17 @@ public class PermissionService {
         return new PermissionResponseVO(permission);
     }
 
-    public PermissionResponseVO delete(Long id) {
-        Permission permission = permissionRepository.findById(id).orElseThrow(() -> {
+    public void delete(Long id) {
+        try {
+            permissionRepository.deleteById(id);
+            logger.info("PERMISSION ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: PERMISSION " + id + " NOT FOUND");
-            return new EntityNotFoundException("The permission requested was not found");
-        });
-        permissionRepository.delete(permission);
-        logger.info(permission + " DELETED SUCCESSFULLY");
-        return new PermissionResponseVO(permission);
+            throw new EntityNotFoundException("The permission requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (PERMISSION ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("PERMISSION = " + id);
+        }
     }
 
 }

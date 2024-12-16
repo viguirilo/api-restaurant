@@ -8,7 +8,8 @@ public enum ProblemType {
 
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request"),
     ENTITY_ALREADY_EXISTS(HttpStatus.CONFLICT, "/entity-already-exists", "Entity Already Exists"),
-    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND,"/entity-not-found", "Entity Not Found");
+    ENTITY_IN_USE(HttpStatus.CONFLICT, "/entity-in-use", "Entity in Use"),
+    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "/entity-not-found", "Entity Not Found");
 
     private final HttpStatus status;
     private final String type;

@@ -1,12 +1,15 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.State;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.StateRepository;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,14 +59,17 @@ public class StateService {
         return new StateResponseVO(stateRepository.save(state));
     }
 
-    public StateResponseVO delete(Long id) {
-        State state = stateRepository.findById(id).orElseThrow(() -> {
+    public void delete(Long id) {
+        try {
+            stateRepository.deleteById(id);
+            logger.info("STATE ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: STATE " + id + " NOT FOUND");
-            return new EntityNotFoundException("The state requested was not found");
-        });
-        stateRepository.delete(state);
-        logger.info(state + " DELETED SUCCESSFULLY");
-        return new StateResponseVO(state);
+            throw new EntityNotFoundException("The state requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (STATE ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("STATE = " + id);
+        }
     }
 
 }
