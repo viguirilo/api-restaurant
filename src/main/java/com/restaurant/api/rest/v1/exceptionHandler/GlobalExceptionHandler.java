@@ -21,7 +21,7 @@ import static com.restaurant.api.rest.v1.exceptionHandler.ProblemType.*;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<?> handleBadRequestException(BadRequestException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleBadRequestException(BadRequestException ex, WebRequest request) {
         ProblemDetail problemDetail = new ProblemDetail(
                 BAD_REQUEST.getStatus().value(),
                 BAD_REQUEST.getType(),
@@ -30,11 +30,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), BAD_REQUEST.getStatus(), webRequest);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), BAD_REQUEST.getStatus(), request);
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity<?> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex, WebRequest request) {
         ProblemDetail problemDetail = new ProblemDetail(
                 ENTITY_ALREADY_EXISTS.getStatus().value(),
                 ENTITY_ALREADY_EXISTS.getType(),
@@ -43,11 +43,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_ALREADY_EXISTS.getStatus(), webRequest);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_ALREADY_EXISTS.getStatus(), request);
     }
 
     @ExceptionHandler(EntityInUseException.class)
-    public ResponseEntity<?> handleEntityInUseException(EntityInUseException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleEntityInUseException(EntityInUseException ex, WebRequest request) {
         ProblemDetail problemDetail = new ProblemDetail(
                 ENTITY_IN_USE.getStatus().value(),
                 ENTITY_IN_USE.getType(),
@@ -56,11 +56,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_IN_USE.getStatus(), webRequest);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_IN_USE.getStatus(), request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest webRequest) {
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
         ProblemDetail problemDetail = new ProblemDetail(
                 ENTITY_NOT_FOUND.getStatus().value(),
                 ENTITY_NOT_FOUND.getType(),
@@ -69,11 +69,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_NOT_FOUND.getStatus(), webRequest);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_NOT_FOUND.getStatus(), request);
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest webRequest) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ProblemDetail problemDetail = new ProblemDetail(
                 status.value(),
                 HTTP_MESSAGE_NOT_READABLE.getType(),
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, webRequest);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
     }
 
     //    TODO(ver aulas )
