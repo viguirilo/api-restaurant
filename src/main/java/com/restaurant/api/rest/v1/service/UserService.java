@@ -1,12 +1,15 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.User;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.UserRepository;
 import com.restaurant.api.rest.v1.vo.UserRequestVO;
 import com.restaurant.api.rest.v1.vo.UserResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -68,12 +71,16 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> {
+        try {
+            userRepository.deleteById(id);
+            logger.info("USER ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: USER " + id + " NOT FOUND");
-            return new EntityNotFoundException("The user requested was not found");
-        });
-        userRepository.delete(user);
-        logger.info(user + " DELETED SUCCESSFULLY");
+            throw new EntityNotFoundException("The user requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (USER ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("USER = " + id);
+        }
     }
 
 }

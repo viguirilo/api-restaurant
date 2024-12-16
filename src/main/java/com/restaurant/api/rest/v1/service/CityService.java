@@ -3,6 +3,7 @@ package com.restaurant.api.rest.v1.service;
 import com.restaurant.api.rest.v1.entity.City;
 import com.restaurant.api.rest.v1.entity.State;
 import com.restaurant.api.rest.v1.exception.BadRequestException;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.CityRepository;
 import com.restaurant.api.rest.v1.repository.StateRepository;
@@ -10,6 +11,8 @@ import com.restaurant.api.rest.v1.vo.CityRequestVO;
 import com.restaurant.api.rest.v1.vo.CityResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,12 +73,16 @@ public class CityService {
     }
 
     public void delete(Long id) {
-        City city = cityRepository.findById(id).orElseThrow(() -> {
+        try {
+            cityRepository.deleteById(id);
+            logger.info("CITY ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: CITY " + id + " NOT FOUND");
-            return new EntityNotFoundException("The city requested was not found");
-        });
-        cityRepository.delete(city);
-        logger.info(city + " DELETED SUCCESSFULLY");
+            throw new EntityNotFoundException("The city requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (CITY ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("CITY = " + id);
+        }
     }
 
 }

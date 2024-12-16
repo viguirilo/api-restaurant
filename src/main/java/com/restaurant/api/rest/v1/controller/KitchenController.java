@@ -4,7 +4,6 @@ import com.restaurant.api.rest.v1.service.KitchenService;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,12 +55,8 @@ public class KitchenController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            kitchenService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        kitchenService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

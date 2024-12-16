@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.entity.City;
 import com.restaurant.api.rest.v1.entity.Kitchen;
 import com.restaurant.api.rest.v1.entity.Restaurant;
 import com.restaurant.api.rest.v1.exception.BadRequestException;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.CityRepository;
 import com.restaurant.api.rest.v1.repository.KitchenRepository;
@@ -12,6 +13,8 @@ import com.restaurant.api.rest.v1.vo.RestaurantRequestVO;
 import com.restaurant.api.rest.v1.vo.RestaurantResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,12 +87,16 @@ public class RestaurantService {
     }
 
     public void delete(Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> {
+        try {
+            restaurantRepository.deleteById(id);
+            logger.info("RESTAURANT ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: RESTAURANT " + id + " NOT FOUND");
-            return new EntityNotFoundException("The restaurant requested was not found");
-        });
-        restaurantRepository.delete(restaurant);
-        logger.info(restaurant + " DELETED SUCCESSFULLY");
+            throw new EntityNotFoundException("The restaurant requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (RESTAURANT ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("RESTAURANT = " + id);
+        }
     }
 
 }

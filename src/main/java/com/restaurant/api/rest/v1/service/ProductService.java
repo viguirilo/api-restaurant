@@ -3,6 +3,7 @@ package com.restaurant.api.rest.v1.service;
 import com.restaurant.api.rest.v1.entity.Product;
 import com.restaurant.api.rest.v1.entity.Restaurant;
 import com.restaurant.api.rest.v1.exception.BadRequestException;
+import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.ProductRepository;
 import com.restaurant.api.rest.v1.repository.RestaurantRepository;
@@ -10,6 +11,8 @@ import com.restaurant.api.rest.v1.vo.ProductRequestVO;
 import com.restaurant.api.rest.v1.vo.ProductResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,14 +72,17 @@ public class ProductService {
         return new ProductResponseVO(product);
     }
 
-    public ProductResponseVO delete(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> {
+    public void delete(Long id) {
+        try {
+            productRepository.deleteById(id);
+            logger.info("PRODUCT ID = " + id + " DELETED SUCCESSFULLY");
+        } catch (EmptyResultDataAccessException ex) {
             logger.warning("CAN NOT DELETE: PRODUCT " + id + " NOT FOUND");
-            return new EntityNotFoundException("The product requested was not found");
-        });
-        productRepository.delete(product);
-        logger.info(product + " DELETED SUCCESSFULLY");
-        return new ProductResponseVO(product);
+            throw new EntityNotFoundException("The product requested was not found");
+        } catch (DataIntegrityViolationException ex) {
+            logger.warning("THE REQUESTED ENTITY (PRODUCT ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            throw new EntityInUseException("PRODUCT = " + id);
+        }
     }
 
 }
