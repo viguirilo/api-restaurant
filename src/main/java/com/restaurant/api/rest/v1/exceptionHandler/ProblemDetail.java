@@ -1,10 +1,12 @@
 package com.restaurant.api.rest.v1.exceptionHandler;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 public class ProblemDetail {
