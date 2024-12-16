@@ -1,6 +1,7 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.Kitchen;
+import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.KitchenRepository;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
@@ -9,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -32,47 +32,37 @@ public class KitchenService {
             return kitchens.stream().map(KitchenResponseVO::new).toList();
         } else {
             logger.warning("KITCHENS NOT FOUND");
-            return null;
+            throw new EntityNotFoundException("Kitchens not found");
         }
     }
 
     public KitchenResponseVO findById(Long id) {
-        Optional<Kitchen> kitchenOptional = kitchenRepository.findById(id);
-        if (kitchenOptional.isPresent()) {
-            Kitchen kitchen = kitchenOptional.get();
-            logger.info(kitchen + " FOUND SUCCESSFULLY");
-            return new KitchenResponseVO(kitchen);
-        } else {
+        Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
             logger.warning("KITCHEN NOT FOUND");
-            return null;
-        }
+            return new EntityNotFoundException("The kitchen requested was not found");
+        });
+        logger.info(kitchen + " FOUND SUCCESSFULLY");
+        return new KitchenResponseVO(kitchen);
     }
 
     public KitchenResponseVO update(Long id, KitchenRequestVO kitchenRequestVO) {
-        Optional<Kitchen> kitchenOptional = kitchenRepository.findById(id);
-        if (kitchenOptional.isPresent()) {
-            Kitchen kitchen = kitchenOptional.get();
-            BeanUtils.copyProperties(kitchenRequestVO, kitchen, "id");
-            kitchen = kitchenRepository.save(kitchen);
-            logger.info(kitchen + " UPDATED SUCCESSFULLY");
-            return new KitchenResponseVO(kitchen);
-        } else {
+        Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: KITCHEN " + id + " NOT FOUND");
-            return null;
-        }
+            return new EntityNotFoundException("The kitchen requested was not found");
+        });
+        BeanUtils.copyProperties(kitchenRequestVO, kitchen, "id");
+        kitchen = kitchenRepository.save(kitchen);
+        logger.info(kitchen + " UPDATED SUCCESSFULLY");
+        return new KitchenResponseVO(kitchen);
     }
 
-    public KitchenResponseVO delete(Long id) {
-        Optional<Kitchen> kitchenOptional = kitchenRepository.findById(id);
-        if (kitchenOptional.isPresent()) {
-            Kitchen kitchen = kitchenOptional.get();
-            kitchenRepository.delete(kitchen);
-            logger.info(kitchen + " DELETED SUCCESSFULLY");
-            return new KitchenResponseVO(kitchen);
-        } else {
+    public void delete(Long id) {
+        Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT DELETE: KITCHEN " + id + " NOT FOUND");
-            return null;
-        }
+            return new EntityNotFoundException("The kitchen requested was not found");
+        });
+        kitchenRepository.delete(kitchen);
+        logger.info(kitchen + " DELETED SUCCESSFULLY");
     }
 
 }

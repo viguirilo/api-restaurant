@@ -23,17 +23,15 @@ public class KitchenController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<KitchenResponseVO> save(@RequestBody KitchenRequestVO kitchenRequestVO) {
-        return ResponseEntity.ok().body(kitchenService.save(kitchenRequestVO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(kitchenService.save(kitchenRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<KitchenResponseVO>> findAll() {
         List<KitchenResponseVO> kitchenResponseVOS = kitchenService.findAll();
-        if (kitchenResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(kitchenResponseVOS);
+        return ResponseEntity.ok().body(kitchenResponseVOS);
     }
 
     @GetMapping(
@@ -42,7 +40,6 @@ public class KitchenController {
     )
     public ResponseEntity<KitchenResponseVO> findById(@PathVariable Long id) {
         KitchenResponseVO kitchenResponseVO = kitchenService.findById(id);
-        if (kitchenResponseVO == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(kitchenResponseVO);
     }
 
@@ -54,16 +51,14 @@ public class KitchenController {
     )
     public ResponseEntity<KitchenResponseVO> update(@PathVariable Long id, @RequestBody KitchenRequestVO kitchenRequestVO) {
         KitchenResponseVO kitchenResponseVO = kitchenService.update(id, kitchenRequestVO);
-        if (kitchenResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(kitchenResponseVO);
+        return ResponseEntity.ok().body(kitchenResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            KitchenResponseVO kitchenResponseVO = kitchenService.delete(id);
-            if (kitchenResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            kitchenService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
