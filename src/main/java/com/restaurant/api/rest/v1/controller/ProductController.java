@@ -23,19 +23,16 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProductResponseVO> save(@RequestBody ProductRequestVO permissionRequestVO) {
         ProductResponseVO productResponseVO = productService.save(permissionRequestVO);
-        if (productResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(productResponseVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productResponseVO);
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponseVO>> findAll() {
         List<ProductResponseVO> productResponseVOS = productService.findAll();
-        if (productResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(productResponseVOS);
+        return ResponseEntity.ok().body(productResponseVOS);
     }
 
     @GetMapping(
@@ -44,7 +41,6 @@ public class ProductController {
     )
     public ResponseEntity<ProductResponseVO> findById(@PathVariable Long id) {
         ProductResponseVO productResponseVO = productService.findById(id);
-        if (productResponseVO == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(productResponseVO);
     }
 
@@ -56,16 +52,14 @@ public class ProductController {
     )
     public ResponseEntity<ProductResponseVO> update(@PathVariable Long id, @RequestBody ProductRequestVO productRequestVO) {
         ProductResponseVO productResponseVO = productService.update(id, productRequestVO);
-        if (productResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(productResponseVO);
+        return ResponseEntity.ok().body(productResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            ProductResponseVO productResponseVO = productService.delete(id);
-            if (productResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            productService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
