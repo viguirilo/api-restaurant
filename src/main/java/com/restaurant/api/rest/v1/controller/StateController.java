@@ -23,17 +23,15 @@ public class StateController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StateResponseVO> save(@RequestBody StateRequestVO stateRequestVO) {
-        return ResponseEntity.ok().body(stateService.save(stateRequestVO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(stateService.save(stateRequestVO));
     }
 
     // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StateResponseVO>> findAll() {
         List<StateResponseVO> stateResponseVOS = stateService.findAll();
-        if (stateResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(stateResponseVOS);
+        return ResponseEntity.ok().body(stateResponseVOS);
     }
 
     @GetMapping(
@@ -42,7 +40,6 @@ public class StateController {
     )
     public ResponseEntity<StateResponseVO> findById(@PathVariable Long id) {
         StateResponseVO stateResponseVO = stateService.findById(id);
-        if (stateResponseVO == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(stateResponseVO);
     }
 
@@ -54,16 +51,14 @@ public class StateController {
     )
     public ResponseEntity<StateResponseVO> update(@PathVariable Long id, @RequestBody StateRequestVO stateRequestVO) {
         StateResponseVO stateResponseVO = stateService.update(id, stateRequestVO);
-        if (stateResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(stateResponseVO);
+        return ResponseEntity.ok().body(stateResponseVO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            StateResponseVO stateResponseVO = stateService.delete(id);
-            if (stateResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            stateService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
