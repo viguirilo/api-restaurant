@@ -24,10 +24,9 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponseVO> save(@RequestBody UserRequestVO userRequestVO) {
         try {
-            return ResponseEntity.ok().body(userService.save(userRequestVO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userRequestVO));
         } catch (NoSuchAlgorithmException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
@@ -37,8 +36,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserResponseVO>> findAll() {
         List<UserResponseVO> userResponseVOS = userService.findAll();
-        if (userResponseVOS == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(userResponseVOS);
+        return ResponseEntity.ok().body(userResponseVOS);
     }
 
     @GetMapping(
@@ -47,8 +45,7 @@ public class UserController {
     )
     public ResponseEntity<UserResponseVO> findById(@PathVariable Long id) {
         UserResponseVO userResponseVO = userService.findById(id);
-        if (userResponseVO == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok().body(userResponseVO);
+        return ResponseEntity.ok().body(userResponseVO);
     }
 
     // TODO(Aulas 4.33 e 4.34 ensinam como fazer o UPDATE parcial usando o PATCH)
@@ -60,8 +57,7 @@ public class UserController {
     public ResponseEntity<UserResponseVO> update(@PathVariable Long id, @RequestBody UserRequestVO userRequestVO) {
         try {
             UserResponseVO userResponseVO = userService.update(id, userRequestVO);
-            if (userResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.ok().body(userResponseVO);
+            return ResponseEntity.ok().body(userResponseVO);
         } catch (NoSuchAlgorithmException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
@@ -70,9 +66,8 @@ public class UserController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            UserResponseVO userResponseVO = userService.delete(id);
-            if (userResponseVO == null) return ResponseEntity.notFound().build();
-            else return ResponseEntity.noContent().build();
+            userService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
