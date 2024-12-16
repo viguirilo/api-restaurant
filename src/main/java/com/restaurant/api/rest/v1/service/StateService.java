@@ -1,6 +1,7 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.State;
+import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.StateRepository;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
@@ -9,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -32,47 +32,38 @@ public class StateService {
             return states.stream().map(StateResponseVO::new).toList();
         } else {
             logger.warning("STATES NOT FOUND");
-            return null;
+            throw new EntityNotFoundException("States not found");
         }
     }
 
     public StateResponseVO findById(Long id) {
-        Optional<State> stateOptional = stateRepository.findById(id);
-        if (stateOptional.isPresent()) {
-            State state = stateOptional.get();
-            logger.info(state + " FOUND SUCCESSFULLY");
-            return new StateResponseVO(state);
-        } else {
+        State state = stateRepository.findById(id).orElseThrow(() -> {
             logger.warning("STATE NOT FOUND");
-            return null;
-        }
+            return new EntityNotFoundException("The state requested was not found");
+        });
+        logger.info(state + " FOUND SUCCESSFULLY");
+        return new StateResponseVO(state);
     }
 
     public StateResponseVO update(Long id, StateRequestVO stateRequestVO) {
-        Optional<State> stateOptional = stateRepository.findById(id);
-        if (stateOptional.isPresent()) {
-            State state = stateOptional.get();
-            BeanUtils.copyProperties(stateRequestVO, state, "id");
-            state = stateRepository.save(state);
-            logger.info(state + " UPDATED SUCCESSFULLY");
-            return new StateResponseVO(stateRepository.save(state));
-        } else {
+        State state = stateRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: STATE " + id + " NOT FOUND");
-            return null;
-        }
+            return new EntityNotFoundException("The state requested was not found");
+        });
+        BeanUtils.copyProperties(stateRequestVO, state, "id");
+        state = stateRepository.save(state);
+        logger.info(state + " UPDATED SUCCESSFULLY");
+        return new StateResponseVO(stateRepository.save(state));
     }
 
     public StateResponseVO delete(Long id) {
-        Optional<State> stateOptional = stateRepository.findById(id);
-        if (stateOptional.isPresent()) {
-            State state = stateOptional.get();
-            stateRepository.delete(state);
-            logger.info(state + " DELETED SUCCESSFULLY");
-            return new StateResponseVO(state);
-        } else {
+        State state = stateRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT DELETE: STATE " + id + " NOT FOUND");
-            return null;
-        }
+            return new EntityNotFoundException("The state requested was not found");
+        });
+        stateRepository.delete(state);
+        logger.info(state + " DELETED SUCCESSFULLY");
+        return new StateResponseVO(state);
     }
 
 }
