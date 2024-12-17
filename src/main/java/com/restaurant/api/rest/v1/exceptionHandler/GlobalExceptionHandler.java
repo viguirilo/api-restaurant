@@ -1,9 +1,12 @@
 package com.restaurant.api.rest.v1.exceptionHandler;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.restaurant.api.rest.v1.exception.BadRequestException;
 import com.restaurant.api.rest.v1.exception.EntityAlreadyExistsException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import static com.restaurant.api.rest.v1.exceptionHandler.ProblemType.*;
 
@@ -74,6 +78,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Throwable rootCause = ExceptionUtils.getRootCause(ex);
+        if (rootCause instanceof InvalidFormatException)
+            return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+
         ProblemDetail problemDetail = new ProblemDetail(
                 status.value(),
                 HTTP_MESSAGE_NOT_READABLE.getType(),
@@ -83,6 +91,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now()
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+    }
+
+    private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String path = ex.getPath().stream()
+                .map(JsonMappingException.Reference::getFieldName)
+                .collect(Collectors.joining("."));
+        String detail = String.format("The property '%s' received '%s' and this is invalid. " +
+                        "Please check your request and send the value compatible with type '%s'",
+                path, ex.getValue(), ex.getTargetType().getSimpleName());
+
+        ProblemDetail problemDetail = new ProblemDetail(
+                status.value(),
+                INVALID_FORMAT.getType(),
+                INVALID_FORMAT.getTitle(),
+                detail,
+                detail,
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
     //    TODO(ver aulas )
