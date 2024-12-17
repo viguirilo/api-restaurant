@@ -2,6 +2,7 @@ package com.restaurant.api.rest.v1.exceptionHandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.restaurant.api.rest.v1.exception.BadRequestException;
 import com.restaurant.api.rest.v1.exception.EntityAlreadyExistsException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
@@ -81,6 +82,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
         if (rootCause instanceof InvalidFormatException)
             return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        if (rootCause instanceof PropertyBindingException)
+            return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
 
         ProblemDetail problemDetail = new ProblemDetail(
                 status.value(),
@@ -97,14 +100,31 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String path = ex.getPath().stream()
                 .map(JsonMappingException.Reference::getFieldName)
                 .collect(Collectors.joining("."));
-        String detail = String.format("The property '%s' received '%s' and this is invalid. " +
-                        "Please check your request and send the value compatible with type '%s'",
+        String detail = String.format("The property '%s' received an invalid value '%s'. " +
+                        "Please, check your request and send the value compatible with type '%s'",
                 path, ex.getValue(), ex.getTargetType().getSimpleName());
 
         ProblemDetail problemDetail = new ProblemDetail(
                 status.value(),
                 INVALID_FORMAT.getType(),
                 INVALID_FORMAT.getTitle(),
+                detail,
+                detail,
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String path = ex.getPath().stream()
+                .map(JsonMappingException.Reference::getFieldName)
+                .collect(Collectors.joining("."));
+        String detail = String.format("The property '%s' you are trying to reach does not exists. " +
+                "Please, check your request and try again", path);
+        ProblemDetail problemDetail = new ProblemDetail(
+                status.value(),
+                PROPERTY_BIND_EXCEPTION.getType(),
+                PROPERTY_BIND_EXCEPTION.getTitle(),
                 detail,
                 detail,
                 LocalDateTime.now()
