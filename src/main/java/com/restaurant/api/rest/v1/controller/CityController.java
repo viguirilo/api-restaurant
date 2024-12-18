@@ -3,6 +3,7 @@ package com.restaurant.api.rest.v1.controller;
 import com.restaurant.api.rest.v1.service.CityService;
 import com.restaurant.api.rest.v1.vo.CityRequestVO;
 import com.restaurant.api.rest.v1.vo.CityResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ public class CityController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<CityResponseVO> save(@RequestBody CityRequestVO cityRequestVO) {
+    public ResponseEntity<CityResponseVO> save(@RequestBody @Valid CityRequestVO cityRequestVO) {
         CityResponseVO cityResponseVO = cityService.save(cityRequestVO);
         return ResponseEntity.status(HttpStatus.CREATED).body(cityResponseVO);
     }
@@ -49,7 +50,7 @@ public class CityController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<CityResponseVO> update(@PathVariable Long id, @RequestBody CityRequestVO cityRequestVO) {
+    public ResponseEntity<CityResponseVO> update(@PathVariable Long id, @RequestBody @Valid CityRequestVO cityRequestVO) {
         CityResponseVO cityResponseVO = cityService.update(id, cityRequestVO);
         return ResponseEntity.ok().body(cityResponseVO);
     }
