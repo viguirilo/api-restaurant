@@ -8,6 +8,7 @@ import com.restaurant.api.rest.v1.exception.EntityAlreadyExistsException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
@@ -115,12 +117,33 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        if (ex instanceof MethodArgumentTypeMismatchException)
+            return handleMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException) ex, headers, status, request);
+        return super.handleTypeMismatch(ex, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String detail = String.format("The URL parameter '%s' has received the value '%s', that is an invalid type. " +
+                "Fix it and inform a value compatible with type %s", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+        ProblemDetail problemDetail = new ProblemDetail(
+                status.value(),
+                METHOD_ARGUMENT_TYPE_MISMATCH.getType(),
+                METHOD_ARGUMENT_TYPE_MISMATCH.getTitle(),
+                detail,
+                detail,
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
     private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         String path = ex.getPath().stream()
                 .map(JsonMappingException.Reference::getFieldName)
                 .collect(Collectors.joining("."));
         String detail = String.format("The property '%s' you are trying to reach does not exists. " +
-                "Please, check your request and try again", path);
+                "Please, fix or remove it and try again", path);
         ProblemDetail problemDetail = new ProblemDetail(
                 status.value(),
                 PROPERTY_BIND_EXCEPTION.getType(),
