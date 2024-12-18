@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -154,6 +155,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ProblemDetail problemDetail = new ProblemDetail(
+                METHOD_ARGUMENT_NOT_VALID.getStatus().value(),
+                METHOD_ARGUMENT_NOT_VALID.getType(),
+                METHOD_ARGUMENT_NOT_VALID.getTitle(),
+                ex.getMessage(),
+                METHOD_ARGUMENT_NOT_VALID.getDetail(),
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         String detail = String.format("The resource '%s' you are trying to access does not exists", ex.getResourcePath());
         ProblemDetail problemDetail = new ProblemDetail(
@@ -183,8 +197,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
-
-    //    TODO(ver aulas )
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {

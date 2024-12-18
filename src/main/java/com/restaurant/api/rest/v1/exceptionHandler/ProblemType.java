@@ -13,6 +13,7 @@ public enum ProblemType {
     HTTP_MESSAGE_NOT_READABLE(HttpStatus.BAD_REQUEST, "/http-message-not-readable", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
+    METHOD_ARGUMENT_NOT_VALID(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     NO_RESOURCE_FOUND(HttpStatus.NOT_FOUND, "/no-resource-found", "No Resource Found", "The resource you are looking for was not found"),
     PROPERTY_BIND_EXCEPTION(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again");
 
