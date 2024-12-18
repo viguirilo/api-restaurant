@@ -80,6 +80,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), NO_RESOURCE_FOUND.getStatus(), request);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleUncaughtException(Exception ex, WebRequest request) {
+        ex.printStackTrace();
+        ProblemDetail problemDetail = new ProblemDetail(
+                INTERNAL_SERVER_ERROR.getStatus().value(),
+                INTERNAL_SERVER_ERROR.getType(),
+                INTERNAL_SERVER_ERROR.getTitle(),
+                INTERNAL_SERVER_ERROR.getDetail(),
+                INTERNAL_SERVER_ERROR.getDetail(),
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), INTERNAL_SERVER_ERROR.getStatus(), request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
