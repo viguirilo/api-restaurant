@@ -9,10 +9,10 @@ public enum ProblemType {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please check that the entities involved exist and try again"),
     ENTITY_ALREADY_EXISTS(HttpStatus.CONFLICT, "/entity-already-exists", "Entity Already Exists", "The entity you are trying to create already exists"),
     ENTITY_IN_USE(HttpStatus.CONFLICT, "/entity-in-use", "Entity in Use", "The entity you are trying to remove or update is already in use for one or more entities"),
-    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "/entity-not-found", "Entity Not Found", "The entity you are looking for was not found"),
     HTTP_MESSAGE_NOT_READABLE(HttpStatus.BAD_REQUEST, "/http-message-not-readable", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
+    NO_RESOURCE_FOUND(HttpStatus.NOT_FOUND, "/no-resource-found", "No Resource Found", "The resource you are looking for was not found"),
     PROPERTY_BIND_EXCEPTION(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again");
 
     private final HttpStatus status;

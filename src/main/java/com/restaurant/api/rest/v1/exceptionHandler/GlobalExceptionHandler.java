@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -69,14 +70,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
         ProblemDetail problemDetail = new ProblemDetail(
-                ENTITY_NOT_FOUND.getStatus().value(),
-                ENTITY_NOT_FOUND.getType(),
-                ENTITY_NOT_FOUND.getTitle(),
-                ENTITY_NOT_FOUND.getDetail(),
+                NO_RESOURCE_FOUND.getStatus().value(),
+                NO_RESOURCE_FOUND.getType(),
+                NO_RESOURCE_FOUND.getTitle(),
+                NO_RESOURCE_FOUND.getDetail(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_NOT_FOUND.getStatus(), request);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), NO_RESOURCE_FOUND.getStatus(), request);
     }
 
     @Override
@@ -131,6 +132,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 status.value(),
                 METHOD_ARGUMENT_TYPE_MISMATCH.getType(),
                 METHOD_ARGUMENT_TYPE_MISMATCH.getTitle(),
+                detail,
+                detail,
+                LocalDateTime.now()
+        );
+        return handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String detail = String.format("The resource '%s' you are trying to access does not exists", ex.getResourcePath());
+        ProblemDetail problemDetail = new ProblemDetail(
+                NO_RESOURCE_FOUND.getStatus().value(),
+                NO_RESOURCE_FOUND.getType(),
+                NO_RESOURCE_FOUND.getTitle(),
                 detail,
                 detail,
                 LocalDateTime.now()
