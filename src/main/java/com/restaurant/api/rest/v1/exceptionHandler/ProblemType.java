@@ -12,6 +12,7 @@ public enum ProblemType {
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "/entity-not-found", "Entity Not Found", "The entity you are looking for was not found"),
     HTTP_MESSAGE_NOT_READABLE(HttpStatus.BAD_REQUEST, "/http-message-not-readable", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
+    METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     PROPERTY_BIND_EXCEPTION(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again");
 
     private final HttpStatus status;
