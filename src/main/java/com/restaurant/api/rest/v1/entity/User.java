@@ -29,16 +29,16 @@ public class User implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", length = 80, nullable = false)
     @JsonProperty(value = "name")
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", length = 50, nullable = false)
     @JsonProperty(value = "email")
     private String email;
 
     @JsonIgnore
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", length = 25, nullable = false)
     @JsonProperty(value = "password")
     private String password;
 

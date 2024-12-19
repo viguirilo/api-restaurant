@@ -24,16 +24,16 @@ public class State implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
+    @Column(name = "name", length = 80, nullable = false)
     @JsonProperty(value = "name")
-    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "abbreviation", length = 5, nullable = false)
     @JsonProperty(value = "abbreviation")
-    @Column(name = "abbreviation", length = 2, nullable = false)
     private String abbreviation;
 
+    @Column(name = "country", length = 25, nullable = false)
     @JsonProperty(value = "country")
-    @Column(name = "country", nullable = false)
     private String country;
 
     public State(StateRequestVO stateRequestVO) {

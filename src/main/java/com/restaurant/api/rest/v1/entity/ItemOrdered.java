@@ -34,7 +34,7 @@ public class ItemOrdered implements Serializable {
     @JsonProperty("product")
     private Product product;
 
-    @Column(name = "observation")
+    @Column(name = "observation", length = 50)
     @JsonProperty(value = "observation")
     private String observation;
 

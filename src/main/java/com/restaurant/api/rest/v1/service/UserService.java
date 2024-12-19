@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,6 +33,7 @@ public class UserService {
     }
 
     private String getPasswordHash(String password) throws NoSuchAlgorithmException {
+        Assert.notNull(password, "The password must not to be blank");
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         messageDigest.update(password.getBytes());
         return new String(messageDigest.digest());
@@ -63,7 +65,8 @@ public class UserService {
             logger.warning("CAN NOT UPDATE: USER " + id + " NOT FOUND");
             return new EntityNotFoundException("The user requested was not found");
         });
-        userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
+        if (userRequestVO.getPassword() != null && !userRequestVO.getPassword().isBlank())
+            userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
         BeanUtils.copyProperties(userRequestVO, user, "id", "creationDate");
         user = userRepository.save(user);
         logger.info(user + " UPDATED SUCCESSFULLY");
