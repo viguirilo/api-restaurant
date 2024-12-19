@@ -7,8 +7,10 @@ import com.restaurant.api.rest.v1.exception.BadRequestException;
 import com.restaurant.api.rest.v1.exception.EntityAlreadyExistsException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static com.restaurant.api.rest.v1.exceptionHandler.ProblemType.*;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final MessageSource messageSource;
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestException(BadRequestException ex, WebRequest request) {
@@ -37,7 +44,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 BAD_REQUEST.getTitle(),
                 BAD_REQUEST.getDetail(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), BAD_REQUEST.getStatus(), request);
     }
@@ -50,7 +58,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ENTITY_ALREADY_EXISTS.getTitle(),
                 ENTITY_ALREADY_EXISTS.getDetail(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_ALREADY_EXISTS.getStatus(), request);
     }
@@ -63,7 +72,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ENTITY_IN_USE.getTitle(),
                 ENTITY_IN_USE.getDetail(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), ENTITY_IN_USE.getStatus(), request);
     }
@@ -76,7 +86,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 NO_RESOURCE_FOUND.getTitle(),
                 NO_RESOURCE_FOUND.getDetail(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), NO_RESOURCE_FOUND.getStatus(), request);
     }
@@ -90,7 +101,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 INTERNAL_SERVER_ERROR.getTitle(),
                 INTERNAL_SERVER_ERROR.getDetail(),
                 INTERNAL_SERVER_ERROR.getDetail(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), INTERNAL_SERVER_ERROR.getStatus(), request);
     }
@@ -109,7 +121,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 HTTP_MESSAGE_NOT_READABLE.getTitle(),
                 HTTP_MESSAGE_NOT_READABLE.getDetail(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
     }
@@ -128,7 +141,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 INVALID_FORMAT.getTitle(),
                 detail,
                 detail,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
@@ -149,20 +163,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 METHOD_ARGUMENT_TYPE_MISMATCH.getTitle(),
                 detail,
                 detail,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        List<ProblemDetail.Field> fields = ex.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> {
+                    String message = messageSource.getMessage(fieldError, Locale.US);
+                    return new ProblemDetail.Field(fieldError.getField(), message);
+                }).toList();
         ProblemDetail problemDetail = new ProblemDetail(
                 METHOD_ARGUMENT_NOT_VALID.getStatus().value(),
                 METHOD_ARGUMENT_NOT_VALID.getType(),
                 METHOD_ARGUMENT_NOT_VALID.getTitle(),
                 ex.getMessage(),
                 METHOD_ARGUMENT_NOT_VALID.getDetail(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                fields
         );
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
@@ -176,7 +197,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 NO_RESOURCE_FOUND.getTitle(),
                 detail,
                 detail,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
@@ -193,7 +215,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 PROPERTY_BIND_EXCEPTION.getTitle(),
                 detail,
                 detail,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
         return handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
@@ -204,3 +227,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 }
+
