@@ -24,7 +24,7 @@ public class PaymentMethod implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", length = 50, nullable = false)
     @JsonProperty(value = "description")
     private String description;
 

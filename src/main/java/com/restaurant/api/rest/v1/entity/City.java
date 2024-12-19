@@ -24,7 +24,7 @@ public class City implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", length = 200, nullable = false)
     @JsonProperty(value = "name")
     private String name;
 

@@ -1,9 +1,9 @@
 CREATE TABLE `product` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `active` bit(1) NOT NULL,
+  `name` varchar(80) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
   `price` decimal(38,2) NOT NULL,
+  `active` bit(1) NOT NULL,
   `restaurant_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `restaurant_fk_1` (`restaurant_id`),

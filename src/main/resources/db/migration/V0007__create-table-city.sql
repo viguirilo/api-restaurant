@@ -1,6 +1,6 @@
 CREATE TABLE `city` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(200) NOT NULL,
   `state_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `state_fk_1` (`state_id`),

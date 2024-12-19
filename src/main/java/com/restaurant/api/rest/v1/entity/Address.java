@@ -16,23 +16,23 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Address implements Serializable {
 
-    @Column(name = "address_street_or_avenue", nullable = false)
+    @Column(name = "address_street_or_avenue", length = 100, nullable = false)
     @JsonProperty(value = "addressStreetOrAvenue")
     private String addressStreetOrAvenue;
 
-    @Column(name = "address_number", nullable = false)
+    @Column(name = "address_number", length = 10, nullable = false)
     @JsonProperty(value = "addressNumber")
     private String addressNumber;
 
-    @Column(name = "address_complement")
+    @Column(name = "address_complement", length = 50)
     @JsonProperty(value = "addressComplement")
     private String addressComplement;
 
-    @Column(name = "address_neighborhood", nullable = false)
+    @Column(name = "address_neighborhood", length = 50, nullable = false)
     @JsonProperty(value = "addressNeighborhood")
     private String addressNeighborhood;
 
-    @Column(name = "address_zip_code", nullable = false)
+    @Column(name = "address_zip_code", length = 25, nullable = false)
     @JsonProperty(value = "addressZipCode")
     private String addressZipCode;
 

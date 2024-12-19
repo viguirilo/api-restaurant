@@ -77,7 +77,7 @@ public class Order implements Serializable {
     @Embedded
     private Address address;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", length = 25, nullable = false)
     @JsonProperty(value = "status")
     private OrderStatus status;
 

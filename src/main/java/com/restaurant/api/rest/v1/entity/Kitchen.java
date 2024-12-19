@@ -27,7 +27,7 @@ public class Kitchen implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     @JsonProperty(value = "name")
     private String name;
 
