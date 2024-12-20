@@ -32,30 +32,32 @@ ALTER TABLE `state` AUTO_INCREMENT = 1;
 ALTER TABLE `user` AUTO_INCREMENT = 1;
 ALTER TABLE `user_group` AUTO_INCREMENT = 1;
 
-INSERT INTO kitchen (name) VALUES ('Thai');
-INSERT INTO kitchen (name) VALUES ('Indian');
-INSERT INTO kitchen (name) VALUES ('Brazilian');
-INSERT INTO kitchen (name) VALUES ('Japanese');
-INSERT INTO kitchen (name) VALUES ('Italian');
-INSERT INTO kitchen (name) VALUES ('Australian');
-INSERT INTO kitchen (name) VALUES ('Mexican');
-INSERT INTO kitchen (name) VALUES ('Chilean');
+INSERT INTO kitchen (name) VALUES
+('Thai'),
+('Indian'),
+('Brazilian'),
+('Japanese'),
+('Italian'),
+('Australian'),
+('Mexican'),
+('Chilean');
 
-INSERT INTO payment_method (description) VALUES ('CASH');
-INSERT INTO payment_method (description) VALUES ('DEBIT_CARD');
-INSERT INTO payment_method (description) VALUES ('CREDIT_CARD');
-INSERT INTO payment_method (description) VALUES ('PIX');
-INSERT INTO payment_method (description) VALUES ('CHECK');
-INSERT INTO payment_method (description) VALUES ('CRYPTO_COINS');
-INSERT INTO payment_method (description) VALUES ('ALELO');
-INSERT INTO payment_method (description) VALUES ('VALE_REFEIÇÃO');
-INSERT INTO payment_method (description) VALUES ('VALE_ALIMENTAÇÃO');
-INSERT INTO payment_method (description) VALUES ('FLASH');
+INSERT INTO payment_method (description) VALUES
+('CASH'),
+('DEBIT_CARD'),
+('CREDIT_CARD'),
+('PIX'),
+('ALELO'),
+('VALE_REFEIÇÃO'),
+('VALE_ALIMENTAÇÃO'),
+('FLASH'),
+('CHECK');
 
-INSERT INTO permission (name, description) VALUES ('CREATE_ORDER', 'Allow an user to create an order');
-INSERT INTO permission (name, description) VALUES ('READ_ORDER', 'Allow an user to read an order');
-INSERT INTO permission (name, description) VALUES ('UPDATE_ORDER', 'Allow an user to update an order');
-INSERT INTO permission (name, description) VALUES ('DELETE_ORDER', 'Allow an user to delete an order');
+INSERT INTO permission (name, description) VALUES
+('CREATE_ORDER', 'Allow an user to create an order'),
+('READ_ORDER', 'Allow an user to read an order'),
+('UPDATE_ORDER', 'Allow an user to update an order'),
+('DELETE_ORDER', 'Allow an user to delete an order');
 
 INSERT INTO state (name, abbreviation, country) VALUES ('Acre', 'AC', 'Brasil');
 INSERT INTO city (name, state_id) VALUES ('Rio Branco', 1);
@@ -111,3 +113,17 @@ INSERT INTO state (name, abbreviation, country) VALUES ('Sergipe', 'SE', 'Brasil
 INSERT INTO city (name, state_id) VALUES ('Aracaju', 26);
 INSERT INTO state (name, abbreviation, country) VALUES ('Tocantins', 'TO', 'Brasil');
 INSERT INTO city (name, state_id) VALUES ('Palmas', 27);
+
+INSERT INTO restaurant(name, ship_rate, active, open, creation_date, update_date, kitchen_id, address_street_or_avenue, address_number, address_complement, address_neighborhood, address_zip_code, address_city_id) VALUES
+('Thai Delivery', 2.9, true, true, now(), now(), 1, "Rua 1", "1", "complemento", "Bairro 1", "30.000-000", 1),
+('Fast Indian', 1.0, true, true, now(), now(), 2, "Rua 2", "2", "complemento", "Bairro 2", "30.000-000", 1),
+('BrazFood', 1.9, true, true, now(), now(), 3, "Rua 3", "3", "complemento", "Bairro 3", "30.000-000", 1),
+('Sushi Moto', 3.9, true, true, now(), now(), 4, "Rua 4", "4", "complemento", "Bairro 4", "30.000-000", 1),
+('Italin House', 2.0, true, true, now(), now(), 5, "Rua 5", "5", "complemento", "Bairro 5", "30.000-000", 1);
+
+INSERT INTO restaurant_payment_method (restaurant_id, payment_method_id) VALUES
+(1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (1,8), (1,9),
+(2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (2,8), (2,9),
+(3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7), (3,8), (3,9),
+(4,1), (4,2), (4,3), (4,4), (4,5), (4,6), (4,7), (4,8), (4,9),
+(5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (5,8), (5,9);
