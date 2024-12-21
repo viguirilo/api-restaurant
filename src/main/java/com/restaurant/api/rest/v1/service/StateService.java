@@ -9,10 +9,10 @@ import com.restaurant.api.rest.v1.vo.StateResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -61,9 +61,9 @@ public class StateService {
 
     public void delete(Long id) {
         try {
-            stateRepository.deleteById(id);
+            stateRepository.delete(Objects.requireNonNull(stateRepository.findById(id).orElse(null)));
             logger.info("STATE ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: STATE " + id + " NOT FOUND");
             throw new EntityNotFoundException("The state requested was not found");
         } catch (DataIntegrityViolationException ex) {

@@ -14,10 +14,10 @@ import com.restaurant.api.rest.v1.vo.RestaurantResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -88,9 +88,9 @@ public class RestaurantService {
 
     public void delete(Long id) {
         try {
-            restaurantRepository.deleteById(id);
+            restaurantRepository.delete(Objects.requireNonNull(restaurantRepository.findById(id).orElse(null)));
             logger.info("RESTAURANT ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: RESTAURANT " + id + " NOT FOUND");
             throw new EntityNotFoundException("The restaurant requested was not found");
         } catch (DataIntegrityViolationException ex) {

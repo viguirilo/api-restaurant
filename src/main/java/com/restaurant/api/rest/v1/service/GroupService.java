@@ -9,10 +9,10 @@ import com.restaurant.api.rest.v1.vo.GroupResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -66,9 +66,9 @@ public class GroupService {
 //  deve estar ligado ao relacionamento ManyToMany com permissions
     public void delete(Long id) {
         try {
-            groupRepository.deleteById(id);
+            groupRepository.delete(Objects.requireNonNull(groupRepository.findById(id).orElse(null)));
             logger.info("GROUP ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: GROUP " + id + " NOT FOUND");
             throw new EntityNotFoundException("The group requested was not found");
         } catch (DataIntegrityViolationException ex) {

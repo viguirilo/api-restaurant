@@ -12,10 +12,10 @@ import com.restaurant.api.rest.v1.vo.ProductResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -74,9 +74,9 @@ public class ProductService {
 
     public void delete(Long id) {
         try {
-            productRepository.deleteById(id);
+            productRepository.delete(Objects.requireNonNull(productRepository.findById(id).orElse(null)));
             logger.info("PRODUCT ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: PRODUCT " + id + " NOT FOUND");
             throw new EntityNotFoundException("The product requested was not found");
         } catch (DataIntegrityViolationException ex) {
