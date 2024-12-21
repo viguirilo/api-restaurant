@@ -12,10 +12,10 @@ import com.restaurant.api.rest.v1.vo.CityResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -74,9 +74,9 @@ public class CityService {
 
     public void delete(Long id) {
         try {
-            cityRepository.deleteById(id);
+            cityRepository.delete(Objects.requireNonNull(cityRepository.findById(id).orElse(null)));
             logger.info("CITY ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: CITY " + id + " NOT FOUND");
             throw new EntityNotFoundException("The city requested was not found");
         } catch (DataIntegrityViolationException ex) {

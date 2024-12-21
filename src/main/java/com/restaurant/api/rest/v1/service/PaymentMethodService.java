@@ -9,10 +9,10 @@ import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -61,11 +61,11 @@ public class PaymentMethodService {
 
     public void delete(Long id) {
         try {
-            paymentMethodRepository.deleteById(id);
+            paymentMethodRepository.delete(Objects.requireNonNull(paymentMethodRepository.findById(id).orElse(null)));
             logger.info("PAYMENT METHOD ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: PAYMENT METHOD " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The PAYMENT METHOD requested was not found");
+            throw new EntityNotFoundException("The payment method requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (PAYMENT METHOD ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("PAYMENT METHOD = " + id);

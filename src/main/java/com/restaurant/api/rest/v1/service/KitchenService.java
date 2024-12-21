@@ -9,10 +9,10 @@ import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -61,9 +61,9 @@ public class KitchenService {
 
     public void delete(Long id) {
         try {
-            kitchenRepository.deleteById(id);
+            kitchenRepository.delete(Objects.requireNonNull(kitchenRepository.findById(id).orElse(null)));
             logger.info("KITCHEN ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NullPointerException ex) {
             logger.warning("CAN NOT DELETE: KITCHEN " + id + " NOT FOUND");
             throw new EntityNotFoundException("The kitchen requested was not found");
         } catch (DataIntegrityViolationException ex) {
