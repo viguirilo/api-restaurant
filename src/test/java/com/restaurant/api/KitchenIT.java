@@ -1,0 +1,216 @@
+package com.restaurant.api;
+
+import com.restaurant.api.rest.v1.service.CityService;
+import com.restaurant.api.rest.v1.service.KitchenService;
+import com.restaurant.api.rest.v1.service.RestaurantService;
+import com.restaurant.api.rest.v1.service.StateService;
+import com.restaurant.api.rest.v1.vo.*;
+import com.restaurant.api.util.ResourceUtils;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
+
+import java.math.BigDecimal;
+
+import static org.hamcrest.Matchers.equalTo;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("/application-test.properties")
+class KitchenIT {
+
+    private static final Long NON_EXISTENT_KITCHEN_ID = 100L;
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private KitchenService kitchenService;
+
+    @Autowired
+    private RestaurantService restaurantService;
+
+    @Autowired
+    private CityService cityService;
+
+    @Autowired
+    private StateService stateService;
+
+    private KitchenResponseVO kitchenResponseVO1;
+
+    private KitchenResponseVO kitchenResponseVO2;
+
+    @BeforeEach
+    public void setup() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.port = port;
+        RestAssured.basePath = "/rest/v1/kitchens";
+        prepareData();
+    }
+
+    private void prepareData() {
+        kitchenResponseVO1 = kitchenService.save(new KitchenRequestVO("Mexican"));
+        kitchenResponseVO2 = kitchenService.save(new KitchenRequestVO("Mexican"));
+        StateResponseVO stateResponseVO = stateService.save(new StateRequestVO("State 1", "AA", "Country 1"));
+        CityResponseVO cityResponseVO = cityService.save(new CityRequestVO("City 1", stateResponseVO.getId()));
+        restaurantService.save(new RestaurantRequestVO(
+                "Restaurant",
+                new BigDecimal("12.90"),
+                true,
+                true,
+                kitchenResponseVO2.getId(),
+                "Street",
+                "1",
+                null,
+                "Neighborhood",
+                "30.000-000",
+                cityResponseVO.getId()
+        ));
+    }
+
+    @AfterEach
+    public void clearData() {
+        restaurantService.findAll().forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
+        kitchenService.findAll().forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
+        cityService.findAll().forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
+        stateService.findAll().forEach(stateResponseVO -> stateService.delete(stateResponseVO.getId()));
+    }
+
+    @Test
+    public void createKitchenSuccessfully() {
+        // Scenario
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_kitchen.json");
+        RestAssured.given()
+                .body(contentFromResource)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .post()
+                // Validation
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body("name", equalTo("American"));
+    }
+
+    @Test
+    public void createKitchenWithOutName() {
+        // Scenario
+        RestAssured.given()
+                .body("{}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .post()
+                // Validation
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void readKitchensSuccessfully() {
+        // Scenario
+        RestAssured.given()
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .get()
+                // Validation
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void readNonExistentKitchen() {
+        // Scenario
+        RestAssured.given()
+                .pathParam("id", NON_EXISTENT_KITCHEN_ID)
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .get("/{id}")
+                // Validation
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    public void updateKitchenSuccessfully() {
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_kitchen.json");
+        RestAssured.given()
+                .pathParam("id", kitchenResponseVO1.getId())
+                .body(contentFromResource)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .put("/{id}")
+                // Validation
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", equalTo("Brazilian"));
+    }
+
+    @Test
+    public void updateKitchenFail() {
+        RestAssured.given()
+                .pathParam("id", kitchenResponseVO1.getId())
+                .body("{}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .put("/{id}")
+                // Validation
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void deleteKitchenSuccessfully() {
+        RestAssured.given()
+                .pathParam("id", kitchenResponseVO1.getId())
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .delete("/{id}")
+                // Validation
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    public void deleteKitchenNotExists() {
+        RestAssured.given()
+                .pathParam("id", NON_EXISTENT_KITCHEN_ID)
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .delete("/{id}")
+                // Validation
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    public void deleteKitchenInUse() {
+        // Scenario
+        RestAssured.given()
+                .pathParam("id", kitchenResponseVO2.getId())
+                .accept(ContentType.JSON)
+                // Action
+                .when()
+                .delete("/{id}")
+                // Validation
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+}
