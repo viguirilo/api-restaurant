@@ -1,10 +1,8 @@
 package com.restaurant.api;
 
-import com.restaurant.api.rest.v1.service.CityService;
-import com.restaurant.api.rest.v1.service.KitchenService;
-import com.restaurant.api.rest.v1.service.RestaurantService;
-import com.restaurant.api.rest.v1.service.StateService;
-import com.restaurant.api.rest.v1.vo.*;
+import com.restaurant.api.rest.v1.service.PaymentMethodService;
+import com.restaurant.api.rest.v1.vo.PaymentMethodRequestVO;
+import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
 import com.restaurant.api.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -17,75 +15,43 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
-import java.math.BigDecimal;
-
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
-class KitchenIT {
+class PaymentMethodIT {
 
-    private static final Long NON_EXISTENT_KITCHEN_ID = 100L;
+    private static final Long NON_EXISTENT_PAYMENT_METHOD_ID = 100L;
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    private KitchenService kitchenService;
+    private PaymentMethodService paymentMethodService;
 
-    @Autowired
-    private StateService stateService;
-
-    @Autowired
-    private CityService cityService;
-
-    @Autowired
-    private RestaurantService restaurantService;
-
-    private KitchenResponseVO kitchenResponseVO1;
-
-    private KitchenResponseVO kitchenResponseVO2;
+    private PaymentMethodResponseVO paymentMethodResponseVO1;
 
     @BeforeEach
     public void setup() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
-        RestAssured.basePath = "/rest/v1/kitchens";
+        RestAssured.basePath = "/rest/v1/paymentMethods";
         prepareData();
     }
 
     private void prepareData() {
-        kitchenResponseVO1 = kitchenService.save(new KitchenRequestVO("Kitchen 1"));
-        kitchenResponseVO2 = kitchenService.save(new KitchenRequestVO("Kitchen 2"));
-        StateResponseVO stateResponseVO = stateService.save(new StateRequestVO("State", "AA", "Country"));
-        CityResponseVO cityResponseVO = cityService.save(new CityRequestVO("City", stateResponseVO.getId()));
-        restaurantService.save(new RestaurantRequestVO(
-                "Restaurant",
-                new BigDecimal("12.90"),
-                true,
-                true,
-                kitchenResponseVO2.getId(),
-                "Street",
-                "1",
-                null,
-                "Neighborhood",
-                "30.000-000",
-                cityResponseVO.getId()
-        ));
+        paymentMethodResponseVO1 = paymentMethodService.save(new PaymentMethodRequestVO("Description 1n"));
     }
 
     @AfterEach
     public void clearData() {
-        restaurantService.findAll().forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
-        kitchenService.findAll().forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
-        cityService.findAll().forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
-        stateService.findAll().forEach(stateResponseVO -> stateService.delete(stateResponseVO.getId()));
+
     }
 
     @Test
-    public void createKitchenSuccessfully() {
+    public void createPaymentMethodSuccessfully() {
         // Scenario
-        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_kitchen.json");
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_payment_method.json");
         RestAssured.given()
                 .body(contentFromResource)
                 .contentType(ContentType.JSON)
@@ -96,11 +62,11 @@ class KitchenIT {
                 // Validation
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("name", equalTo("Kitchen"));
+                .body("description", equalTo("Payment Method"));
     }
 
     @Test
-    public void createKitchenWithOutName() {
+    public void createPaymentMethodWithOutName() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -115,7 +81,7 @@ class KitchenIT {
     }
 
     @Test
-    public void readKitchensSuccessfully() {
+    public void readPaymentMethodsSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -128,10 +94,10 @@ class KitchenIT {
     }
 
     @Test
-    public void readNonExistentKitchen() {
+    public void readNonExistentPaymentMethod() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", NON_EXISTENT_KITCHEN_ID)
+                .pathParam("id", NON_EXISTENT_PAYMENT_METHOD_ID)
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -142,11 +108,10 @@ class KitchenIT {
     }
 
     @Test
-    public void updateKitchenSuccessfully() {
-        // Scenario
-        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_kitchen.json");
+    public void updatePaymentMethodSuccessfully() {
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_payment_method.json");
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO1.getId())
+                .pathParam("id", paymentMethodResponseVO1.getId())
                 .body(contentFromResource)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -156,13 +121,13 @@ class KitchenIT {
                 // Validation
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", equalTo("New Kitchen"));
+                .body("description", equalTo("New Payment Method"));
     }
 
     @Test
-    public void updateKitchenFail() {
+    public void updatePaymentMethodFail() {
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO1.getId())
+                .pathParam("id", paymentMethodResponseVO1.getId())
                 .body("{}")
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -175,10 +140,10 @@ class KitchenIT {
     }
 
     @Test
-    public void deleteKitchenSuccessfully() {
+    public void deletePaymentMethodSuccessfully() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO1.getId())
+                .pathParam("id", paymentMethodResponseVO1.getId())
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -192,7 +157,7 @@ class KitchenIT {
     public void deleteKitchenNotExists() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", NON_EXISTENT_KITCHEN_ID)
+                .pathParam("id", NON_EXISTENT_PAYMENT_METHOD_ID)
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -202,18 +167,18 @@ class KitchenIT {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    @Test
-    public void deleteKitchenInUse() {
-        // Scenario
-        RestAssured.given()
-                .pathParam("id", kitchenResponseVO2.getId())
-                .accept(ContentType.JSON)
-                // Action
-                .when()
-                .delete("/{id}")
-                // Validation
-                .then()
-                .statusCode(HttpStatus.CONFLICT.value());
-    }
+//    @Test
+//    public void deleteKitchenInUse() {
+//        // Scenario
+//        RestAssured.given()
+//                .pathParam("id", PaymentMethodResponseVO2.getId())
+//                .accept(ContentType.JSON)
+//                // Action
+//                .when()
+//                .delete("/{id}")
+//                // Validation
+//                .then()
+//                .statusCode(HttpStatus.CONFLICT.value());
+//    }
 
 }

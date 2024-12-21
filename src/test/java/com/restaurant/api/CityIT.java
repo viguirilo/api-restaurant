@@ -23,15 +23,12 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
-class KitchenIT {
+class CityIT {
 
-    private static final Long NON_EXISTENT_KITCHEN_ID = 100L;
+    private static final Long NON_EXISTENT_CITY_ID = 100L;
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private KitchenService kitchenService;
 
     @Autowired
     private StateService stateService;
@@ -40,37 +37,42 @@ class KitchenIT {
     private CityService cityService;
 
     @Autowired
+    private KitchenService kitchenService;
+
+    @Autowired
     private RestaurantService restaurantService;
 
-    private KitchenResponseVO kitchenResponseVO1;
+    private StateResponseVO stateResponseVO;
 
-    private KitchenResponseVO kitchenResponseVO2;
+    private CityResponseVO cityResponseVO1;
+
+    private CityResponseVO cityResponseVO2;
 
     @BeforeEach
     public void setup() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
-        RestAssured.basePath = "/rest/v1/kitchens";
+        RestAssured.basePath = "/rest/v1/cities";
         prepareData();
     }
 
     private void prepareData() {
-        kitchenResponseVO1 = kitchenService.save(new KitchenRequestVO("Kitchen 1"));
-        kitchenResponseVO2 = kitchenService.save(new KitchenRequestVO("Kitchen 2"));
-        StateResponseVO stateResponseVO = stateService.save(new StateRequestVO("State", "AA", "Country"));
-        CityResponseVO cityResponseVO = cityService.save(new CityRequestVO("City", stateResponseVO.getId()));
+        stateResponseVO = stateService.save(new StateRequestVO("State", "AA", "Country"));
+        cityResponseVO1 = cityService.save(new CityRequestVO("City 1", stateResponseVO.getId()));
+        cityResponseVO2 = cityService.save(new CityRequestVO("City 2", stateResponseVO.getId()));
+        KitchenResponseVO kitchenResponseVO = kitchenService.save(new KitchenRequestVO("Kitchen"));
         restaurantService.save(new RestaurantRequestVO(
                 "Restaurant",
                 new BigDecimal("12.90"),
                 true,
                 true,
-                kitchenResponseVO2.getId(),
+                kitchenResponseVO.getId(),
                 "Street",
                 "1",
                 null,
                 "Neighborhood",
                 "30.000-000",
-                cityResponseVO.getId()
+                cityResponseVO2.getId()
         ));
     }
 
@@ -83,9 +85,10 @@ class KitchenIT {
     }
 
     @Test
-    public void createKitchenSuccessfully() {
+    public void createCitySuccessfully() {
         // Scenario
-        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_kitchen.json");
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_city.json")
+                .replace("$stateId", stateResponseVO.getId().toString());
         RestAssured.given()
                 .body(contentFromResource)
                 .contentType(ContentType.JSON)
@@ -96,11 +99,11 @@ class KitchenIT {
                 // Validation
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("name", equalTo("Kitchen"));
+                .body("name", equalTo("City"));
     }
 
     @Test
-    public void createKitchenWithOutName() {
+    public void createCityWithOutName() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -115,7 +118,7 @@ class KitchenIT {
     }
 
     @Test
-    public void readKitchensSuccessfully() {
+    public void readCitiesSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -128,10 +131,10 @@ class KitchenIT {
     }
 
     @Test
-    public void readNonExistentKitchen() {
+    public void readNonExistentCity() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", NON_EXISTENT_KITCHEN_ID)
+                .pathParam("id", NON_EXISTENT_CITY_ID)
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -142,11 +145,11 @@ class KitchenIT {
     }
 
     @Test
-    public void updateKitchenSuccessfully() {
-        // Scenario
-        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_kitchen.json");
+    public void updateCitySuccessfully() {
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_city.json")
+                .replace("$stateId", stateResponseVO.getId().toString());
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO1.getId())
+                .pathParam("id", cityResponseVO1.getId())
                 .body(contentFromResource)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -156,13 +159,13 @@ class KitchenIT {
                 // Validation
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("name", equalTo("New Kitchen"));
+                .body("name", equalTo("New City"));
     }
 
     @Test
-    public void updateKitchenFail() {
+    public void updateCityFail() {
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO1.getId())
+                .pathParam("id", cityResponseVO1.getId())
                 .body("{}")
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -175,10 +178,10 @@ class KitchenIT {
     }
 
     @Test
-    public void deleteKitchenSuccessfully() {
+    public void deleteCitySuccessfully() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO1.getId())
+                .pathParam("id", cityResponseVO1.getId())
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -192,7 +195,7 @@ class KitchenIT {
     public void deleteKitchenNotExists() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", NON_EXISTENT_KITCHEN_ID)
+                .pathParam("id", NON_EXISTENT_CITY_ID)
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -206,7 +209,7 @@ class KitchenIT {
     public void deleteKitchenInUse() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", kitchenResponseVO2.getId())
+                .pathParam("id", cityResponseVO2.getId())
                 .accept(ContentType.JSON)
                 // Action
                 .when()

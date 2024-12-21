@@ -1,6 +1,5 @@
 package com.restaurant.api.rest.v1.vo;
 
-import com.restaurant.api.core.validation.ValueZeroCheckField;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@ValueZeroCheckField(referenceField = "shipRate", targetField = "name", mandatoryDescription = "Free shipping")
+//@ValueZeroCheckField(referenceField = "shipRate", targetField = "name", mandatoryDescription = "Free shipping")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
