@@ -41,11 +41,12 @@ class GroupIT {
 
     private void prepareData() {
         groupResponseVO = groupService.save(new GroupRequestVO("Group"));
+        groupResponseVO = groupService.save(new GroupRequestVO("Group"));
     }
 
     @AfterEach
     public void clearData() {
-
+        groupService.findAll().forEach(groupResponseVO -> groupService.delete(groupResponseVO.getId()));
     }
 
     @Test
@@ -66,7 +67,7 @@ class GroupIT {
     }
 
     @Test
-    public void createGroupWithOutName() {
+    public void createGroupWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -125,7 +126,7 @@ class GroupIT {
     }
 
     @Test
-    public void updateGroupFail() {
+    public void updateGroupWithoutFields() {
         RestAssured.given()
                 .pathParam("id", groupResponseVO.getId())
                 .body("{}")
