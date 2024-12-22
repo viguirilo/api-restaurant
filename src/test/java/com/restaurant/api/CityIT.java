@@ -103,7 +103,7 @@ class CityIT {
     }
 
     @Test
-    public void createCityWithOutName() {
+    public void createCityWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -163,7 +163,7 @@ class CityIT {
     }
 
     @Test
-    public void updateCityFail() {
+    public void updateCityWithoutFields() {
         RestAssured.given()
                 .pathParam("id", cityResponseVO1.getId())
                 .body("{}")
@@ -206,7 +206,7 @@ class CityIT {
     }
 
     @Test
-    public void deleteKitchenInUse() {
+    public void deleteCityInUse() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", cityResponseVO2.getId())

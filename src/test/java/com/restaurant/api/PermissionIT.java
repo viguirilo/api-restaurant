@@ -1,8 +1,8 @@
 package com.restaurant.api;
 
-import com.restaurant.api.rest.v1.service.PaymentMethodService;
-import com.restaurant.api.rest.v1.vo.PaymentMethodRequestVO;
-import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
+import com.restaurant.api.rest.v1.service.PermissionService;
+import com.restaurant.api.rest.v1.vo.PermissionRequestVO;
+import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
 import com.restaurant.api.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,40 +19,40 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
-class PaymentMethodIT {
+class PermissionIT {
 
-    private static final Long NON_EXISTENT_PAYMENT_METHOD_ID = 100L;
+    private static final Long NON_EXISTENT_PERMISSION_ID = 100L;
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    private PaymentMethodService paymentMethodService;
+    private PermissionService permissionService;
 
-    private PaymentMethodResponseVO paymentMethodResponseVO1;
+    private PermissionResponseVO permissionResponseVO;
 
     @BeforeEach
     public void setup() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
-        RestAssured.basePath = "/rest/v1/paymentMethods";
+        RestAssured.basePath = "/rest/v1/permissions";
         prepareData();
     }
 
     private void prepareData() {
-        paymentMethodResponseVO1 = paymentMethodService.save(new PaymentMethodRequestVO("Description 1n"));
-        paymentMethodResponseVO1 = paymentMethodService.save(new PaymentMethodRequestVO("Description 1n"));
+        permissionResponseVO = permissionService.save(new PermissionRequestVO("PERMISSION", "Description"));
+        permissionResponseVO = permissionService.save(new PermissionRequestVO("PERMISSION", "Description"));
     }
 
     @AfterEach
     public void clearData() {
-        paymentMethodService.findAll().forEach(paymentMethodResponseVO -> paymentMethodService.delete(paymentMethodResponseVO.getId()));
+        permissionService.findAll().forEach(permissionResponseVO -> permissionService.delete(permissionResponseVO.getId()));
     }
 
     @Test
-    public void createPaymentMethodSuccessfully() {
+    public void createPermissionSuccessfully() {
         // Scenario
-        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_payment_method.json");
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/create_permission.json");
         RestAssured.given()
                 .body(contentFromResource)
                 .contentType(ContentType.JSON)
@@ -63,11 +63,12 @@ class PaymentMethodIT {
                 // Validation
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("description", equalTo("Payment Method"));
+                .body("name", equalTo("PERMISSION"))
+                .body("description", equalTo("Description"));
     }
 
     @Test
-    public void createPaymentMethodWithOutFields() {
+    public void createPermissionWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -82,7 +83,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void readPaymentMethodsSuccessfully() {
+    public void readPermissionsSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -95,10 +96,10 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void readNonExistentPaymentMethod() {
+    public void readNonExistentPermission() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", NON_EXISTENT_PAYMENT_METHOD_ID)
+                .pathParam("id", NON_EXISTENT_PERMISSION_ID)
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -109,10 +110,10 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void updatePaymentMethodSuccessfully() {
-        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_payment_method.json");
+    public void updatePermissionSuccessfully() {
+        String contentFromResource = ResourceUtils.getContentFromResource("/json/update_permission.json");
         RestAssured.given()
-                .pathParam("id", paymentMethodResponseVO1.getId())
+                .pathParam("id", permissionResponseVO.getId())
                 .body(contentFromResource)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -122,13 +123,14 @@ class PaymentMethodIT {
                 // Validation
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("description", equalTo("New Payment Method"));
+                .body("name", equalTo("NEW NAME"))
+                .body("description", equalTo("New description"));
     }
 
     @Test
-    public void updatePaymentMethodWithoutFields() {
+    public void updatePermissionWithoutFields() {
         RestAssured.given()
-                .pathParam("id", paymentMethodResponseVO1.getId())
+                .pathParam("id", permissionResponseVO.getId())
                 .body("{}")
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -141,10 +143,10 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void deletePaymentMethodSuccessfully() {
+    public void deletePermissionSuccessfully() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", paymentMethodResponseVO1.getId())
+                .pathParam("id", permissionResponseVO.getId())
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -155,10 +157,10 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void deletePaymentMethodNotExists() {
+    public void deletePermissionNotExists() {
         // Scenario
         RestAssured.given()
-                .pathParam("id", NON_EXISTENT_PAYMENT_METHOD_ID)
+                .pathParam("id", NON_EXISTENT_PERMISSION_ID)
                 .accept(ContentType.JSON)
                 // Action
                 .when()
@@ -169,10 +171,10 @@ class PaymentMethodIT {
     }
 
 //    @Test
-//    public void deletePaymentMethodInUse() {
+//    public void deletePermissionInUse() {
 //        // Scenario
 //        RestAssured.given()
-//                .pathParam("id", PaymentMethodResponseVO2.getId())
+//                .pathParam("id", PermissionResponseVO2.getId())
 //                .accept(ContentType.JSON)
 //                // Action
 //                .when()

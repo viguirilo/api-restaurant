@@ -100,7 +100,7 @@ class KitchenIT {
     }
 
     @Test
-    public void createKitchenWithOutName() {
+    public void createKitchenWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -160,7 +160,7 @@ class KitchenIT {
     }
 
     @Test
-    public void updateKitchenFail() {
+    public void updateKitchenWithoutFields() {
         RestAssured.given()
                 .pathParam("id", kitchenResponseVO1.getId())
                 .body("{}")
