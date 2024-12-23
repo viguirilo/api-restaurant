@@ -1,0 +1,7 @@
+{
+  "name": "New Name",
+  "description": "New description",
+  "price": 1.0,
+  "active": true,
+  "restaurantId": $restaurantId
+}
