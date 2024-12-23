@@ -83,7 +83,7 @@ public class Order implements Serializable {
 
     @JsonIgnore // TODO(Por que tem JsonIgnore neste campo?)
     @OneToMany(mappedBy = "order")
-    private List<ItemOrdered> itemsOrdered = new ArrayList<>();
+    private List<OrderedItem> itemsOrdered = new ArrayList<>();
 
     @Override
     public String toString() {
