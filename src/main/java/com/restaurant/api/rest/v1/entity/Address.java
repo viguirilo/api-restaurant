@@ -1,6 +1,7 @@
 package com.restaurant.api.rest.v1.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.restaurant.api.rest.v1.vo.OrderRequestVO;
 import com.restaurant.api.rest.v1.vo.RestaurantRequestVO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,15 @@ public class Address implements Serializable {
         this.addressComplement = restaurantRequestVO.getAddressComplement();
         this.addressNeighborhood = restaurantRequestVO.getAddressNeighborhood();
         this.addressZipCode = restaurantRequestVO.getAddressZipCode();
+        this.city = city;
+    }
+
+    public Address(OrderRequestVO orderRequestVO, City city) {
+        this.addressStreetOrAvenue = orderRequestVO.getAddressStreetOrAvenue();
+        this.addressNumber = orderRequestVO.getAddressNumber();
+        this.addressComplement = orderRequestVO.getAddressComplement();
+        this.addressNeighborhood = orderRequestVO.getAddressNeighborhood();
+        this.addressZipCode = orderRequestVO.getAddressZipCode();
         this.city = city;
     }
 

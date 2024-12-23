@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.restaurant.api.rest.v1.enums.OrderStatus;
+import com.restaurant.api.rest.v1.vo.OrderRequestVO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -83,7 +84,19 @@ public class Order implements Serializable {
 
     @JsonIgnore // TODO(Por que tem JsonIgnore neste campo?)
     @OneToMany(mappedBy = "order")
-    private List<OrderedItem> itemsOrdered = new ArrayList<>();
+    private List<OrderedItem> orderedItems = new ArrayList<>();
+
+    public Order(OrderRequestVO orderRequestVO, Restaurant restaurant, User customer, PaymentMethod paymentMethod, City city) {
+        this.subTotal = orderRequestVO.getSubTotal();
+        this.shipRate = orderRequestVO.getShipRate();
+        this.totalValue = orderRequestVO.getTotalValue();
+        this.creationDate = LocalDateTime.now();
+        this.restaurant = restaurant;
+        this.customer = customer;
+        this.paymentMethod = paymentMethod;
+        this.address = new Address(orderRequestVO, city);
+        this.status = OrderStatus.CREATED;
+    }
 
     @Override
     public String toString() {
@@ -101,7 +114,7 @@ public class Order implements Serializable {
                 ", paymentMethod=" + paymentMethod.toString() +
                 ", address=" + address.toString() +
                 ", status=" + status +
-                ", itemsOrdered=" + itemsOrdered.toString() +
+                ", itemsOrdered=" + orderedItems.toString() +
                 '}';
     }
 
@@ -113,12 +126,12 @@ public class Order implements Serializable {
         return Objects.equals(creationDate, order.creationDate) &&
                 Objects.equals(restaurant.getId(), order.restaurant.getId()) &&
                 Objects.equals(customer.getId(), order.customer.getId()) &&
-                Objects.equals(itemsOrdered, order.itemsOrdered);
+                Objects.equals(orderedItems, order.orderedItems);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(creationDate, restaurant.getId(), customer.getId(), itemsOrdered);
+        return Objects.hash(creationDate, restaurant.getId(), customer.getId(), orderedItems);
     }
 
 }

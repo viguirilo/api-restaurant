@@ -1,8 +1,7 @@
 package com.restaurant.api.rest.v1.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -21,22 +20,22 @@ public class OrderedItemRequestVO {
     Long orderId;
 
     @NotNull
-    @DecimalMin("1")
+    @Min(1)
     private Long productId;
 
     @Size(max = 255)
     private String observation;
 
-    @Column(name = "quantity", nullable = false)
-    @JsonProperty(value = "quantity")
+    @NotNull
+    @Min(1)
     private Integer quantity;
 
-    @Column(name = "unit_price", nullable = false)
-    @JsonProperty(value = "unit_price")
+    @NotNull
+    @DecimalMin("0.01")
     private BigDecimal unitPrice;
 
-    @Column(name = "total_price", nullable = false)
-    @JsonProperty(value = "total_price")
+    @NotNull
+    @DecimalMin("0.01")
     private BigDecimal totalPrice;
 
 }
