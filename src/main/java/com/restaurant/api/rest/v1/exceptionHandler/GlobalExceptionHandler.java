@@ -12,6 +12,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -140,6 +141,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    private ResponseEntity<?> handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException ex, WebRequest request) {
+        ProblemDetail problemDetail = new ProblemDetail(
+                BAD_REQUEST.getStatus().value(),
+                BAD_REQUEST.getType(),
+                BAD_REQUEST.getTitle(),
+                ex.getMessage(),
+                BAD_REQUEST.getDetail(),
+                LocalDateTime.now(),
+                null
+        );
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), BAD_REQUEST.getStatus(), request);
     }
 
     private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
