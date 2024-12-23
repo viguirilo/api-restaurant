@@ -142,9 +142,23 @@ INSERT INTO `user` (name, email, password, creation_date) VALUES
 ("User Four", "user.four@provider.com", "passPhrase", now()),
 ("User Five", "user.five@provider.com", "passPhrase", now());
 
+INSERT INTO `group` (name) VALUES
+("Group 1"),
+("Group 2"),
+("Group 3"),
+("Group 4"),
+("Group 5");
+
 INSERT INTO `order` (sub_total, ship_rate, total_value, creation_date, restaurant_id, customer_id, payment_method_id, address_street_or_avenue, address_number, address_complement, address_neighborhood, address_zip_code, address_city_id, status) VALUES
 (5.0, 2.5, 7.5, now(), 1, 1, 1, "Rua 1", "1", "", "Neighborhood", "30.000-000", 1, "CREATED"),
 (5.0, 2.5, 7.5, now(), 2, 2, 2, "Rua 2", "2", "", "Neighborhood", "30.000-000", 2, "CREATED"),
 (5.0, 2.5, 7.5, now(), 3, 3, 3, "Rua 3", "3", "", "Neighborhood", "30.000-000", 3, "CREATED"),
 (5.0, 2.5, 7.5, now(), 4, 4, 4, "Rua 4", "4", "", "Neighborhood", "30.000-000", 4, "CREATED"),
 (5.0, 2.5, 7.5, now(), 5, 5, 5, "Rua 5", "5", "", "Neighborhood", "30.000-000", 5, "CREATED");
+
+INSERT INTO ordered_item (order_id, product_id, observation, quantity, unit_price, total_price) VALUES
+(1, 1, "Observation 1", 1, 1.0, 1.0),
+(2, 2, "Observation 1", 1, 1.0, 1.0),
+(3, 3, "Observation 1", 1, 1.0, 1.0),
+(4, 4, "Observation 1", 1, 1.0, 1.0),
+(5, 5, "Observation 1", 1, 1.0, 1.0);

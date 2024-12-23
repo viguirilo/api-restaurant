@@ -6,6 +6,7 @@ import com.restaurant.api.rest.v1.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 
@@ -23,13 +24,7 @@ public class OrderedItemResponseVO {
     private BigDecimal totalPrice;
 
     public OrderedItemResponseVO(OrderedItem orderedItem) {
-        this.id = orderedItem.getId();
-        this.order = orderedItem.getOrder();
-        this.product = orderedItem.getProduct();
-        this.observation = orderedItem.getObservation();
-        this.quantity = orderedItem.getQuantity();
-        this.unitPrice = orderedItem.getUnitPrice();
-        this.totalPrice = orderedItem.getTotalPrice();
+        BeanUtils.copyProperties(orderedItem, this);
     }
 
 }

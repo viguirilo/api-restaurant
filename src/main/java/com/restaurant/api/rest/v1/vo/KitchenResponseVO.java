@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.entity.Kitchen;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,8 +15,7 @@ public class KitchenResponseVO {
     public String name;
 
     public KitchenResponseVO(Kitchen kitchen) {
-        this.id = kitchen.getId();
-        this.name = kitchen.getName();
+        BeanUtils.copyProperties(kitchen, this);
     }
 
 }

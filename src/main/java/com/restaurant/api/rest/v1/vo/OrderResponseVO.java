@@ -5,6 +5,7 @@ import com.restaurant.api.rest.v1.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,20 +33,7 @@ public class OrderResponseVO {
     private List<OrderedItem> orderedItems = new ArrayList<>();
 
     public OrderResponseVO(Order order) {
-        this.id = order.getId();
-        this.subTotal = order.getSubTotal();
-        this.shipRate = order.getShipRate();
-        this.totalValue = order.getTotalValue();
-        this.creationDate = order.getCreationDate();
-        this.confirmationDate = order.getConfirmationDate();
-        this.cancellationDate = order.getCancellationDate();
-        this.deliveryDate = order.getDeliveryDate();
-        this.restaurant = order.getRestaurant();
-        this.customer = order.getCustomer();
-        this.paymentMethod = order.getPaymentMethod();
-        this.address = order.getAddress();
-        this.status = order.getStatus();
-        this.orderedItems = order.getOrderedItems();
+        BeanUtils.copyProperties(order, this);
     }
 
 }

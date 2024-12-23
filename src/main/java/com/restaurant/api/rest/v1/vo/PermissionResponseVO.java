@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.entity.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,9 +16,7 @@ public class PermissionResponseVO {
     private String description;
 
     public PermissionResponseVO(Permission permission) {
-        this.id = permission.getId();
-        this.name = permission.getName();
-        this.description = permission.getDescription();
+        BeanUtils.copyProperties(permission, this);
     }
 
 }
