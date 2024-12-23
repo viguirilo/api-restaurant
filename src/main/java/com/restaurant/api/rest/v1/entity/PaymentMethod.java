@@ -29,7 +29,7 @@ public class PaymentMethod implements Serializable {
     private String description;
 
     public PaymentMethod(PaymentMethodRequestVO paymentMethodRequestVO) {
-        this.description = paymentMethodRequestVO.getDescription();
+        this.description = paymentMethodRequestVO.getDescription().trim().replaceAll("\\s+", " ");
     }
 
     @Override

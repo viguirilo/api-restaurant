@@ -54,7 +54,7 @@ public class OrderedItem implements Serializable {
     public OrderedItem(OrderedItemRequestVO orderedItemRequestVO, Order order, Product product) {
         this.order = order;
         this.product = product;
-        this.observation = orderedItemRequestVO.getObservation();
+        this.observation = orderedItemRequestVO.getObservation() != null ? orderedItemRequestVO.getObservation().trim().replaceAll("\\s+", " ") : null;
         this.quantity = orderedItemRequestVO.getQuantity();
         this.unitPrice = orderedItemRequestVO.getUnitPrice();
         this.totalPrice = orderedItemRequestVO.getTotalPrice();

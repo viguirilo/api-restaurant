@@ -36,7 +36,7 @@ public class Kitchen implements Serializable {
     private List<Restaurant> restaurants = new ArrayList<>();
 
     public Kitchen(KitchenRequestVO kitchenRequestVO) {
-        this.name = kitchenRequestVO.getName();
+        this.name = kitchenRequestVO.getName().trim().replaceAll("\\s+", " ");
     }
 
     @Override

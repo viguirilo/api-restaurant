@@ -37,9 +37,9 @@ public class State implements Serializable {
     private String country;
 
     public State(StateRequestVO stateRequestVO) {
-        this.name = stateRequestVO.getName();
-        this.abbreviation = stateRequestVO.getAbbreviation();
-        this.country = stateRequestVO.getCountry();
+        this.name = stateRequestVO.getName().trim().replaceAll("\\s+", " ");
+        this.abbreviation = stateRequestVO.getAbbreviation().trim().replaceAll("\\s+", " ");
+        this.country = stateRequestVO.getCountry().trim().replaceAll("\\s+", " ");
     }
 
     @Override

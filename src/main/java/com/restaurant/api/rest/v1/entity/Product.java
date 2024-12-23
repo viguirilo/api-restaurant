@@ -47,8 +47,8 @@ public class Product implements Serializable {
     private Restaurant restaurant;
 
     public Product(ProductRequestVO productRequestVO, Restaurant restaurant) {
-        this.name = productRequestVO.getName();
-        this.description = productRequestVO.getDescription();
+        this.name = productRequestVO.getName().trim().replaceAll("\\s+", " ");
+        this.description = productRequestVO.getDescription().trim().replaceAll("\\s+", " ");
         this.price = productRequestVO.getPrice();
         this.active = productRequestVO.getActive();
         this.restaurant = restaurant;

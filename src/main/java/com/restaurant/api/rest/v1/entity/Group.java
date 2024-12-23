@@ -38,7 +38,7 @@ public class Group implements Serializable {
     private List<Permission> permissions = new ArrayList<>();
 
     public Group(GroupRequestVO groupRequestVO) {
-        this.name = groupRequestVO.getName();
+        this.name = groupRequestVO.getName().trim().replaceAll("\\s+", " ");
     }
 
     @Override

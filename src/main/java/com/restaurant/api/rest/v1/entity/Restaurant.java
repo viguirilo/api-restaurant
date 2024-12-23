@@ -79,7 +79,7 @@ public class Restaurant implements Serializable {
     private List<Product> products = new ArrayList<>();
 
     public Restaurant(RestaurantRequestVO restaurantRequestVO, Kitchen kitchen, City city) {
-        this.name = restaurantRequestVO.getName();
+        this.name = restaurantRequestVO.getName().trim().replaceAll("\\s+", " ");
         this.shipRate = restaurantRequestVO.getShipRate();
         this.active = restaurantRequestVO.getActive();
         this.open = restaurantRequestVO.getOpen();
