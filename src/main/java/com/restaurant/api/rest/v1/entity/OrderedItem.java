@@ -25,12 +25,12 @@ public class OrderedItem implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     @JsonProperty("order")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     @JsonProperty("product")
     private Product product;
@@ -64,8 +64,8 @@ public class OrderedItem implements Serializable {
     public String toString() {
         return "ItemOrdered{" +
                 "id=" + id +
-                ", order=" + order.toString() +
-                ", product=" + product.toString() +
+//                ", order=" + order.toString() +
+//                ", product=" + product.toString() +
                 ", observation='" + observation + '\'' +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +

@@ -73,7 +73,7 @@ public class OrderService {
     public OrderResponseVO update(Long id, OrderRequestVO orderRequestVO) {
         Order order = orderRepository.findById(id).orElseThrow(() -> {
             logger.warning("ORDERED ID = " + id + " NOT FOUND");
-            return new EntityNotFoundException("The ordered requested was not found");
+            return new EntityNotFoundException("The order requested was not found");
         });
         Restaurant restaurant = restaurantRepository.findById(orderRequestVO.getRestaurantId()).orElseThrow(() -> {
             logger.warning("RESTAURANT ID = " + orderRequestVO.getRestaurantId() + " WAS NOT FOUND");
@@ -94,7 +94,7 @@ public class OrderService {
         BeanUtils.copyProperties(
                 orderRequestVO,
                 order,
-                "id", "restaurant", "customer", "paymentMethod", "address"
+                "id", "creationDate", "restaurant", "customer", "paymentMethod", "address"
         );
         order.setRestaurant(restaurant);
         order.setCustomer(customer);

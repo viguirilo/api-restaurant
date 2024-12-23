@@ -42,7 +42,7 @@ public class OrderResponseVO {
         this.deliveryDate = order.getDeliveryDate();
         this.restaurant = order.getRestaurant();
         this.customer = order.getCustomer();
-        this.paymentMethod=order.getPaymentMethod();
+        this.paymentMethod = order.getPaymentMethod();
         this.address = order.getAddress();
         this.status = order.getStatus();
         this.orderedItems = order.getOrderedItems();
