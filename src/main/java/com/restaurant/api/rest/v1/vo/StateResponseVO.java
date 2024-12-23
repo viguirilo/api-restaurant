@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.entity.State;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,10 +17,7 @@ public class StateResponseVO {
     public String country;
 
     public StateResponseVO(State state) {
-        this.id = state.getId();
-        this.name = state.getName();
-        this.abbreviation = state.getAbbreviation();
-        this.country = state.getCountry();
+        BeanUtils.copyProperties(state, this);
     }
 
 }

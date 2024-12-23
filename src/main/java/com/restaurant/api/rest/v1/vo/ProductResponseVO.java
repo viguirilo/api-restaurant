@@ -5,6 +5,7 @@ import com.restaurant.api.rest.v1.entity.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 
@@ -21,12 +22,7 @@ public class ProductResponseVO {
     public Restaurant restaurant;
 
     public ProductResponseVO(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.description = product.getDescription();
-        this.price = product.getPrice();
-        this.active = product.getActive();
-        this.restaurant = product.getRestaurant();
+        BeanUtils.copyProperties(product, this);
     }
 
 }

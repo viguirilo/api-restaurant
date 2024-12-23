@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "order")
+@Table(name = "`order`")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@JsonRootName(value = "order")
+@JsonRootName(value = "`order`")
 public class Order implements Serializable {
 
     @Id
@@ -60,12 +60,12 @@ public class Order implements Serializable {
     @JsonProperty(value = "deliveryDate")
     private LocalDateTime deliveryDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonProperty(value = "restaurant")
     private Restaurant restaurant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonProperty(value = "customer")
     private User customer;
@@ -78,6 +78,7 @@ public class Order implements Serializable {
     @Embedded
     private Address address;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 25, nullable = false)
     @JsonProperty(value = "status")
     private OrderStatus status;

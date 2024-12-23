@@ -5,6 +5,7 @@ import com.restaurant.api.rest.v1.entity.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
@@ -18,9 +19,7 @@ public class GroupResponseVO {
     private List<Permission> permissions;
 
     public GroupResponseVO(Group group) {
-        this.id = group.getId();
-        this.name = group.getName();
-        this.permissions = group.getPermissions();
+        BeanUtils.copyProperties(group, this);
     }
 
 }

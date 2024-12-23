@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.entity.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,8 +15,7 @@ public class PaymentMethodResponseVO {
     public String description;
 
     public PaymentMethodResponseVO(PaymentMethod paymentMethod) {
-        this.id = paymentMethod.getId();
-        this.description = paymentMethod.getDescription();
+        BeanUtils.copyProperties(paymentMethod, this);
     }
 
 }

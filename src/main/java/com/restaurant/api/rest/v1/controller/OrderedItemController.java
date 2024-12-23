@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/v1/itemsOrdered")
+@RequestMapping("/rest/v1/orderedItems")
 @RequiredArgsConstructor
 public class OrderedItemController {
 
