@@ -1,8 +1,8 @@
-CREATE TABLE `item_ordered` (
+CREATE TABLE `ordered_item` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `order_id` bigint NOT NULL,
   `product_id` bigint NOT NULL,
-  `observation` varchar(50) DEFAULT NULL,
+  `observation` varchar(255) DEFAULT NULL,
   `quantity` int NOT NULL,
   `unit_price` decimal(38,2) NOT NULL,
   `total_price` decimal(38,2) NOT NULL,
