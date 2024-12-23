@@ -51,11 +51,11 @@ public class Address implements Serializable {
     }
 
     public Address(OrderRequestVO orderRequestVO, City city) {
-        this.addressStreetOrAvenue = orderRequestVO.getAddressStreetOrAvenue();
-        this.addressNumber = orderRequestVO.getAddressNumber();
-        this.addressComplement = orderRequestVO.getAddressComplement();
-        this.addressNeighborhood = orderRequestVO.getAddressNeighborhood();
-        this.addressZipCode = orderRequestVO.getAddressZipCode();
+        this.addressStreetOrAvenue = orderRequestVO.getAddressStreetOrAvenue().trim().replaceAll("\\s+", " ");
+        this.addressNumber = orderRequestVO.getAddressNumber().trim().replaceAll("\\s+", " ");
+        this.addressComplement = orderRequestVO.getAddressComplement() != null ? orderRequestVO.getAddressComplement().trim().replaceAll("\\s+", " ") : null;
+        this.addressNeighborhood = orderRequestVO.getAddressNeighborhood().trim().replaceAll("\\s+", " ");
+        this.addressZipCode = orderRequestVO.getAddressZipCode().trim().replaceAll("\\s+", " ");
         this.city = city;
     }
 

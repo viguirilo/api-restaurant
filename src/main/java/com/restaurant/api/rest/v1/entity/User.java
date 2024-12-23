@@ -55,9 +55,9 @@ public class User implements Serializable {
     private List<Group> groups = new ArrayList<>();
 
     public User(UserRequestVO userRequestVO) {
-        this.name = userRequestVO.getName();
-        this.email = userRequestVO.getEmail();
-        this.password = userRequestVO.getPassword();
+        this.name = userRequestVO.getName().trim().replaceAll("\\s+", " ");
+        this.email = userRequestVO.getEmail().trim().replaceAll("\\s+", " ");
+        this.password = userRequestVO.getPassword().trim().replaceAll("\\s+", "");
         this.creationDate = LocalDateTime.now();
     }
 

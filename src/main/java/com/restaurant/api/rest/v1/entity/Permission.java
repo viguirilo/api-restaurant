@@ -33,8 +33,8 @@ public class Permission implements Serializable {
     private String description;
 
     public Permission(PermissionRequestVO permissionRequestVO) {
-        this.name = permissionRequestVO.getName();
-        this.description = permissionRequestVO.getDescription();
+        this.name = permissionRequestVO.getName().trim().replaceAll("\\s+", " ");
+        this.description = permissionRequestVO.getDescription().trim().replaceAll("\\s+", " ");
     }
 
     @Override

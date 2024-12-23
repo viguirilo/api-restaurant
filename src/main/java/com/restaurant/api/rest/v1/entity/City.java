@@ -34,7 +34,7 @@ public class City implements Serializable {
     private State state;
 
     public City(CityRequestVO cityRequestVO, State state) {
-        this.name = cityRequestVO.getName();
+        this.name = cityRequestVO.getName().trim().replaceAll("\\s+", " ");
         this.state = state;
     }
 
