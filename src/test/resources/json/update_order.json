@@ -1,0 +1,14 @@
+{
+  "subTotal": 0,
+  "shipRate": 0,
+  "totalValue": 0,
+  "restaurantId": $restaurantId,
+  "customerId": $customerId,
+  "paymentMethodId": $paymentMethodId,
+  "addressStreetOrAvenue": "Rua 2",
+  "addressNumber": "1",
+  "addressComplement": "",
+  "addressNeighborhood": "New Neighborhood",
+  "addressZipCode": "30.000-000",
+  "addressCityId": $cityId
+}
