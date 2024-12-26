@@ -21,7 +21,7 @@ public class UserRequestVO {
     @Size(max = 50)
     public String email;
 
-    @Size(max = 25)
+    @Size(max = 100)
     public String password;
 
 }
