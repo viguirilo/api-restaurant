@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,7 @@ public class OrderService {
     private final Logger logger = Logger.getLogger(OrderService.class.getName());
 
     // TODO(Rever aula 4.30 para adequar como ele implementa esse método)
+    @Transactional
     public OrderResponseVO save(OrderRequestVO orderRequestVO) {
         Restaurant restaurant = restaurantRepository.findById(orderRequestVO.getRestaurantId()).orElseThrow(() -> {
             logger.warning("RESTAURANT ID = " + orderRequestVO.getRestaurantId() + " WAS NOT FOUND");
@@ -70,6 +72,7 @@ public class OrderService {
         return new OrderResponseVO(order);
     }
 
+    @Transactional
     public OrderResponseVO update(Long id, OrderRequestVO orderRequestVO) {
         Order order = orderRepository.findById(id).orElseThrow(() -> {
             logger.warning("ORDERED ID = " + id + " NOT FOUND");
@@ -106,6 +109,7 @@ public class OrderService {
         return new OrderResponseVO(order);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             orderRepository.delete(Objects.requireNonNull(orderRepository.findById(id).orElse(null)));

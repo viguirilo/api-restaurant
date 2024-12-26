@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.equalTo;
 @TestPropertySource("/application-test.properties")
 class OrderIT {
 
-    private static final Long NON_EXISTENT_ORDER_ID = 100L;
+    private static final Long NON_EXISTENT_ORDER_ID = 1_000_000L;
 
     @LocalServerPort
     private int port;
@@ -148,21 +148,8 @@ class OrderIT {
         ));
     }
 
-    @AfterEach
-    public void clearData() {
-        orderedItemService.findAll().forEach(orderedItemResponseVO -> orderedItemService.delete(orderedItemResponseVO.getId()));
-        productService.findAll().forEach(productResponseVO -> productService.delete(productResponseVO.getId()));
-        orderService.findAll().forEach(orderResponseVO -> orderService.delete(orderResponseVO.getId()));
-        paymentMethodService.findAll().forEach(paymentMethodResponseVO1 -> paymentMethodService.delete(paymentMethodResponseVO1.getId()));
-        userService.findAll().forEach(userResponseVO1 -> userService.delete(userResponseVO1.getId()));
-        restaurantService.findAll().forEach(restaurantResponseVO1 -> restaurantService.delete(restaurantResponseVO1.getId()));
-        cityService.findAll().forEach(cityResponseVO1 -> cityService.delete(cityResponseVO1.getId()));
-        stateService.findAll().forEach(stateResponseVO -> stateService.delete(stateResponseVO.getId()));
-        kitchenService.findAll().forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
-    }
-
     @Test
-    void createOrderSuccessfully() {
+    public void createOrderSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_order.json")
                 .replace("$restaurantId", restaurantResponseVO.getId().toString())

@@ -80,13 +80,8 @@ class ProductIT {
         ));
     }
 
-    @AfterEach
-    public void clearData() {
-
-    }
-
     @Test
-    public void createProductSuccessfully() {
+    void createProductSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_product.json")
                 .replace("$restaurantId", restaurantResponseVO.getId().toString());
@@ -105,7 +100,7 @@ class ProductIT {
     }
 
     @Test
-    public void createProductWithOutFields() {
+    void createProductWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -119,8 +114,13 @@ class ProductIT {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+//    @Test TODO(pendente da implemenntação dessa checagem no service.save())
+//    public void createProductAlreadyExists() {
+//
+//    }
+
     @Test
-    public void readProductsSuccessfully() {
+    void readProductsSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -133,7 +133,7 @@ class ProductIT {
     }
 
     @Test
-    public void readNonExistentProduct() {
+    void readNonExistentProduct() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_PRODUCT_ID)
@@ -147,7 +147,7 @@ class ProductIT {
     }
 
     @Test
-    public void updateProductSuccessfully() {
+    void updateProductSuccessfully() {
         String contentFromResource = ResourceUtils.getContentFromResource("/json/update_product.json")
                 .replace("$restaurantId", restaurantResponseVO.getId().toString());
         RestAssured.given()
@@ -166,7 +166,7 @@ class ProductIT {
     }
 
     @Test
-    public void updateProductWithoutFields() {
+    void updateProductWithoutFields() {
         RestAssured.given()
                 .pathParam("id", productResponseVO.getId())
                 .body("{}")
@@ -181,7 +181,7 @@ class ProductIT {
     }
 
     @Test
-    public void deleteProductSuccessfully() {
+    void deleteProductSuccessfully() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", productResponseVO.getId())
@@ -195,7 +195,7 @@ class ProductIT {
     }
 
     @Test
-    public void deleteProductNotExists() {
+    void deleteProductNotExists() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_PRODUCT_ID)

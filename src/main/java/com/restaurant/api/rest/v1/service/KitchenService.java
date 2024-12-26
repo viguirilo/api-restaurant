@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ public class KitchenService {
     private final KitchenRepository kitchenRepository;
     private final Logger logger = Logger.getLogger(KitchenService.class.getName());
 
+    @Transactional
     public KitchenResponseVO save(KitchenRequestVO kitchenRequestVO) {
         Kitchen kitchen = kitchenRepository.save(new Kitchen(kitchenRequestVO));
         logger.info(kitchen + " CREATED SUCCESSFULLY");
@@ -48,6 +50,7 @@ public class KitchenService {
         return new KitchenResponseVO(kitchen);
     }
 
+    @Transactional
     public KitchenResponseVO update(Long id, KitchenRequestVO kitchenRequestVO) {
         Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: KITCHEN " + id + " NOT FOUND");
@@ -59,6 +62,7 @@ public class KitchenService {
         return new KitchenResponseVO(kitchen);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             kitchenRepository.delete(Objects.requireNonNull(kitchenRepository.findById(id).orElse(null)));

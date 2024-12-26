@@ -46,11 +46,11 @@ class PermissionIT {
 
     @AfterEach
     public void clearData() {
-        permissionService.findAll().forEach(permissionResponseVO -> permissionService.delete(permissionResponseVO.getId()));
+        permissionService.findAll().forEach(permissionResponseVO1 -> permissionService.delete(permissionResponseVO1.getId()));
     }
 
     @Test
-    public void createPermissionSuccessfully() {
+    void createPermissionSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_permission.json");
         RestAssured.given()
@@ -68,7 +68,7 @@ class PermissionIT {
     }
 
     @Test
-    public void createPermissionWithOutFields() {
+    void createPermissionWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -82,8 +82,13 @@ class PermissionIT {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+//    @Test TODO(pendente da implemenntação dessa checagem no service.save())
+//    public void createPermissionAlreadyExists() {
+//
+//    }
+
     @Test
-    public void readPermissionsSuccessfully() {
+    void readPermissionsSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -96,7 +101,7 @@ class PermissionIT {
     }
 
     @Test
-    public void readNonExistentPermission() {
+    void readNonExistentPermission() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_PERMISSION_ID)
@@ -110,7 +115,7 @@ class PermissionIT {
     }
 
     @Test
-    public void updatePermissionSuccessfully() {
+    void updatePermissionSuccessfully() {
         String contentFromResource = ResourceUtils.getContentFromResource("/json/update_permission.json");
         RestAssured.given()
                 .pathParam("id", permissionResponseVO.getId())
@@ -128,7 +133,7 @@ class PermissionIT {
     }
 
     @Test
-    public void updatePermissionWithoutFields() {
+    void updatePermissionWithoutFields() {
         RestAssured.given()
                 .pathParam("id", permissionResponseVO.getId())
                 .body("{}")
@@ -143,7 +148,7 @@ class PermissionIT {
     }
 
     @Test
-    public void deletePermissionSuccessfully() {
+    void deletePermissionSuccessfully() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", permissionResponseVO.getId())
@@ -157,7 +162,7 @@ class PermissionIT {
     }
 
     @Test
-    public void deletePermissionNotExists() {
+    void deletePermissionNotExists() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_PERMISSION_ID)

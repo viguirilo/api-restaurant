@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class OrderedItemService {
     private final Logger logger = Logger.getLogger(OrderedItemService.class.getName());
 
     // TODO(Rever aula 4.30 para adequar como ele implementa esse método)
+    @Transactional
     public OrderedItemResponseVO save(OrderedItemRequestVO orderedItemRequestVO) {
         Order order = orderRepository.findById(orderedItemRequestVO.getOrderId()).orElseThrow(() -> {
             logger.warning("ORDER ID = " + orderedItemRequestVO.getOrderId() + " WAS NOT FOUND");
@@ -64,6 +66,7 @@ public class OrderedItemService {
         return new OrderedItemResponseVO(orderedItem);
     }
 
+    @Transactional
     public OrderedItemResponseVO update(Long id, OrderedItemRequestVO orderedItemRequestVO) {
         OrderedItem orderedItem = orderedItemRepository.findById(id).orElseThrow(() -> {
             logger.warning("ORDERED ITEM ID = " + id + " NOT FOUND");
@@ -89,6 +92,7 @@ public class OrderedItemService {
         return new OrderedItemResponseVO(orderedItem);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             orderedItemRepository.delete(Objects.requireNonNull(orderedItemRepository.findById(id).orElse(null)));

@@ -50,7 +50,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void createPaymentMethodSuccessfully() {
+    void createPaymentMethodSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_payment_method.json");
         RestAssured.given()
@@ -67,7 +67,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void createPaymentMethodWithOutFields() {
+    void createPaymentMethodWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -81,8 +81,13 @@ class PaymentMethodIT {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+//    @Test TODO(pendente da implemenntação dessa checagem no service.save())
+//    public void createPaymentMethodAlreadyExists() {
+//
+//    }
+
     @Test
-    public void readPaymentMethodsSuccessfully() {
+    void readPaymentMethodsSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -95,7 +100,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void readNonExistentPaymentMethod() {
+    void readNonExistentPaymentMethod() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_PAYMENT_METHOD_ID)
@@ -109,7 +114,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void updatePaymentMethodSuccessfully() {
+    void updatePaymentMethodSuccessfully() {
         String contentFromResource = ResourceUtils.getContentFromResource("/json/update_payment_method.json");
         RestAssured.given()
                 .pathParam("id", paymentMethodResponseVO1.getId())
@@ -126,7 +131,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void updatePaymentMethodWithoutFields() {
+    void updatePaymentMethodWithoutFields() {
         RestAssured.given()
                 .pathParam("id", paymentMethodResponseVO1.getId())
                 .body("{}")
@@ -141,7 +146,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void deletePaymentMethodSuccessfully() {
+    void deletePaymentMethodSuccessfully() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", paymentMethodResponseVO1.getId())
@@ -155,7 +160,7 @@ class PaymentMethodIT {
     }
 
     @Test
-    public void deletePaymentMethodNotExists() {
+    void deletePaymentMethodNotExists() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_PAYMENT_METHOD_ID)

@@ -81,11 +81,11 @@ class CityIT {
         restaurantService.findAll().forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
         kitchenService.findAll().forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
         cityService.findAll().forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
-        stateService.findAll().forEach(stateResponseVO -> stateService.delete(stateResponseVO.getId()));
+        stateService.findAll().forEach(stateResponseVO1 -> stateService.delete(stateResponseVO1.getId()));
     }
 
     @Test
-    public void createCitySuccessfully() {
+    void createCitySuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_city.json")
                 .replace("$stateId", stateResponseVO.getId().toString());
@@ -103,7 +103,7 @@ class CityIT {
     }
 
     @Test
-    public void createCityWithOutFields() {
+    void createCityWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -117,8 +117,13 @@ class CityIT {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+//    @Test TODO(pendente da implemenntação dessa checagem no service.save())
+//    public void createCityAlreadyExists() {
+//
+//    }
+
     @Test
-    public void readCitiesSuccessfully() {
+    void readCitiesSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -131,7 +136,7 @@ class CityIT {
     }
 
     @Test
-    public void readNonExistentCity() {
+    void readNonExistentCity() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_CITY_ID)
@@ -145,7 +150,7 @@ class CityIT {
     }
 
     @Test
-    public void updateCitySuccessfully() {
+    void updateCitySuccessfully() {
         String contentFromResource = ResourceUtils.getContentFromResource("/json/update_city.json")
                 .replace("$stateId", stateResponseVO.getId().toString());
         RestAssured.given()
@@ -163,7 +168,7 @@ class CityIT {
     }
 
     @Test
-    public void updateCityWithoutFields() {
+    void updateCityWithoutFields() {
         RestAssured.given()
                 .pathParam("id", cityResponseVO1.getId())
                 .body("{}")
@@ -178,7 +183,7 @@ class CityIT {
     }
 
     @Test
-    public void deleteCitySuccessfully() {
+    void deleteCitySuccessfully() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", cityResponseVO1.getId())
@@ -192,7 +197,7 @@ class CityIT {
     }
 
     @Test
-    public void deleteKitchenNotExists() {
+    void deleteKitchenNotExists() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_CITY_ID)
@@ -206,7 +211,7 @@ class CityIT {
     }
 
     @Test
-    public void deleteCityInUse() {
+    void deleteCityInUse() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", cityResponseVO2.getId())

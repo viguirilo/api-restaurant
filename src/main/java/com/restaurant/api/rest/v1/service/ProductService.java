@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class ProductService {
     private final RestaurantRepository restaurantRepository;
     private final Logger logger = Logger.getLogger(ProductService.class.getName());
 
+    @Transactional
     public ProductResponseVO save(ProductRequestVO productRequestVO) {
         Restaurant restaurant = restaurantRepository.findById(productRequestVO.getRestaurantId()).orElseThrow(() -> {
             logger.warning("RESTAURANT ID = " + productRequestVO.getRestaurantId() + " WAS NOT FOUND");
@@ -56,6 +58,7 @@ public class ProductService {
         return new ProductResponseVO(product);
     }
 
+    @Transactional
     public ProductResponseVO update(Long id, ProductRequestVO productRequestVO) {
         Product product = productRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: PRODUCT " + id + " NOT FOUND");
@@ -72,6 +75,7 @@ public class ProductService {
         return new ProductResponseVO(product);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             productRepository.delete(Objects.requireNonNull(productRepository.findById(id).orElse(null)));
