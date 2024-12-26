@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,7 @@ public class GroupService {
     private final Logger logger = Logger.getLogger(GroupService.class.getName());
 
     //    TODO(ver como criar permissions diretamente dentro do save)
+    @Transactional
     public GroupResponseVO save(GroupRequestVO groupRequestVO) {
         Group group = groupRepository.save(new Group(groupRequestVO));
         logger.info(group + " CREATED SUCCESSFULLY");
@@ -50,6 +52,7 @@ public class GroupService {
     }
 
     //    TODO(ver como passar permissions diretamente dentro do update)
+    @Transactional
     public GroupResponseVO update(Long id, GroupRequestVO groupRequestVO) {
         Group group = groupRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: GROUP " + id + " NOT FOUND");
@@ -62,8 +65,9 @@ public class GroupService {
     }
 
     // erro: failed to lazily initialize a collection: could not initialize proxy - no Session
-// ver: https://stackoverflow.com/questions/22821695/how-to-fix-hibernate-lazyinitializationexception-failed-to-lazily-initialize-a
-//  deve estar ligado ao relacionamento ManyToMany com permissions
+    // ver: https://stackoverflow.com/questions/22821695/how-to-fix-hibernate-lazyinitializationexception-failed-to-lazily-initialize-a
+    //  deve estar ligado ao relacionamento ManyToMany com permissions
+    @Transactional
     public void delete(Long id) {
         try {
             groupRepository.delete(Objects.requireNonNull(groupRepository.findById(id).orElse(null)));

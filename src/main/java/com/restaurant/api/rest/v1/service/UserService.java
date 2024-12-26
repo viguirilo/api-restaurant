@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.security.MessageDigest;
@@ -25,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
+    @Transactional
     public UserResponseVO save(UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
         userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
         User user = userRepository.save(new User(userRequestVO));
@@ -60,6 +62,7 @@ public class UserService {
     }
 
     // TODO(Ver como a atualização do password pode prejudicar o Hash)
+    @Transactional
     public UserResponseVO update(Long id, UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
         User user = userRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: USER " + id + " NOT FOUND");
@@ -73,6 +76,7 @@ public class UserService {
         return new UserResponseVO(user);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             userRepository.delete(Objects.requireNonNull(userRepository.findById(id).orElse(null)));

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ public class StateService {
     private final StateRepository stateRepository;
     private final Logger logger = Logger.getLogger(StateService.class.getName());
 
+    @Transactional
     public StateResponseVO save(StateRequestVO stepRequestVO) {
         State state = stateRepository.save(new State(stepRequestVO));
         logger.info(state + " CREATED SUCCESSFULLY");
@@ -48,6 +50,7 @@ public class StateService {
         return new StateResponseVO(state);
     }
 
+    @Transactional
     public StateResponseVO update(Long id, StateRequestVO stateRequestVO) {
         State state = stateRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: STATE " + id + " NOT FOUND");
@@ -59,6 +62,7 @@ public class StateService {
         return new StateResponseVO(stateRepository.save(state));
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             stateRepository.delete(Objects.requireNonNull(stateRepository.findById(id).orElse(null)));

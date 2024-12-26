@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class RestaurantService {
     private final Logger logger = Logger.getLogger(RestaurantService.class.getName());
 
     // TODO(Rever aula 4.30 para adequar como ele implementa esse método)
+    @Transactional
     public RestaurantResponseVO save(RestaurantRequestVO restaurantRequestVO) {
         Kitchen kitchen = kitchenRepository.findById(restaurantRequestVO.getKitchenId()).orElseThrow(() -> {
             logger.warning("KITCHEN ID = " + restaurantRequestVO.getKitchenId() + " WAS NOT FOUND");
@@ -66,6 +68,7 @@ public class RestaurantService {
 
     //    TODO(ver como fica o BeanUtils.copyProperties em relação a atualização das entidades internas como kitchen, city, products)
     //    TODO(implementar a parte de atualização de endereço)
+    @Transactional
     public RestaurantResponseVO update(Long id, RestaurantRequestVO restaurantRequestVO) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> {
             logger.warning("RESTAURANT ID = " + id + " NOT FOUND");
@@ -86,6 +89,7 @@ public class RestaurantService {
         return new RestaurantResponseVO(restaurant);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             restaurantRepository.delete(Objects.requireNonNull(restaurantRepository.findById(id).orElse(null)));

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class CityService {
     private final StateRepository stateRepository;
     private final Logger logger = Logger.getLogger(CityService.class.getName());
 
+    @Transactional
     public CityResponseVO save(CityRequestVO cityRequestVO) {
         State state = stateRepository.findById(cityRequestVO.getStateId()).orElseThrow(() -> {
             logger.warning("STATE ID = " + cityRequestVO.getStateId() + " WAS NOT FOUND");
@@ -56,6 +58,7 @@ public class CityService {
         return new CityResponseVO(city);
     }
 
+    @Transactional
     public CityResponseVO update(Long id, CityRequestVO cityRequestVO) {
         City city = cityRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: CITY " + id + " NOT FOUND");
@@ -72,6 +75,7 @@ public class CityService {
         return new CityResponseVO(city);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             cityRepository.delete(Objects.requireNonNull(cityRepository.findById(id).orElse(null)));

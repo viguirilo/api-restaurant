@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ public class PaymentMethodService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final Logger logger = Logger.getLogger(PaymentMethodService.class.getName());
 
+    @Transactional
     public PaymentMethodResponseVO save(PaymentMethodRequestVO paymentMethodRequestVO) {
         PaymentMethod paymentMethod = paymentMethodRepository.save(new PaymentMethod(paymentMethodRequestVO));
         logger.info(paymentMethod + " CREATED SUCCESSFULLY");
@@ -48,6 +50,7 @@ public class PaymentMethodService {
         return new PaymentMethodResponseVO(paymentMethod);
     }
 
+    @Transactional
     public PaymentMethodResponseVO update(Long id, PaymentMethodRequestVO paymentMethodRequestVO) {
         PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: PAYMENT METHOD " + id + " NOT FOUND");
@@ -59,6 +62,7 @@ public class PaymentMethodService {
         return new PaymentMethodResponseVO(paymentMethod);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             paymentMethodRepository.delete(Objects.requireNonNull(paymentMethodRepository.findById(id).orElse(null)));

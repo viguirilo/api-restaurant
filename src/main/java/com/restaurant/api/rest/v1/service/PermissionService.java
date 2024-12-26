@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ public class PermissionService {
     private final PermissionRepository permissionRepository;
     private final Logger logger = Logger.getLogger(PermissionService.class.getName());
 
+    @Transactional
     public PermissionResponseVO save(PermissionRequestVO permissionRequestVO) {
         Permission permission = permissionRepository.save(new Permission(permissionRequestVO));
         logger.info(permission + " CREATED SUCCESSFULLY");
@@ -48,6 +50,7 @@ public class PermissionService {
         return new PermissionResponseVO(permission);
     }
 
+    @Transactional
     public PermissionResponseVO update(Long id, PermissionRequestVO permissionRequestVO) {
         Permission permission = permissionRepository.findById(id).orElseThrow(() -> {
             logger.warning("CAN NOT UPDATE: PERMISSION " + id + " NOT FOUND");
@@ -59,6 +62,7 @@ public class PermissionService {
         return new PermissionResponseVO(permission);
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             permissionRepository.delete(Objects.requireNonNull(permissionRepository.findById(id).orElse(null)));
