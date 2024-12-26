@@ -46,11 +46,11 @@ class GroupIT {
 
     @AfterEach
     public void clearData() {
-        groupService.findAll().forEach(groupResponseVO -> groupService.delete(groupResponseVO.getId()));
+        groupService.findAll().forEach(groupResponseVO1 -> groupService.delete(groupResponseVO1.getId()));
     }
 
     @Test
-    public void createGroupSuccessfully() {
+    void createGroupSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_group.json");
         RestAssured.given()
@@ -67,7 +67,7 @@ class GroupIT {
     }
 
     @Test
-    public void createGroupWithOutFields() {
+    void createGroupWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -81,8 +81,13 @@ class GroupIT {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+//    @Test TODO(pendente da implemenntação dessa checagem no service.save())
+//    public void createGroupAlreadyExists() {
+//
+//    }
+
     @Test
-    public void readGroupsSuccessfully() {
+    void readGroupsSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -95,7 +100,7 @@ class GroupIT {
     }
 
     @Test
-    public void readNonExistentGroup() {
+    void readNonExistentGroup() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_GROUP_ID)
@@ -109,7 +114,7 @@ class GroupIT {
     }
 
     @Test
-    public void updateGroupSuccessfully() {
+    void updateGroupSuccessfully() {
         String contentFromResource = ResourceUtils.getContentFromResource("/json/update_group.json");
         RestAssured.given()
                 .pathParam("id", groupResponseVO.getId())
@@ -126,7 +131,7 @@ class GroupIT {
     }
 
     @Test
-    public void updateGroupWithoutFields() {
+    void updateGroupWithoutFields() {
         RestAssured.given()
                 .pathParam("id", groupResponseVO.getId())
                 .body("{}")
@@ -141,7 +146,7 @@ class GroupIT {
     }
 
     @Test
-    public void deleteGroupSuccessfully() {
+    void deleteGroupSuccessfully() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", groupResponseVO.getId())
@@ -155,7 +160,7 @@ class GroupIT {
     }
 
     @Test
-    public void deleteGroupNotExists() {
+    void deleteGroupNotExists() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_GROUP_ID)

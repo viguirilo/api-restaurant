@@ -83,7 +83,7 @@ class KitchenIT {
     }
 
     @Test
-    public void createKitchenSuccessfully() {
+    void createKitchenSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/create_kitchen.json");
         RestAssured.given()
@@ -100,7 +100,7 @@ class KitchenIT {
     }
 
     @Test
-    public void createKitchenWithOutFields() {
+    void createKitchenWithOutFields() {
         // Scenario
         RestAssured.given()
                 .body("{}")
@@ -114,8 +114,13 @@ class KitchenIT {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+//    @Test TODO(pendente da implemenntação dessa checagem no service.save())
+//    public void createKitchenAlreadyExists() {
+//
+//    }
+
     @Test
-    public void readKitchensSuccessfully() {
+    void readKitchensSuccessfully() {
         // Scenario
         RestAssured.given()
                 .accept(ContentType.JSON)
@@ -128,7 +133,7 @@ class KitchenIT {
     }
 
     @Test
-    public void readNonExistentKitchen() {
+    void readNonExistentKitchen() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_KITCHEN_ID)
@@ -142,7 +147,7 @@ class KitchenIT {
     }
 
     @Test
-    public void updateKitchenSuccessfully() {
+    void updateKitchenSuccessfully() {
         // Scenario
         String contentFromResource = ResourceUtils.getContentFromResource("/json/update_kitchen.json");
         RestAssured.given()
@@ -160,7 +165,7 @@ class KitchenIT {
     }
 
     @Test
-    public void updateKitchenWithoutFields() {
+    void updateKitchenWithoutFields() {
         RestAssured.given()
                 .pathParam("id", kitchenResponseVO1.getId())
                 .body("{}")
@@ -175,7 +180,7 @@ class KitchenIT {
     }
 
     @Test
-    public void deleteKitchenSuccessfully() {
+    void deleteKitchenSuccessfully() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", kitchenResponseVO1.getId())
@@ -189,7 +194,7 @@ class KitchenIT {
     }
 
     @Test
-    public void deleteKitchenNotExists() {
+    void deleteKitchenNotExists() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", NON_EXISTENT_KITCHEN_ID)
@@ -203,7 +208,7 @@ class KitchenIT {
     }
 
     @Test
-    public void deleteKitchenInUse() {
+    void deleteKitchenInUse() {
         // Scenario
         RestAssured.given()
                 .pathParam("id", kitchenResponseVO2.getId())
