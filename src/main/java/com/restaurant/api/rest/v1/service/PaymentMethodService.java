@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -65,11 +64,9 @@ public class PaymentMethodService {
     @Transactional
     public void delete(Long id) {
         try {
-            paymentMethodRepository.delete(Objects.requireNonNull(paymentMethodRepository.findById(id).orElse(null)));
+            paymentMethodRepository.deleteById(id);
+            paymentMethodRepository.flush();
             logger.info("PAYMENT METHOD ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: PAYMENT METHOD " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The payment method requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (PAYMENT METHOD ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("PAYMENT METHOD = " + id);

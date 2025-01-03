@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -65,11 +64,9 @@ public class StateService {
     @Transactional
     public void delete(Long id) {
         try {
-            stateRepository.delete(Objects.requireNonNull(stateRepository.findById(id).orElse(null)));
+            stateRepository.deleteById(id);
+            stateRepository.flush();
             logger.info("STATE ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: STATE " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The state requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (STATE ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("STATE = " + id);

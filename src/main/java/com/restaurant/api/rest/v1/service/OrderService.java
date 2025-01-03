@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -112,11 +111,9 @@ public class OrderService {
     @Transactional
     public void delete(Long id) {
         try {
-            orderRepository.delete(Objects.requireNonNull(orderRepository.findById(id).orElse(null)));
+            orderRepository.deleteById(id);
+            orderRepository.flush();
             logger.info("ORDER ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: ORDER " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The order requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (ORDER ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("ORDER = " + id);

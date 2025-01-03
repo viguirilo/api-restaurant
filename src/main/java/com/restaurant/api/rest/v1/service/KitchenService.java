@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -65,11 +64,9 @@ public class KitchenService {
     @Transactional
     public void delete(Long id) {
         try {
-            kitchenRepository.delete(Objects.requireNonNull(kitchenRepository.findById(id).orElse(null)));
+            kitchenRepository.deleteById(id);
+            kitchenRepository.flush();
             logger.info("KITCHEN ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: KITCHEN " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The kitchen requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (KITCHEN ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("KITCHEN = " + id);

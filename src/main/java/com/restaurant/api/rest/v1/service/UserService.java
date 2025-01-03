@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -79,11 +78,9 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         try {
-            userRepository.delete(Objects.requireNonNull(userRepository.findById(id).orElse(null)));
+            userRepository.deleteById(id);
+            userRepository.flush();
             logger.info("USER ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: USER " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The user requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (USER ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("USER = " + id);

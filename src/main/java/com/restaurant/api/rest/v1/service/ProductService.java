@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -78,11 +77,9 @@ public class ProductService {
     @Transactional
     public void delete(Long id) {
         try {
-            productRepository.delete(Objects.requireNonNull(productRepository.findById(id).orElse(null)));
+            productRepository.deleteById(id);
+            productRepository.flush();
             logger.info("PRODUCT ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: PRODUCT " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The product requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (PRODUCT ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("PRODUCT = " + id);
