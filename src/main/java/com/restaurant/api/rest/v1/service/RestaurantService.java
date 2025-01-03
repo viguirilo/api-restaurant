@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -92,11 +91,9 @@ public class RestaurantService {
     @Transactional
     public void delete(Long id) {
         try {
-            restaurantRepository.delete(Objects.requireNonNull(restaurantRepository.findById(id).orElse(null)));
+            restaurantRepository.deleteById(id);
+            restaurantRepository.flush();
             logger.info("RESTAURANT ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: RESTAURANT " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The restaurant requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (RESTAURANT ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("RESTAURANT = " + id);

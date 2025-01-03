@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -70,11 +69,9 @@ public class GroupService {
     @Transactional
     public void delete(Long id) {
         try {
-            groupRepository.delete(Objects.requireNonNull(groupRepository.findById(id).orElse(null)));
+            groupRepository.deleteById(id);
+            groupRepository.flush();
             logger.info("GROUP ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: GROUP " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The group requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (GROUP ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("GROUP = " + id);

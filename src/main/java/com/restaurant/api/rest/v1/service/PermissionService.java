@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -65,11 +64,9 @@ public class PermissionService {
     @Transactional
     public void delete(Long id) {
         try {
-            permissionRepository.delete(Objects.requireNonNull(permissionRepository.findById(id).orElse(null)));
+            permissionRepository.deleteById(id);
+            permissionRepository.flush();
             logger.info("PERMISSION ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: PERMISSION " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The permission requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (PERMISSION ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("PERMISSION = " + id);

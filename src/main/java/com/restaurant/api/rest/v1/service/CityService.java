@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -78,11 +77,9 @@ public class CityService {
     @Transactional
     public void delete(Long id) {
         try {
-            cityRepository.delete(Objects.requireNonNull(cityRepository.findById(id).orElse(null)));
+            cityRepository.deleteById(id);
+            cityRepository.flush();
             logger.info("CITY ID = " + id + " DELETED SUCCESSFULLY");
-        } catch (NullPointerException ex) {
-            logger.warning("CAN NOT DELETE: CITY " + id + " NOT FOUND");
-            throw new EntityNotFoundException("The city requested was not found");
         } catch (DataIntegrityViolationException ex) {
             logger.warning("THE REQUESTED ENTITY (CITY ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
             throw new EntityInUseException("CITY = " + id);
