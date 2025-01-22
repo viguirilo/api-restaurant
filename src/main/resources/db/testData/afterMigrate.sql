@@ -115,11 +115,11 @@ INSERT INTO state (name, abbreviation, country) VALUES ('Tocantins', 'TO', 'Bras
 INSERT INTO city (name, state_id) VALUES ('Palmas', 27);
 
 INSERT INTO restaurant (name, ship_rate, active, open, creation_date, update_date, kitchen_id, address_street_or_avenue, address_number, address_complement, address_neighborhood, address_zip_code, address_city_id) VALUES
-('Thai Delivery', 2.9, true, true, now(), now(), 1, "Rua 1", "1", "complemento", "Bairro 1", "30.000-000", 1),
-('Fast Indian', 1.0, true, true, now(), now(), 2, "Rua 2", "2", "complemento", "Bairro 2", "30.000-000", 2),
-('BrazFood', 1.9, true, true, now(), now(), 3, "Rua 3", "3", "complemento", "Bairro 3", "30.000-000", 3),
-('Sushi Moto', 3.9, true, true, now(), now(), 4, "Rua 4", "4", "complemento", "Bairro 4", "30.000-000", 4),
-('Italin House', 2.0, true, true, now(), now(), 5, "Rua 5", "5", "complemento", "Bairro 5", "30.000-000", 5);
+('Thai Delivery', 2.9, true, true, utc_timestamp, utc_timestamp, 1, "Rua 1", "1", "complemento", "Bairro 1", "30.000-000", 1),
+('Fast Indian', 1.0, true, true, utc_timestamp, utc_timestamp, 2, "Rua 2", "2", "complemento", "Bairro 2", "30.000-000", 2),
+('BrazFood', 1.9, true, true, utc_timestamp, utc_timestamp, 3, "Rua 3", "3", "complemento", "Bairro 3", "30.000-000", 3),
+('Sushi Moto', 3.9, true, true, utc_timestamp, utc_timestamp, 4, "Rua 4", "4", "complemento", "Bairro 4", "30.000-000", 4),
+('Italin House', 2.0, true, true, utc_timestamp, utc_timestamp, 5, "Rua 5", "5", "complemento", "Bairro 5", "30.000-000", 5);
 
 INSERT INTO product (name, description, price, active, restaurant_id) VALUES
 ("Product 1", "Description 1", 1.0, true, 1),
@@ -136,11 +136,11 @@ INSERT INTO restaurant_payment_method (restaurant_id, payment_method_id) VALUES
 (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (5,8), (5,9);
 
 INSERT INTO `user` (name, email, password, creation_date) VALUES
-("User One", "user.one@provider.com", "passPhrase", now()),
-("User Two", "user.two@provider.com", "passPhrase", now()),
-("User Three", "user.three@provider.com", "passPhrase", now()),
-("User Four", "user.four@provider.com", "passPhrase", now()),
-("User Five", "user.five@provider.com", "passPhrase", now());
+("User One", "user.one@provider.com", "passPhrase", utc_timestamp),
+("User Two", "user.two@provider.com", "passPhrase", utc_timestamp),
+("User Three", "user.three@provider.com", "passPhrase", utc_timestamp),
+("User Four", "user.four@provider.com", "passPhrase", utc_timestamp),
+("User Five", "user.five@provider.com", "passPhrase", utc_timestamp);
 
 INSERT INTO `group` (name) VALUES
 ("Group 1"),
@@ -150,11 +150,11 @@ INSERT INTO `group` (name) VALUES
 ("Group 5");
 
 INSERT INTO `order` (sub_total, ship_rate, total_value, creation_date, restaurant_id, customer_id, payment_method_id, address_street_or_avenue, address_number, address_complement, address_neighborhood, address_zip_code, address_city_id, status) VALUES
-(5.0, 2.5, 7.5, now(), 1, 1, 1, "Rua 1", "1", "", "Neighborhood", "30.000-000", 1, "CREATED"),
-(5.0, 2.5, 7.5, now(), 2, 2, 2, "Rua 2", "2", "", "Neighborhood", "30.000-000", 2, "CREATED"),
-(5.0, 2.5, 7.5, now(), 3, 3, 3, "Rua 3", "3", "", "Neighborhood", "30.000-000", 3, "CREATED"),
-(5.0, 2.5, 7.5, now(), 4, 4, 4, "Rua 4", "4", "", "Neighborhood", "30.000-000", 4, "CREATED"),
-(5.0, 2.5, 7.5, now(), 5, 5, 5, "Rua 5", "5", "", "Neighborhood", "30.000-000", 5, "CREATED");
+(5.0, 2.5, 7.5, utc_timestamp, 1, 1, 1, "Rua 1", "1", "", "Neighborhood", "30.000-000", 1, "CREATED"),
+(5.0, 2.5, 7.5, utc_timestamp, 2, 2, 2, "Rua 2", "2", "", "Neighborhood", "30.000-000", 2, "CREATED"),
+(5.0, 2.5, 7.5, utc_timestamp, 3, 3, 3, "Rua 3", "3", "", "Neighborhood", "30.000-000", 3, "CREATED"),
+(5.0, 2.5, 7.5, utc_timestamp, 4, 4, 4, "Rua 4", "4", "", "Neighborhood", "30.000-000", 4, "CREATED"),
+(5.0, 2.5, 7.5, utc_timestamp, 5, 5, 5, "Rua 5", "5", "", "Neighborhood", "30.000-000", 5, "CREATED");
 
 INSERT INTO ordered_item (order_id, product_id, observation, quantity, unit_price, total_price) VALUES
 (1, 1, "Observation 1", 1, 1.0, 1.0),
