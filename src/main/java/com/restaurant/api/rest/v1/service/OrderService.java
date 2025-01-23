@@ -10,10 +10,12 @@ import com.restaurant.api.rest.v1.vo.OrderResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -51,11 +53,11 @@ public class OrderService {
         return new OrderResponseVO(order);
     }
 
-    public List<OrderResponseVO> findAll() {
-        List<Order> orders = orderRepository.findAll();
+    public Page<OrderResponseVO> findAll(Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(pageable);
         if (!orders.isEmpty()) {
-            logger.info("FOUND " + orders.size() + " ORDERS");
-            return orders.stream().map(OrderResponseVO::new).toList();
+            logger.info("FOUND " + orders.getTotalElements() + " ORDERS");
+            return new PageImpl<>(orders.stream().map(OrderResponseVO::new).toList(), pageable, orders.getTotalElements());
         } else {
             logger.warning("ORDER NOT FOUND");
             throw new EntityNotFoundException("Orders not found");

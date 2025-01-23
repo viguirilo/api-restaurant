@@ -12,10 +12,12 @@ import com.restaurant.api.rest.v1.vo.CityResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -37,11 +39,11 @@ public class CityService {
         return new CityResponseVO(city);
     }
 
-    public List<CityResponseVO> findAll() {
-        List<City> cities = cityRepository.findAll();
+    public Page<CityResponseVO> findAll(Pageable pageable) {
+        Page<City> cities = cityRepository.findAll(pageable);
         if (!cities.isEmpty()) {
-            logger.info("FOUND " + cities.size() + " CITIES");
-            return cities.stream().map(CityResponseVO::new).toList();
+            logger.info("FOUND " + cities.getTotalElements() + " CITIES");
+            return new PageImpl<>(cities.stream().map(CityResponseVO::new).toList(), pageable, cities.getTotalElements());
         } else {
             logger.warning("CITIES NOT FOUND");
             throw new EntityNotFoundException("Cities not found");

@@ -9,10 +9,12 @@ import com.restaurant.api.rest.v1.vo.StateResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -29,11 +31,11 @@ public class StateService {
         return new StateResponseVO(state);
     }
 
-    public List<StateResponseVO> findAll() {
-        List<State> states = stateRepository.findAll();
+    public Page<StateResponseVO> findAll(Pageable pageable) {
+        Page<State> states = stateRepository.findAll(pageable);
         if (!states.isEmpty()) {
-            logger.info("FOUND " + states.size() + " STATES");
-            return states.stream().map(StateResponseVO::new).toList();
+            logger.info("FOUND " + states.getTotalElements() + " STATES");
+            return new PageImpl<>(states.stream().map(StateResponseVO::new).toList(), pageable, states.getTotalElements());
         } else {
             logger.warning("STATES NOT FOUND");
             throw new EntityNotFoundException("States not found");

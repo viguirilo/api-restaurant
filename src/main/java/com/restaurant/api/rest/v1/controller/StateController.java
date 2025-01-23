@@ -4,12 +4,12 @@ import com.restaurant.api.rest.v1.service.StateService;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/v1/states")
@@ -26,10 +26,9 @@ public class StateController {
         return ResponseEntity.status(HttpStatus.CREATED).body(stateService.save(stateRequestVO));
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<StateResponseVO>> findAll() {
-        List<StateResponseVO> stateResponseVOS = stateService.findAll();
+    public ResponseEntity<Page<StateResponseVO>> findAll(Pageable pageable) {
+        Page<StateResponseVO> stateResponseVOS = stateService.findAll(pageable);
         return ResponseEntity.ok().body(stateResponseVOS);
     }
 

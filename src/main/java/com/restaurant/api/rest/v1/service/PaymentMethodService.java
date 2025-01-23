@@ -9,10 +9,12 @@ import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -29,11 +31,11 @@ public class PaymentMethodService {
         return new PaymentMethodResponseVO(paymentMethod);
     }
 
-    public List<PaymentMethodResponseVO> findAll() {
-        List<PaymentMethod> paymentMethods = paymentMethodRepository.findAll();
+    public Page<PaymentMethodResponseVO> findAll(Pageable pageable) {
+        Page<PaymentMethod> paymentMethods = paymentMethodRepository.findAll(pageable);
         if (!paymentMethods.isEmpty()) {
-            logger.info("FOUND " + paymentMethods.size() + " PAYMENT METHODS");
-            return paymentMethods.stream().map(PaymentMethodResponseVO::new).toList();
+            logger.info("FOUND " + paymentMethods.getTotalElements() + " PAYMENT METHODS");
+            return new PageImpl<>(paymentMethods.stream().map(PaymentMethodResponseVO::new).toList(), pageable, paymentMethods.getTotalElements());
         } else {
             logger.warning("PAYMENT METHODS NOT FOUND");
             throw new EntityNotFoundException("Payment methods not found");

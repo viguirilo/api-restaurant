@@ -4,12 +4,12 @@ import com.restaurant.api.rest.v1.service.OrderService;
 import com.restaurant.api.rest.v1.vo.OrderRequestVO;
 import com.restaurant.api.rest.v1.vo.OrderResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/v1/orders")
@@ -27,10 +27,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderResponseVO);
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<OrderResponseVO>> findAll() {
-        List<OrderResponseVO> orderResponseVOS = orderService.findAll();
+    public ResponseEntity<Page<OrderResponseVO>> findAll(Pageable pageable) {
+        Page<OrderResponseVO> orderResponseVOS = orderService.findAll(pageable);
         return ResponseEntity.ok().body(orderResponseVOS);
     }
 

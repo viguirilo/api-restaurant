@@ -14,10 +14,12 @@ import com.restaurant.api.rest.v1.vo.RestaurantResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -45,11 +47,11 @@ public class RestaurantService {
         return new RestaurantResponseVO(restaurant);
     }
 
-    public List<RestaurantResponseVO> findAll() {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+    public Page<RestaurantResponseVO> findAll(Pageable pageable) {
+        Page<Restaurant> restaurants = restaurantRepository.findAll(pageable);
         if (!restaurants.isEmpty()) {
-            logger.info("FOUND " + restaurants.size() + " RESTAURANTS");
-            return restaurants.stream().map(RestaurantResponseVO::new).toList();
+            logger.info("FOUND " + restaurants.getTotalElements() + " RESTAURANTS");
+            return new PageImpl<>(restaurants.stream().map(RestaurantResponseVO::new).toList(), pageable, restaurants.getTotalElements());
         } else {
             logger.warning("RESTAURANTS NOT FOUND");
             throw new EntityNotFoundException("Restaurants not found");

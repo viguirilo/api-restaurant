@@ -9,10 +9,12 @@ import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -29,11 +31,11 @@ public class PermissionService {
         return new PermissionResponseVO(permission);
     }
 
-    public List<PermissionResponseVO> findAll() {
-        List<Permission> permissions = permissionRepository.findAll();
+    public Page<PermissionResponseVO> findAll(Pageable pageable) {
+        Page<Permission> permissions = permissionRepository.findAll(pageable);
         if (!permissions.isEmpty()) {
-            logger.info("FOUND " + permissions.size() + " PERMISSIONS");
-            return permissions.stream().map(PermissionResponseVO::new).toList();
+            logger.info("FOUND " + permissions.getTotalElements() + " PERMISSIONS");
+            return new PageImpl<>(permissions.stream().map(PermissionResponseVO::new).toList(), pageable, permissions.getTotalElements());
         } else {
             logger.warning("PERMISSIONS NOT FOUND");
             throw new EntityNotFoundException("Permissions not found");
