@@ -9,13 +9,15 @@ import com.restaurant.api.rest.v1.vo.UserResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -40,11 +42,11 @@ public class UserService {
         return new String(messageDigest.digest());
     }
 
-    public List<UserResponseVO> findAll() {
-        List<User> users = userRepository.findAll();
+    public Page<UserResponseVO> findAll(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
         if (!users.isEmpty()) {
-            logger.info("FOUND " + users.size() + " USERS");
-            return users.stream().map(UserResponseVO::new).toList();
+            logger.info("FOUND " + users.getTotalElements() + " USERS");
+            return new PageImpl<>(users.stream().map(UserResponseVO::new).toList(), pageable, users.getTotalElements());
         } else {
             logger.warning("USERS NOT FOUND");
             throw new EntityNotFoundException("Users not found");

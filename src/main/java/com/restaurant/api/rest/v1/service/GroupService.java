@@ -9,10 +9,12 @@ import com.restaurant.api.rest.v1.vo.GroupResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -30,11 +32,11 @@ public class GroupService {
         return new GroupResponseVO(group);
     }
 
-    public List<GroupResponseVO> findAll() {
-        List<Group> groups = groupRepository.findAll();
+    public Page<GroupResponseVO> findAll(Pageable pageable) {
+        Page<Group> groups = groupRepository.findAll(pageable);
         if (!groups.isEmpty()) {
-            logger.info("FOUND " + groups.size() + " GROUPS");
-            return groups.stream().map(GroupResponseVO::new).toList();
+            logger.info("FOUND " + groups.getTotalElements() + " GROUPS");
+            return new PageImpl<>(groups.stream().map(GroupResponseVO::new).toList(), pageable, groups.getTotalElements());
         } else {
             logger.warning("GROUPS NOT FOUND");
             throw new EntityNotFoundException("Groups not found");

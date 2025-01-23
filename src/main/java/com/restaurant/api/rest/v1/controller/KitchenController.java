@@ -4,12 +4,12 @@ import com.restaurant.api.rest.v1.service.KitchenService;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/v1/kitchens")
@@ -26,10 +26,9 @@ public class KitchenController {
         return ResponseEntity.status(HttpStatus.CREATED).body(kitchenService.save(kitchenRequestVO));
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<KitchenResponseVO>> findAll() {
-        List<KitchenResponseVO> kitchenResponseVOS = kitchenService.findAll();
+    public ResponseEntity<Page<KitchenResponseVO>> findAll(Pageable pageable) {
+        Page<KitchenResponseVO> kitchenResponseVOS = kitchenService.findAll(pageable);
         return ResponseEntity.ok().body(kitchenResponseVOS);
     }
 

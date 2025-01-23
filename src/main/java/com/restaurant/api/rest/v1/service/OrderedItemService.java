@@ -14,10 +14,12 @@ import com.restaurant.api.rest.v1.vo.OrderedItemResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -45,11 +47,11 @@ public class OrderedItemService {
         return new OrderedItemResponseVO(orderedItem);
     }
 
-    public List<OrderedItemResponseVO> findAll() {
-        List<OrderedItem> orderedItems = orderedItemRepository.findAll();
+    public Page<OrderedItemResponseVO> findAll(Pageable pageable) {
+        Page<OrderedItem> orderedItems = orderedItemRepository.findAll(pageable);
         if (!orderedItems.isEmpty()) {
-            logger.info("FOUND " + orderedItems.size() + " ORDERED ITEMS");
-            return orderedItems.stream().map(OrderedItemResponseVO::new).toList();
+            logger.info("FOUND " + orderedItems.getTotalElements() + " ORDERED ITEMS");
+            return new PageImpl<>(orderedItems.stream().map(OrderedItemResponseVO::new).toList(), pageable, orderedItems.getTotalElements());
         } else {
             logger.warning("ORDERED ITEMS NOT FOUND");
             throw new EntityNotFoundException("Ordered items not found");

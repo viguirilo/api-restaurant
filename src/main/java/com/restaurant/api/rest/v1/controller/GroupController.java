@@ -4,12 +4,12 @@ import com.restaurant.api.rest.v1.service.GroupService;
 import com.restaurant.api.rest.v1.vo.GroupRequestVO;
 import com.restaurant.api.rest.v1.vo.GroupResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/v1/groups")
@@ -26,10 +26,9 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.save(groupRequestVO));
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupResponseVO>> findAll() {
-        List<GroupResponseVO> groupResponseVOS = groupService.findAll();
+    public ResponseEntity<Page<GroupResponseVO>> findAll(Pageable pageable) {
+        Page<GroupResponseVO> groupResponseVOS = groupService.findAll(pageable);
         return ResponseEntity.ok().body(groupResponseVOS);
     }
 

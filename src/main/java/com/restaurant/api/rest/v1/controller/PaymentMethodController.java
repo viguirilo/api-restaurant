@@ -4,12 +4,12 @@ import com.restaurant.api.rest.v1.service.PaymentMethodService;
 import com.restaurant.api.rest.v1.vo.PaymentMethodRequestVO;
 import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/v1/paymentMethods")
@@ -26,10 +26,9 @@ public class PaymentMethodController {
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodService.save(paymentMethodRequestVO));
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PaymentMethodResponseVO>> findAll() {
-        List<PaymentMethodResponseVO> paymentMethodResponseVOS = paymentMethodService.findAll();
+    public ResponseEntity<Page<PaymentMethodResponseVO>> findAll(Pageable pageable) {
+        Page<PaymentMethodResponseVO> paymentMethodResponseVOS = paymentMethodService.findAll(pageable);
         return ResponseEntity.ok().body(paymentMethodResponseVOS);
     }
 

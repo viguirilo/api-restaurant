@@ -9,10 +9,12 @@ import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -29,11 +31,11 @@ public class KitchenService {
         return new KitchenResponseVO(kitchen);
     }
 
-    public List<KitchenResponseVO> findAll() {
-        List<Kitchen> kitchens = kitchenRepository.findAll();
+    public Page<KitchenResponseVO> findAll(Pageable pageable) {
+        Page<Kitchen> kitchens = kitchenRepository.findAll(pageable);
         if (!kitchens.isEmpty()) {
-            logger.info("FOUND " + kitchens.size() + " KITCHENS");
-            return kitchens.stream().map(KitchenResponseVO::new).toList();
+            logger.info("FOUND " + kitchens.getTotalElements() + " KITCHENS");
+            return new PageImpl<>(kitchens.stream().map(KitchenResponseVO::new).toList(), pageable, kitchens.getTotalElements());
         } else {
             logger.warning("KITCHENS NOT FOUND");
             throw new EntityNotFoundException("Kitchens not found");

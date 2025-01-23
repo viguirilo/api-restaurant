@@ -12,10 +12,12 @@ import com.restaurant.api.rest.v1.vo.ProductResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -37,11 +39,11 @@ public class ProductService {
         return new ProductResponseVO(product);
     }
 
-    public List<ProductResponseVO> findAll() {
-        List<Product> products = productRepository.findAll();
+    public Page<ProductResponseVO> findAll(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
         if (!products.isEmpty()) {
-            logger.info("FOUND " + products.size() + " PRODUCTS");
-            return products.stream().map(ProductResponseVO::new).toList();
+            logger.info("FOUND " + products.getTotalElements() + " PRODUCTS");
+            return new PageImpl<>(products.stream().map(ProductResponseVO::new).toList(), pageable, products.getTotalElements());
         } else {
             logger.warning("PRODUCTS NOT FOUND");
             throw new EntityNotFoundException("Products not found");

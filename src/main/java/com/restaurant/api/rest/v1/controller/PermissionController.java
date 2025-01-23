@@ -4,12 +4,12 @@ import com.restaurant.api.rest.v1.service.PermissionService;
 import com.restaurant.api.rest.v1.vo.PermissionRequestVO;
 import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/v1/permissions")
@@ -26,10 +26,9 @@ public class PermissionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.save(permissionRequestVO));
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PermissionResponseVO>> findAll() {
-        List<PermissionResponseVO> permissionResponseVOS = permissionService.findAll();
+    public ResponseEntity<Page<PermissionResponseVO>> findAll(Pageable pageable) {
+        Page<PermissionResponseVO> permissionResponseVOS = permissionService.findAll(pageable);
         return ResponseEntity.ok().body(permissionResponseVOS);
     }
 

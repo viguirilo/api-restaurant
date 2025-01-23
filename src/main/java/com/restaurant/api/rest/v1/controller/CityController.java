@@ -3,15 +3,17 @@ package com.restaurant.api.rest.v1.controller;
 import com.restaurant.api.rest.v1.service.CityService;
 import com.restaurant.api.rest.v1.vo.CityRequestVO;
 import com.restaurant.api.rest.v1.vo.CityResponseVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Tag(name = "Cities")
 @RestController
 @RequestMapping("/rest/v1/cities")
 @RequiredArgsConstructor
@@ -28,10 +30,9 @@ public class CityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cityResponseVO);
     }
 
-    // TODO(colocar paginação neste endpoint)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CityResponseVO>> findAll() {
-        List<CityResponseVO> cityResponseVOS = cityService.findAll();
+    public ResponseEntity<Page<CityResponseVO>> findAll(Pageable pageable) {
+        Page<CityResponseVO> cityResponseVOS = cityService.findAll(pageable);
         return ResponseEntity.ok().body(cityResponseVOS);
     }
 
