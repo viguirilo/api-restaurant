@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.OrderedItemControllerOpenApi;
 import com.restaurant.api.rest.v1.service.OrderedItemService;
 import com.restaurant.api.rest.v1.vo.OrderedItemRequestVO;
 import com.restaurant.api.rest.v1.vo.OrderedItemResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/orderedItems")
 @RequiredArgsConstructor
-public class OrderedItemController {
+public class OrderedItemController implements OrderedItemControllerOpenApi {
 
     private final OrderedItemService orderedItemService;
 
@@ -23,8 +24,7 @@ public class OrderedItemController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<OrderedItemResponseVO> save(@RequestBody OrderedItemRequestVO orderedItemRequestVO) {
-        OrderedItemResponseVO orderedItemResponseVO = orderedItemService.save(orderedItemRequestVO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderedItemResponseVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderedItemService.save(orderedItemRequestVO));
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

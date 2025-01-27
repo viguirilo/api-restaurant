@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.PaymentMethodControllerOpenApi;
 import com.restaurant.api.rest.v1.service.PaymentMethodService;
 import com.restaurant.api.rest.v1.vo.PaymentMethodRequestVO;
 import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/paymentMethods")
 @RequiredArgsConstructor
-public class PaymentMethodController {
+public class PaymentMethodController implements PaymentMethodControllerOpenApi {
 
     private final PaymentMethodService paymentMethodService;
 

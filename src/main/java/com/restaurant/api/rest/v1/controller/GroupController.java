@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.GroupControllerOpenApi;
 import com.restaurant.api.rest.v1.service.GroupService;
 import com.restaurant.api.rest.v1.vo.GroupRequestVO;
 import com.restaurant.api.rest.v1.vo.GroupResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/groups")
 @RequiredArgsConstructor
-public class GroupController {
+public class GroupController implements GroupControllerOpenApi {
 
     private final GroupService groupService;
 

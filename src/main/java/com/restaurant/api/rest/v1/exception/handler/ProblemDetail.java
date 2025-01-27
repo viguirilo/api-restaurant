@@ -1,4 +1,4 @@
-package com.restaurant.api.rest.v1.exceptionHandler;
+package com.restaurant.api.rest.v1.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

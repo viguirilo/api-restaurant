@@ -1,9 +1,9 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.CityControllerOpenApi;
 import com.restaurant.api.rest.v1.service.CityService;
 import com.restaurant.api.rest.v1.vo.CityRequestVO;
 import com.restaurant.api.rest.v1.vo.CityResponseVO;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,11 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Cities")
 @RestController
 @RequestMapping("/rest/v1/cities")
 @RequiredArgsConstructor
-public class CityController {
+public class CityController implements CityControllerOpenApi {
 
     private final CityService cityService;
 
@@ -26,8 +25,7 @@ public class CityController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<CityResponseVO> save(@RequestBody @Valid CityRequestVO cityRequestVO) {
-        CityResponseVO cityResponseVO = cityService.save(cityRequestVO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cityResponseVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cityService.save(cityRequestVO));
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

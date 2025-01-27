@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.KitchenControllerOpenApi;
 import com.restaurant.api.rest.v1.service.KitchenService;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/kitchens")
 @RequiredArgsConstructor
-public class KitchenController {
+public class KitchenController implements KitchenControllerOpenApi {
 
     private final KitchenService kitchenService;
 

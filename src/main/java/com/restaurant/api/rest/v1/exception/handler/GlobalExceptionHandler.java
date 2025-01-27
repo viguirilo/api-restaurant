@@ -1,4 +1,4 @@
-package com.restaurant.api.rest.v1.exceptionHandler;
+package com.restaurant.api.rest.v1.exception.handler;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import static com.restaurant.api.rest.v1.exceptionHandler.ProblemType.*;
+import static com.restaurant.api.rest.v1.exception.handler.ProblemType.*;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -257,4 +257,3 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 }
-
