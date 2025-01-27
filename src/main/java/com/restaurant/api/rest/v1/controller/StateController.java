@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.StateControllerOpenApi;
 import com.restaurant.api.rest.v1.service.StateService;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/states")
 @RequiredArgsConstructor
-public class StateController {
+public class StateController implements StateControllerOpenApi {
 
     private final StateService stateService;
 

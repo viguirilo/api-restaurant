@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.ProductControllerOpenApi;
 import com.restaurant.api.rest.v1.service.ProductService;
 import com.restaurant.api.rest.v1.vo.ProductRequestVO;
 import com.restaurant.api.rest.v1.vo.ProductResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/products")
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductController implements ProductControllerOpenApi {
 
     private final ProductService productService;
 
@@ -23,8 +24,7 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ProductResponseVO> save(@RequestBody ProductRequestVO permissionRequestVO) {
-        ProductResponseVO productResponseVO = productService.save(permissionRequestVO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productResponseVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(permissionRequestVO));
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

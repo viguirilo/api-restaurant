@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.PermissionControllerOpenApi;
 import com.restaurant.api.rest.v1.service.PermissionService;
 import com.restaurant.api.rest.v1.vo.PermissionRequestVO;
 import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rest/v1/permissions")
 @RequiredArgsConstructor
-public class PermissionController {
+public class PermissionController implements PermissionControllerOpenApi {
 
     private final PermissionService permissionService;
 

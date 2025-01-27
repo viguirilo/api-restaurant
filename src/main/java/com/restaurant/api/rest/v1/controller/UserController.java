@@ -1,5 +1,6 @@
 package com.restaurant.api.rest.v1.controller;
 
+import com.restaurant.api.rest.v1.controller.openapi.UserControllerOpenApi;
 import com.restaurant.api.rest.v1.service.UserService;
 import com.restaurant.api.rest.v1.vo.UserRequestVO;
 import com.restaurant.api.rest.v1.vo.UserResponseVO;
@@ -16,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 @RequestMapping("/rest/v1/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserControllerOpenApi {
 
     private final UserService userService;
 
