@@ -7,6 +7,7 @@ import com.restaurant.api.rest.v1.repository.KitchenRepository;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,51 +16,49 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KitchenService {
 
     private final KitchenRepository kitchenRepository;
-    private final Logger logger = Logger.getLogger(KitchenService.class.getName());
 
     @Transactional
     public KitchenResponseVO save(KitchenRequestVO kitchenRequestVO) {
         Kitchen kitchen = kitchenRepository.save(new Kitchen(kitchenRequestVO));
-        logger.info(kitchen + " CREATED SUCCESSFULLY");
+        log.info("SAVE: {} CREATED SUCCESSFULLY", kitchen);
         return new KitchenResponseVO(kitchen);
     }
 
     public Page<KitchenResponseVO> findAll(Pageable pageable) {
         Page<Kitchen> kitchens = kitchenRepository.findAll(pageable);
         if (!kitchens.isEmpty()) {
-            logger.info("FOUND " + kitchens.getTotalElements() + " KITCHENS");
+            log.info("FIND ALL: FOUND {} KITCHENS", kitchens.getTotalElements());
             return new PageImpl<>(kitchens.stream().map(KitchenResponseVO::new).toList(), pageable, kitchens.getTotalElements());
         } else {
-            logger.warning("KITCHENS NOT FOUND");
+            log.error("FIND ALL: KITCHENS NOT FOUND");
             throw new EntityNotFoundException("Kitchens not found");
         }
     }
 
     public KitchenResponseVO findById(Long id) {
         Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
-            logger.warning("KITCHEN NOT FOUND");
+            log.error("FIND BY ID: KITCHEN ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The kitchen requested was not found");
         });
-        logger.info(kitchen + " FOUND SUCCESSFULLY");
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", kitchen);
         return new KitchenResponseVO(kitchen);
     }
 
     @Transactional
     public KitchenResponseVO update(Long id, KitchenRequestVO kitchenRequestVO) {
         Kitchen kitchen = kitchenRepository.findById(id).orElseThrow(() -> {
-            logger.warning("CAN NOT UPDATE: KITCHEN " + id + " NOT FOUND");
+            log.error(": KITCHEN ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The kitchen requested was not found");
         });
         BeanUtils.copyProperties(kitchenRequestVO, kitchen, "id");
         kitchen = kitchenRepository.save(kitchen);
-        logger.info(kitchen + " UPDATED SUCCESSFULLY");
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", kitchen);
         return new KitchenResponseVO(kitchen);
     }
 
@@ -68,9 +67,9 @@ public class KitchenService {
         try {
             kitchenRepository.deleteById(id);
             kitchenRepository.flush();
-            logger.info("KITCHEN ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: KITCHEN ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (KITCHEN ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED KITCHEN ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("KITCHEN = " + id);
         }
     }

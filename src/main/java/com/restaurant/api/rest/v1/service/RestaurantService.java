@@ -3,7 +3,6 @@ package com.restaurant.api.rest.v1.service;
 import com.restaurant.api.rest.v1.entity.City;
 import com.restaurant.api.rest.v1.entity.Kitchen;
 import com.restaurant.api.rest.v1.entity.Restaurant;
-import com.restaurant.api.rest.v1.exception.BadRequestException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.CityRepository;
@@ -12,6 +11,7 @@ import com.restaurant.api.rest.v1.repository.RestaurantRepository;
 import com.restaurant.api.rest.v1.vo.RestaurantRequestVO;
 import com.restaurant.api.rest.v1.vo.RestaurantResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -20,8 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
@@ -29,41 +28,40 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final KitchenRepository kitchenRepository;
     private final CityRepository cityRepository;
-    private final Logger logger = Logger.getLogger(RestaurantService.class.getName());
 
     // TODO(Rever aula 4.30 para adequar como ele implementa esse método)
     @Transactional
     public RestaurantResponseVO save(RestaurantRequestVO restaurantRequestVO) {
         Kitchen kitchen = kitchenRepository.findById(restaurantRequestVO.getKitchenId()).orElseThrow(() -> {
-            logger.warning("KITCHEN ID = " + restaurantRequestVO.getKitchenId() + " WAS NOT FOUND");
-            return new BadRequestException("The kitchen informed was not found");
+            log.error("SAVE: KITCHEN ID = {} NOT FOUND", restaurantRequestVO.getKitchenId());
+            return new EntityNotFoundException("The kitchen informed was not found");
         });
         City city = cityRepository.findById(restaurantRequestVO.getAddressCityId()).orElseThrow(() -> {
-            logger.warning("CITY ID = " + restaurantRequestVO.getAddressCityId() + " WAS NOT FOUND");
-            return new BadRequestException("The city informed was not found");
+            log.error("SAVE: CITY ID = {} NOT FOUND", restaurantRequestVO.getAddressCityId());
+            return new EntityNotFoundException("The city informed was not found");
         });
         Restaurant restaurant = restaurantRepository.save(new Restaurant(restaurantRequestVO, kitchen, city));
-        logger.info(restaurant + " CREATED SUCCESSFULLY");
+        log.info("SAVE: {} CREATED SUCCESSFULLY", restaurant);
         return new RestaurantResponseVO(restaurant);
     }
 
     public Page<RestaurantResponseVO> findAll(Pageable pageable) {
         Page<Restaurant> restaurants = restaurantRepository.findAll(pageable);
         if (!restaurants.isEmpty()) {
-            logger.info("FOUND " + restaurants.getTotalElements() + " RESTAURANTS");
+            log.info("FIND ALL: FOUND {} RESTAURANTS", restaurants.getTotalElements());
             return new PageImpl<>(restaurants.stream().map(RestaurantResponseVO::new).toList(), pageable, restaurants.getTotalElements());
         } else {
-            logger.warning("RESTAURANTS NOT FOUND");
+            log.error("FIND ALL: RESTAURANTS NOT FOUND");
             throw new EntityNotFoundException("Restaurants not found");
         }
     }
 
     public RestaurantResponseVO findById(Long id) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> {
-            logger.warning("RESTAURANT ID = " + id + " NOT FOUND");
+            log.error("FIND BY ID: RESTAURANT ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The restaurant requested was not found");
         });
-        logger.info(restaurant + " FOUND SUCCESSFULLY");
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", restaurant);
         return new RestaurantResponseVO(restaurant);
     }
 
@@ -72,12 +70,12 @@ public class RestaurantService {
     @Transactional
     public RestaurantResponseVO update(Long id, RestaurantRequestVO restaurantRequestVO) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> {
-            logger.warning("RESTAURANT ID = " + id + " NOT FOUND");
+            log.error("UPDATE: RESTAURANT ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The restaurant requested was not found");
         });
         Kitchen kitchen = kitchenRepository.findById(restaurantRequestVO.kitchenId).orElseThrow(() -> {
-            logger.warning("CAN NOT UPDATE RESTAURANT: KITCHEN " + restaurantRequestVO.getKitchenId() + " NOT FOUND");
-            return new BadRequestException("The kitchen informed was not found");
+            log.error("UPDATE: CAN NOT UPDATE RESTAURANT: KITCHEN {} NOT FOUND", restaurantRequestVO.getKitchenId());
+            return new EntityNotFoundException("The kitchen informed was not found");
         });
         BeanUtils.copyProperties(
                 restaurantRequestVO,
@@ -86,7 +84,7 @@ public class RestaurantService {
         );
         restaurant.setKitchen(kitchen);
         restaurant = restaurantRepository.save(restaurant);
-        logger.info(restaurant + " UPDATED SUCCESSFULLY");
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", restaurant);
         return new RestaurantResponseVO(restaurant);
     }
 
@@ -95,9 +93,9 @@ public class RestaurantService {
         try {
             restaurantRepository.deleteById(id);
             restaurantRepository.flush();
-            logger.info("RESTAURANT ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: RESTAURANT ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (RESTAURANT ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED RESTAURANT ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("RESTAURANT = " + id);
         }
     }

@@ -7,6 +7,7 @@ import com.restaurant.api.rest.v1.repository.UserRepository;
 import com.restaurant.api.rest.v1.vo.UserRequestVO;
 import com.restaurant.api.rest.v1.vo.UserResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -18,21 +19,21 @@ import org.springframework.util.Assert;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Logger;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Transactional
     public UserResponseVO save(UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
         userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
         User user = userRepository.save(new User(userRequestVO));
-        logger.info(user + " CREATED SUCCESSFULLY");
-        return new UserResponseVO(user);
+        UserResponseVO userResponseVO = new UserResponseVO(user);
+        log.info("SAVE: {} CREATED SUCCESSFULLY", userResponseVO);
+        return userResponseVO;
     }
 
     private String getPasswordHash(String password) throws NoSuchAlgorithmException {
@@ -45,36 +46,38 @@ public class UserService {
     public Page<UserResponseVO> findAll(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         if (!users.isEmpty()) {
-            logger.info("FOUND " + users.getTotalElements() + " USERS");
+            log.info("FIND ALL: FOUND {} USERS", users.getTotalElements());
             return new PageImpl<>(users.stream().map(UserResponseVO::new).toList(), pageable, users.getTotalElements());
         } else {
-            logger.warning("USERS NOT FOUND");
+            log.error("FIND ALL: USERS NOT FOUND");
             throw new EntityNotFoundException("Users not found");
         }
     }
 
     public UserResponseVO findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.warning("USER ID = " + id + " NOT FOUND");
+            log.error("FIND BY ID: USER ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The user requested was not found");
         });
-        logger.info(user + " FOUND SUCCESSFULLY");
-        return new UserResponseVO(user);
+        UserResponseVO userResponseVO = new UserResponseVO(user);
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", userResponseVO);
+        return userResponseVO;
     }
 
     // TODO(Ver como a atualização do password pode prejudicar o Hash)
     @Transactional
     public UserResponseVO update(Long id, UserRequestVO userRequestVO) throws NoSuchAlgorithmException {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.warning("CAN NOT UPDATE: USER " + id + " NOT FOUND");
+            log.error("UPDATE: USER ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The user requested was not found");
         });
         if (userRequestVO.getPassword() != null && !userRequestVO.getPassword().isBlank())
             userRequestVO.setPassword(getPasswordHash(userRequestVO.getPassword()));
-        BeanUtils.copyProperties(userRequestVO, user, "id", "creationDate");
+        BeanUtils.copyProperties(userRequestVO, user, "id", "password", "creationDate");
         user = userRepository.save(user);
-        logger.info(user + " UPDATED SUCCESSFULLY");
-        return new UserResponseVO(user);
+        UserResponseVO userResponseVO = new UserResponseVO(user);
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", userResponseVO);
+        return userResponseVO;
     }
 
     @Transactional
@@ -82,9 +85,9 @@ public class UserService {
         try {
             userRepository.deleteById(id);
             userRepository.flush();
-            logger.info("USER ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: USER ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (USER ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED USER ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("USER = " + id);
         }
     }

@@ -7,6 +7,7 @@ import com.restaurant.api.rest.v1.repository.PermissionRepository;
 import com.restaurant.api.rest.v1.vo.PermissionRequestVO;
 import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,51 +16,49 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PermissionService {
 
     private final PermissionRepository permissionRepository;
-    private final Logger logger = Logger.getLogger(PermissionService.class.getName());
 
     @Transactional
     public PermissionResponseVO save(PermissionRequestVO permissionRequestVO) {
         Permission permission = permissionRepository.save(new Permission(permissionRequestVO));
-        logger.info(permission + " CREATED SUCCESSFULLY");
+        log.info("SAVE: {} CREATED SUCCESSFULLY", permission);
         return new PermissionResponseVO(permission);
     }
 
     public Page<PermissionResponseVO> findAll(Pageable pageable) {
         Page<Permission> permissions = permissionRepository.findAll(pageable);
         if (!permissions.isEmpty()) {
-            logger.info("FOUND " + permissions.getTotalElements() + " PERMISSIONS");
+            log.info("FIND ALL: FOUND {} PERMISSIONS", permissions.getTotalElements());
             return new PageImpl<>(permissions.stream().map(PermissionResponseVO::new).toList(), pageable, permissions.getTotalElements());
         } else {
-            logger.warning("PERMISSIONS NOT FOUND");
+            log.error("FIND ALL: PERMISSIONS NOT FOUND");
             throw new EntityNotFoundException("Permissions not found");
         }
     }
 
     public PermissionResponseVO findById(Long id) {
         Permission permission = permissionRepository.findById(id).orElseThrow(() -> {
-            logger.warning("PERMISSION ID = " + id + " NOT FOUND");
+            log.error("FIND BY ID: PERMISSION ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The permission requested was not found");
         });
-        logger.info(permission + " FOUND SUCCESSFULLY");
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", permission);
         return new PermissionResponseVO(permission);
     }
 
     @Transactional
     public PermissionResponseVO update(Long id, PermissionRequestVO permissionRequestVO) {
         Permission permission = permissionRepository.findById(id).orElseThrow(() -> {
-            logger.warning("CAN NOT UPDATE: PERMISSION " + id + " NOT FOUND");
+            log.error("UPDATE: PERMISSION ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The permission requested was not found");
         });
         BeanUtils.copyProperties(permissionRequestVO, permission, "id");
         permission = permissionRepository.save(permission);
-        logger.info(permission + " UPDATED SUCCESSFULLY");
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", permission);
         return new PermissionResponseVO(permission);
     }
 
@@ -68,9 +67,9 @@ public class PermissionService {
         try {
             permissionRepository.deleteById(id);
             permissionRepository.flush();
-            logger.info("PERMISSION ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: PERMISSION ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (PERMISSION ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED PERMISSION ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("PERMISSION = " + id);
         }
     }

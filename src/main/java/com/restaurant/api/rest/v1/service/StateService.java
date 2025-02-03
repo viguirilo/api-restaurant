@@ -7,6 +7,7 @@ import com.restaurant.api.rest.v1.repository.StateRepository;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,51 +16,49 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StateService {
 
     private final StateRepository stateRepository;
-    private final Logger logger = Logger.getLogger(StateService.class.getName());
 
     @Transactional
     public StateResponseVO save(StateRequestVO stepRequestVO) {
         State state = stateRepository.save(new State(stepRequestVO));
-        logger.info(state + " CREATED SUCCESSFULLY");
+        log.info("SAVE: {} CREATED SUCCESSFULLY", state);
         return new StateResponseVO(state);
     }
 
     public Page<StateResponseVO> findAll(Pageable pageable) {
         Page<State> states = stateRepository.findAll(pageable);
         if (!states.isEmpty()) {
-            logger.info("FOUND " + states.getTotalElements() + " STATES");
+            log.info("FIND ALL: FOUND {} STATES", states.getTotalElements());
             return new PageImpl<>(states.stream().map(StateResponseVO::new).toList(), pageable, states.getTotalElements());
         } else {
-            logger.warning("STATES NOT FOUND");
+            log.error("FIND ALL: STATES NOT FOUND");
             throw new EntityNotFoundException("States not found");
         }
     }
 
     public StateResponseVO findById(Long id) {
         State state = stateRepository.findById(id).orElseThrow(() -> {
-            logger.warning("STATE NOT FOUND");
+            log.error("FIND BY ID: STATE NOT FOUND");
             return new EntityNotFoundException("The state requested was not found");
         });
-        logger.info(state + " FOUND SUCCESSFULLY");
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", state);
         return new StateResponseVO(state);
     }
 
     @Transactional
     public StateResponseVO update(Long id, StateRequestVO stateRequestVO) {
         State state = stateRepository.findById(id).orElseThrow(() -> {
-            logger.warning("CAN NOT UPDATE: STATE " + id + " NOT FOUND");
+            log.error("UPDATE: STATE ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The state requested was not found");
         });
         BeanUtils.copyProperties(stateRequestVO, state, "id");
         state = stateRepository.save(state);
-        logger.info(state + " UPDATED SUCCESSFULLY");
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", state);
         return new StateResponseVO(stateRepository.save(state));
     }
 
@@ -68,9 +67,9 @@ public class StateService {
         try {
             stateRepository.deleteById(id);
             stateRepository.flush();
-            logger.info("STATE ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: STATE ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (STATE ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED STATE ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("STATE = " + id);
         }
     }
