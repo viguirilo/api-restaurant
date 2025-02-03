@@ -1,13 +1,13 @@
 package com.restaurant.api.rest.v1.service;
 
 import com.restaurant.api.rest.v1.entity.*;
-import com.restaurant.api.rest.v1.exception.BadRequestException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import com.restaurant.api.rest.v1.repository.*;
 import com.restaurant.api.rest.v1.vo.OrderRequestVO;
 import com.restaurant.api.rest.v1.vo.OrderResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -16,8 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -27,73 +26,72 @@ public class OrderService {
     private final UserRepository userRepository;
     private final PaymentMethodRepository paymentMethodRepository;
     private final CityRepository cityRepository;
-    private final Logger logger = Logger.getLogger(OrderService.class.getName());
 
     // TODO(Rever aula 4.30 para adequar como ele implementa esse método)
     @Transactional
     public OrderResponseVO save(OrderRequestVO orderRequestVO) {
         Restaurant restaurant = restaurantRepository.findById(orderRequestVO.getRestaurantId()).orElseThrow(() -> {
-            logger.warning("RESTAURANT ID = " + orderRequestVO.getRestaurantId() + " WAS NOT FOUND");
-            return new BadRequestException("The restaurant informed was not found");
+            log.error("SAVE: RESTAURANT ID = {} NOT FOUND", orderRequestVO.getRestaurantId());
+            return new EntityNotFoundException("The restaurant informed was not found");
         });
         User customer = userRepository.findById(orderRequestVO.getCustomerId()).orElseThrow(() -> {
-            logger.warning("CUSTOMER ID = " + orderRequestVO.getRestaurantId() + " WAS NOT FOUND");
-            return new BadRequestException("The customer informed was not found");
+            log.error("SAVE: CUSTOMER ID = {} NOT FOUND", orderRequestVO.getRestaurantId());
+            return new EntityNotFoundException("The customer informed was not found");
         });
         PaymentMethod paymentMethod = paymentMethodRepository.findById(orderRequestVO.getCustomerId()).orElseThrow(() -> {
-            logger.warning("PAYMENT METHOD ID = " + orderRequestVO.getPaymentMethodId() + " WAS NOT FOUND");
-            return new BadRequestException("The payment method informed was not found");
+            log.error("SAVE: PAYMENT METHOD ID = {} NOT FOUND", orderRequestVO.getPaymentMethodId());
+            return new EntityNotFoundException("The payment method informed was not found");
         });
         City city = cityRepository.findById(orderRequestVO.getAddressCityId()).orElseThrow(() -> {
-            logger.warning("CITY ID = " + orderRequestVO.getAddressCityId() + " WAS NOT FOUND");
-            return new BadRequestException("The city informed was not found");
+            log.error("SAVE: CITY ID = {} NOT FOUND", orderRequestVO.getAddressCityId());
+            return new EntityNotFoundException("The city informed was not found");
         });
         Order order = orderRepository.save(new Order(orderRequestVO, restaurant, customer, paymentMethod, city));
-        logger.info(order + " CREATED SUCCESSFULLY");
+        log.info("SAVE: {} CREATED SUCCESSFULLY", order);
         return new OrderResponseVO(order);
     }
 
     public Page<OrderResponseVO> findAll(Pageable pageable) {
         Page<Order> orders = orderRepository.findAll(pageable);
         if (!orders.isEmpty()) {
-            logger.info("FOUND " + orders.getTotalElements() + " ORDERS");
+            log.info("FIND ALL: FOUND {} ORDERS", orders.getTotalElements());
             return new PageImpl<>(orders.stream().map(OrderResponseVO::new).toList(), pageable, orders.getTotalElements());
         } else {
-            logger.warning("ORDER NOT FOUND");
+            log.error("FIND ALL: ORDER NOT FOUND");
             throw new EntityNotFoundException("Orders not found");
         }
     }
 
     public OrderResponseVO findById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> {
-            logger.warning("ORDER ID = " + id + " NOT FOUND");
+            log.error("FIND BY ID: ORDER ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The order requested was not found");
         });
-        logger.info(order + " FOUND SUCCESSFULLY");
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", order);
         return new OrderResponseVO(order);
     }
 
     @Transactional
     public OrderResponseVO update(Long id, OrderRequestVO orderRequestVO) {
         Order order = orderRepository.findById(id).orElseThrow(() -> {
-            logger.warning("ORDERED ID = " + id + " NOT FOUND");
+            log.error("UPDATE: ORDERED ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The order requested was not found");
         });
         Restaurant restaurant = restaurantRepository.findById(orderRequestVO.getRestaurantId()).orElseThrow(() -> {
-            logger.warning("RESTAURANT ID = " + orderRequestVO.getRestaurantId() + " WAS NOT FOUND");
-            return new BadRequestException("The restaurant informed was not found");
+            log.error("UPDATE: RESTAURANT ID = {} NOT FOUND", orderRequestVO.getRestaurantId());
+            return new EntityNotFoundException("The restaurant informed was not found");
         });
         User customer = userRepository.findById(orderRequestVO.getCustomerId()).orElseThrow(() -> {
-            logger.warning("CUSTOMER ID = " + orderRequestVO.getRestaurantId() + " WAS NOT FOUND");
-            return new BadRequestException("The customer informed was not found");
+            log.error("UPDATE: CUSTOMER ID = {} NOT FOUND", orderRequestVO.getRestaurantId());
+            return new EntityNotFoundException("The customer informed was not found");
         });
         PaymentMethod paymentMethod = paymentMethodRepository.findById(orderRequestVO.getCustomerId()).orElseThrow(() -> {
-            logger.warning("PAYMENT METHOD ID = " + orderRequestVO.getPaymentMethodId() + " WAS NOT FOUND");
-            return new BadRequestException("The payment method informed was not found");
+            log.error("UPDATE: PAYMENT METHOD ID = {} NOT FOUND", orderRequestVO.getPaymentMethodId());
+            return new EntityNotFoundException("The payment method informed was not found");
         });
         City city = cityRepository.findById(orderRequestVO.getAddressCityId()).orElseThrow(() -> {
-            logger.warning("CITY ID = " + orderRequestVO.getAddressCityId() + " WAS NOT FOUND");
-            return new BadRequestException("The city informed was not found");
+            log.error("UPDATE: CITY ID = {} NOT FOUND", orderRequestVO.getAddressCityId());
+            return new EntityNotFoundException("The city informed was not found");
         });
         BeanUtils.copyProperties(
                 orderRequestVO,
@@ -106,7 +104,7 @@ public class OrderService {
         Address address = new Address(orderRequestVO, city);
         order.setAddress(address);
         order = orderRepository.save(order);
-        logger.info(order + " UPDATED SUCCESSFULLY");
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", order);
         return new OrderResponseVO(order);
     }
 
@@ -115,9 +113,9 @@ public class OrderService {
         try {
             orderRepository.deleteById(id);
             orderRepository.flush();
-            logger.info("ORDER ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: ORDER ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (ORDER ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED ORDER ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("ORDER = " + id);
         }
     }

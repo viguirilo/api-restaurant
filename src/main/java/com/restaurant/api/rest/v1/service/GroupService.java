@@ -7,6 +7,7 @@ import com.restaurant.api.rest.v1.repository.GroupRepository;
 import com.restaurant.api.rest.v1.vo.GroupRequestVO;
 import com.restaurant.api.rest.v1.vo.GroupResponseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,40 +16,38 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final Logger logger = Logger.getLogger(GroupService.class.getName());
 
     //    TODO(ver como criar permissions diretamente dentro do save)
     @Transactional
     public GroupResponseVO save(GroupRequestVO groupRequestVO) {
         Group group = groupRepository.save(new Group(groupRequestVO));
-        logger.info(group + " CREATED SUCCESSFULLY");
+        log.info("SAVE: {} CREATED SUCCESSFULLY", group);
         return new GroupResponseVO(group);
     }
 
     public Page<GroupResponseVO> findAll(Pageable pageable) {
         Page<Group> groups = groupRepository.findAll(pageable);
         if (!groups.isEmpty()) {
-            logger.info("FOUND " + groups.getTotalElements() + " GROUPS");
+            log.info("FIND ALL: FOUND {} GROUPS", groups.getTotalElements());
             return new PageImpl<>(groups.stream().map(GroupResponseVO::new).toList(), pageable, groups.getTotalElements());
         } else {
-            logger.warning("GROUPS NOT FOUND");
+            log.error("FIND ALL: GROUPS NOT FOUND");
             throw new EntityNotFoundException("Groups not found");
         }
     }
 
     public GroupResponseVO findById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(() -> {
-            logger.warning("GROUP ID = " + id + " NOT FOUND");
+            log.error("FIND BY ID: GROUP ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The group requested was not found");
         });
-        logger.info(group + " FOUND SUCCESSFULLY");
+        log.info("FIND BY ID: {} FOUND SUCCESSFULLY", group);
         return new GroupResponseVO(group);
     }
 
@@ -56,12 +55,12 @@ public class GroupService {
     @Transactional
     public GroupResponseVO update(Long id, GroupRequestVO groupRequestVO) {
         Group group = groupRepository.findById(id).orElseThrow(() -> {
-            logger.warning("CAN NOT UPDATE: GROUP " + id + " NOT FOUND");
+            log.error("UPDATE: GROUP ID = {} NOT FOUND", id);
             return new EntityNotFoundException("The group requested was not found");
         });
         BeanUtils.copyProperties(groupRequestVO, group, "id");
         group = groupRepository.save(group);
-        logger.info(group + " UPDATED SUCCESSFULLY");
+        log.info("UPDATE: {} UPDATED SUCCESSFULLY", group);
         return new GroupResponseVO(group);
     }
 
@@ -73,9 +72,9 @@ public class GroupService {
         try {
             groupRepository.deleteById(id);
             groupRepository.flush();
-            logger.info("GROUP ID = " + id + " DELETED SUCCESSFULLY");
+            log.info("DELETE: GROUP ID = {} DELETED SUCCESSFULLY", id);
         } catch (DataIntegrityViolationException ex) {
-            logger.warning("THE REQUESTED ENTITY (GROUP ID = " + id + ") IS BEING USED BY ONE OR MORE ENTITIES");
+            log.error("DELETE: THE REQUESTED GROUP ID = {} IS BEING USED BY ONE OR MORE ENTITIES", id);
             throw new EntityInUseException("GROUP = " + id);
         }
     }
