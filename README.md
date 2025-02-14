@@ -1,6 +1,6 @@
 # api-restaurant
 
-API responsible for dealing with food delivery based on AlgaWorks Spring Boot training.
+API responsible for dealing with food delivery based on AlgaWorks Spring REST training.
 
 [AlgaWorks Website](https://www.algaworks.com/)
 
