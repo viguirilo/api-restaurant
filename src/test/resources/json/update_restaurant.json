@@ -1,0 +1,13 @@
+{
+  "name": "New Name",
+  "shipRate": 1.0,
+  "active": true,
+  "open": true,
+  "kitchenId": $kitchenId,
+  "addressStreetOrAvenue": "Street 1",
+  "addressNumber": 1,
+  "addressComplement": "",
+  "addressNeighborhood": "Neighborhood",
+  "addressZipCode": "30.000-000",
+  "addressCityId": $cityId
+}
