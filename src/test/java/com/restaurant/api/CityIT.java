@@ -78,10 +78,10 @@ class CityIT {
 
     @AfterEach
     public void clearData() {
-        restaurantService.findAll().forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
-        kitchenService.findAll().forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
-        cityService.findAll().forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
-        stateService.findAll().forEach(stateResponseVO1 -> stateService.delete(stateResponseVO1.getId()));
+        restaurantService.findAll(pageable).forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
+        kitchenService.findAll(pageable).forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
+        cityService.findAll(pageable).forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
+        stateService.findAll(pageable).forEach(stateResponseVO1 -> stateService.delete(stateResponseVO1.getId()));
     }
 
     @Test

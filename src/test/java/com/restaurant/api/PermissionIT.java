@@ -46,7 +46,7 @@ class PermissionIT {
 
     @AfterEach
     public void clearData() {
-        permissionService.findAll().forEach(permissionResponseVO1 -> permissionService.delete(permissionResponseVO1.getId()));
+        permissionService.findAll(pageable).forEach(permissionResponseVO1 -> permissionService.delete(permissionResponseVO1.getId()));
     }
 
     @Test

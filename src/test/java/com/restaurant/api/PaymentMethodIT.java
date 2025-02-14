@@ -46,7 +46,7 @@ class PaymentMethodIT {
 
     @AfterEach
     public void clearData() {
-        paymentMethodService.findAll().forEach(paymentMethodResponseVO -> paymentMethodService.delete(paymentMethodResponseVO.getId()));
+        paymentMethodService.findAll(pageable).forEach(paymentMethodResponseVO -> paymentMethodService.delete(paymentMethodResponseVO.getId()));
     }
 
     @Test
