@@ -46,7 +46,7 @@ class GroupIT {
 
     @AfterEach
     public void clearData() {
-        groupService.findAll().forEach(groupResponseVO1 -> groupService.delete(groupResponseVO1.getId()));
+        groupService.findAll(pageable).forEach(groupResponseVO1 -> groupService.delete(groupResponseVO1.getId()));
     }
 
     @Test
