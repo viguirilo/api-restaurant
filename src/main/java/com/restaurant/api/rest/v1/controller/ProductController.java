@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.ProductControllerOpenApi;
 import com.restaurant.api.rest.v1.service.ProductService;
 import com.restaurant.api.rest.v1.vo.ProductRequestVO;
 import com.restaurant.api.rest.v1.vo.ProductResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class ProductController implements ProductControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ProductResponseVO> save(@RequestBody ProductRequestVO permissionRequestVO) {
+    public ResponseEntity<ProductResponseVO> save(@RequestBody @Valid ProductRequestVO permissionRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(permissionRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class ProductController implements ProductControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ProductResponseVO> update(@PathVariable Long id, @RequestBody ProductRequestVO productRequestVO) {
+    public ResponseEntity<ProductResponseVO> update(@PathVariable Long id, @RequestBody @Valid ProductRequestVO productRequestVO) {
         ProductResponseVO productResponseVO = productService.update(id, productRequestVO);
         return ResponseEntity.ok().body(productResponseVO);
     }

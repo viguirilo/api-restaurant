@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.PaymentMethodControllerOpen
 import com.restaurant.api.rest.v1.service.PaymentMethodService;
 import com.restaurant.api.rest.v1.vo.PaymentMethodRequestVO;
 import com.restaurant.api.rest.v1.vo.PaymentMethodResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PaymentMethodResponseVO> save(@RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
+    public ResponseEntity<PaymentMethodResponseVO> save(@RequestBody @Valid PaymentMethodRequestVO paymentMethodRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodService.save(paymentMethodRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class PaymentMethodController implements PaymentMethodControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PaymentMethodResponseVO> update(@PathVariable Long id, @RequestBody PaymentMethodRequestVO paymentMethodRequestVO) {
+    public ResponseEntity<PaymentMethodResponseVO> update(@PathVariable Long id, @RequestBody @Valid PaymentMethodRequestVO paymentMethodRequestVO) {
         PaymentMethodResponseVO paymentMethodResponseVO = paymentMethodService.update(id, paymentMethodRequestVO);
         return ResponseEntity.ok().body(paymentMethodResponseVO);
     }

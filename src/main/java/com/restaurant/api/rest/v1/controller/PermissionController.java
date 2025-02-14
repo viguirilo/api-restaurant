@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.PermissionControllerOpenApi
 import com.restaurant.api.rest.v1.service.PermissionService;
 import com.restaurant.api.rest.v1.vo.PermissionRequestVO;
 import com.restaurant.api.rest.v1.vo.PermissionResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class PermissionController implements PermissionControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PermissionResponseVO> save(@RequestBody PermissionRequestVO permissionRequestVO) {
+    public ResponseEntity<PermissionResponseVO> save(@RequestBody @Valid PermissionRequestVO permissionRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.save(permissionRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class PermissionController implements PermissionControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PermissionResponseVO> update(@PathVariable Long id, @RequestBody PermissionRequestVO permissionRequestVO) {
+    public ResponseEntity<PermissionResponseVO> update(@PathVariable Long id, @RequestBody @Valid PermissionRequestVO permissionRequestVO) {
         PermissionResponseVO permissionResponseVO = permissionService.update(id, permissionRequestVO);
         return ResponseEntity.ok().body(permissionResponseVO);
     }

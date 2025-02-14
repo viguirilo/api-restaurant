@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.RestaurantControllerOpenApi
 import com.restaurant.api.rest.v1.service.RestaurantService;
 import com.restaurant.api.rest.v1.vo.RestaurantRequestVO;
 import com.restaurant.api.rest.v1.vo.RestaurantResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class RestaurantController implements RestaurantControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<RestaurantResponseVO> save(@RequestBody RestaurantRequestVO restaurantRequestVO) {
+    public ResponseEntity<RestaurantResponseVO> save(@RequestBody @Valid RestaurantRequestVO restaurantRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurantRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class RestaurantController implements RestaurantControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<RestaurantResponseVO> update(@PathVariable Long id, @RequestBody RestaurantRequestVO restaurantRequestVO) {
+    public ResponseEntity<RestaurantResponseVO> update(@PathVariable Long id, @RequestBody @Valid RestaurantRequestVO restaurantRequestVO) {
         RestaurantResponseVO restaurantResponseVO = restaurantService.update(id, restaurantRequestVO);
         return ResponseEntity.ok().body(restaurantResponseVO);
     }
