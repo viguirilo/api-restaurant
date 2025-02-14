@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.UserControllerOpenApi;
 import com.restaurant.api.rest.v1.service.UserService;
 import com.restaurant.api.rest.v1.vo.UserRequestVO;
 import com.restaurant.api.rest.v1.vo.UserResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public class UserController implements UserControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<UserResponseVO> save(@RequestBody UserRequestVO userRequestVO) {
+    public ResponseEntity<UserResponseVO> save(@RequestBody @Valid UserRequestVO userRequestVO) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userRequestVO));
         } catch (NoSuchAlgorithmException e) {
@@ -54,7 +55,7 @@ public class UserController implements UserControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<UserResponseVO> update(@PathVariable Long id, @RequestBody UserRequestVO userRequestVO) {
+    public ResponseEntity<UserResponseVO> update(@PathVariable Long id, @RequestBody @Valid UserRequestVO userRequestVO) {
         try {
             UserResponseVO userResponseVO = userService.update(id, userRequestVO);
             return ResponseEntity.ok().body(userResponseVO);

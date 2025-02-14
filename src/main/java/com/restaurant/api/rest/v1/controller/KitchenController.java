@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.KitchenControllerOpenApi;
 import com.restaurant.api.rest.v1.service.KitchenService;
 import com.restaurant.api.rest.v1.vo.KitchenRequestVO;
 import com.restaurant.api.rest.v1.vo.KitchenResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class KitchenController implements KitchenControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<KitchenResponseVO> save(@RequestBody KitchenRequestVO kitchenRequestVO) {
+    public ResponseEntity<KitchenResponseVO> save(@RequestBody @Valid KitchenRequestVO kitchenRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(kitchenService.save(kitchenRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class KitchenController implements KitchenControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<KitchenResponseVO> update(@PathVariable Long id, @RequestBody KitchenRequestVO kitchenRequestVO) {
+    public ResponseEntity<KitchenResponseVO> update(@PathVariable Long id, @RequestBody @Valid KitchenRequestVO kitchenRequestVO) {
         KitchenResponseVO kitchenResponseVO = kitchenService.update(id, kitchenRequestVO);
         return ResponseEntity.ok().body(kitchenResponseVO);
     }

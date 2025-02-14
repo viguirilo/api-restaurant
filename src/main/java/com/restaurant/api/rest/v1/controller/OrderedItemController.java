@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.OrderedItemControllerOpenAp
 import com.restaurant.api.rest.v1.service.OrderedItemService;
 import com.restaurant.api.rest.v1.vo.OrderedItemRequestVO;
 import com.restaurant.api.rest.v1.vo.OrderedItemResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class OrderedItemController implements OrderedItemControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<OrderedItemResponseVO> save(@RequestBody OrderedItemRequestVO orderedItemRequestVO) {
+    public ResponseEntity<OrderedItemResponseVO> save(@RequestBody @Valid OrderedItemRequestVO orderedItemRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderedItemService.save(orderedItemRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class OrderedItemController implements OrderedItemControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<OrderedItemResponseVO> update(@PathVariable Long id, @RequestBody OrderedItemRequestVO orderedItemRequestVO) {
+    public ResponseEntity<OrderedItemResponseVO> update(@PathVariable Long id, @RequestBody @Valid OrderedItemRequestVO orderedItemRequestVO) {
         OrderedItemResponseVO orderedItemResponseVO = orderedItemService.update(id, orderedItemRequestVO);
         return ResponseEntity.ok().body(orderedItemResponseVO);
     }

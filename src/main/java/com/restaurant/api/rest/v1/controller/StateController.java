@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.StateControllerOpenApi;
 import com.restaurant.api.rest.v1.service.StateService;
 import com.restaurant.api.rest.v1.vo.StateRequestVO;
 import com.restaurant.api.rest.v1.vo.StateResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class StateController implements StateControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<StateResponseVO> save(@RequestBody StateRequestVO stateRequestVO) {
+    public ResponseEntity<StateResponseVO> save(@RequestBody @Valid StateRequestVO stateRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(stateService.save(stateRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class StateController implements StateControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<StateResponseVO> update(@PathVariable Long id, @RequestBody StateRequestVO stateRequestVO) {
+    public ResponseEntity<StateResponseVO> update(@PathVariable Long id, @RequestBody @Valid StateRequestVO stateRequestVO) {
         StateResponseVO stateResponseVO = stateService.update(id, stateRequestVO);
         return ResponseEntity.ok().body(stateResponseVO);
     }

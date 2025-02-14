@@ -4,6 +4,7 @@ import com.restaurant.api.rest.v1.controller.openapi.GroupControllerOpenApi;
 import com.restaurant.api.rest.v1.service.GroupService;
 import com.restaurant.api.rest.v1.vo.GroupRequestVO;
 import com.restaurant.api.rest.v1.vo.GroupResponseVO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class GroupController implements GroupControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<GroupResponseVO> save(@RequestBody GroupRequestVO groupRequestVO) {
+    public ResponseEntity<GroupResponseVO> save(@RequestBody @Valid GroupRequestVO groupRequestVO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.save(groupRequestVO));
     }
 
@@ -48,7 +49,7 @@ public class GroupController implements GroupControllerOpenApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<GroupResponseVO> update(@PathVariable Long id, @RequestBody GroupRequestVO groupRequestVO) {
+    public ResponseEntity<GroupResponseVO> update(@PathVariable Long id, @RequestBody @Valid GroupRequestVO groupRequestVO) {
         GroupResponseVO groupResponseVO = groupService.update(id, groupRequestVO);
         return ResponseEntity.ok().body(groupResponseVO);
     }
