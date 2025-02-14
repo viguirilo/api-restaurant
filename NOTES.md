@@ -54,7 +54,7 @@
   https://docs.swagger.io/swagger-core/v2.2.0/apidocs/io/swagger/v3/oas/annotations/tags/Tag.html
 - Podemos colocar a anotação @Schema em cima de cada classe de entity e VO para descrevermos o seu propósito
 - URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand().toUri();
-- Adicionar anotações Swagger nos VOs
+- Adicionar anotações Swagger nos VOs de response. Request já foi feito
 - Implementar parte de responsáveis pelo restaurante
 - Trocar logger para usar da classe Sl4fj, anotando a classe como @Slf4j e usando log.info, log.warn, log.debug,
   log.error
