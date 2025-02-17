@@ -5,4 +5,4 @@ CREATE TABLE `group_permission` (
   KEY `permission_fk_1` (`permission_id`),
   CONSTRAINT `group_fk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
   CONSTRAINT `permission_fk_1` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -18,4 +18,4 @@ CREATE TABLE `restaurant` (
   KEY `kitchen_fk_1` (`kitchen_id`),
   CONSTRAINT `address_city_fk_1` FOREIGN KEY (`address_city_id`) REFERENCES `city` (`id`),
   CONSTRAINT `kitchen_fk_1` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -11,4 +11,4 @@ CREATE TABLE `ordered_item` (
   KEY `product_fk_1` (`product_id`),
   CONSTRAINT `order_fk_1` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`),
   CONSTRAINT `product_fk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
