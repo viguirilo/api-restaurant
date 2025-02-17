@@ -5,4 +5,4 @@ CREATE TABLE `restaurant_payment_method` (
   KEY `restaurant_fk_2` (`restaurant_id`),
   CONSTRAINT `payment_method_fk_1` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`),
   CONSTRAINT `restaurant_fk_2` FOREIGN KEY (`restaurant_id`) REFERENCES `restaurant` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

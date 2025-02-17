@@ -5,4 +5,4 @@ CREATE TABLE `city` (
   PRIMARY KEY (`id`),
   KEY `state_fk_1` (`state_id`),
   CONSTRAINT `state_fk_1` FOREIGN KEY (`state_id`) REFERENCES `state` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

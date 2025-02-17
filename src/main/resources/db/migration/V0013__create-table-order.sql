@@ -26,4 +26,4 @@ CREATE TABLE `order` (
   CONSTRAINT `customer_fk_1` FOREIGN KEY (`customer_id`) REFERENCES `user` (`id`),
   CONSTRAINT `payment_method_fk_2` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`),
   CONSTRAINT `address_city_fk_2` FOREIGN KEY (`address_city_id`) REFERENCES `city` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
