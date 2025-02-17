@@ -61,4 +61,4 @@
 - resource server implementado automaticamente. necessário configurar o endpoint de check_token
 - 22.11. Configurando o Resource Server com a nova stack do Spring Security
 - Usar BCryptPasswordEncoder ao salvar senhas no banco de dados. Ver aula 23.15
-- 
+- Rever todos os testes de integração
