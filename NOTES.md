@@ -62,3 +62,4 @@
 - 22.11. Configurando o Resource Server com a nova stack do Spring Security
 - Usar BCryptPasswordEncoder ao salvar senhas no banco de dados. Ver aula 23.15
 - Rever todos os testes de integração
+- Ver erro que ocorre no console quando uma query de página é retornada

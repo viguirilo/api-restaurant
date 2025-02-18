@@ -39,8 +39,9 @@ public class ResourceServerConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.opaqueToken(Customizer.withDefaults())
-                ).build();
+                        oauth2.jwt(Customizer.withDefaults())
+                )
+                .build();
     }
 
 }
