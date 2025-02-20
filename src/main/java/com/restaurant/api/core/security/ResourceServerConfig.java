@@ -32,16 +32,14 @@ public class ResourceServerConfig {
     }
 
     @Bean
-    public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth ->
                         auth.requestMatchers("/oauth2/**").authenticated()
                                 .anyRequest().authenticated()
-                )
-                .csrf(AbstractHttpConfigurer::disable)
+                ).csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults())
-                )
-                .build();
+                ).build();
     }
 
 }
