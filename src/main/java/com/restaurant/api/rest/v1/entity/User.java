@@ -29,9 +29,13 @@ public class User implements Serializable {
     @JsonProperty(value = "id")
     private Long id;
 
-    @Column(name = "name", length = 80, nullable = false)
-    @JsonProperty(value = "name")
-    private String name;
+    @Column(name = "fullname", length = 80, nullable = false)
+    @JsonProperty(value = "fullname")
+    private String fullname;
+
+    @Column(name = "username", length = 80, nullable = false)
+    @JsonProperty(value = "username")
+    private String username;
 
     @Column(name = "email", length = 50, nullable = false)
     @JsonProperty(value = "email")
@@ -41,6 +45,18 @@ public class User implements Serializable {
     @Column(name = "password", length = 100, nullable = false)
     @JsonProperty(value = "password")
     private String password;
+
+    @Column(name = "language_code", length = 5, nullable = false)
+    @JsonProperty(value = "languageCode")
+    private String languageCode;
+
+    @Column(name = "currency_code", length = 3, nullable = false)
+    @JsonProperty(value = "currencyCode")
+    private String currencyCode;
+
+    @Column(name = "timezone", length = 6, nullable = false)
+    @JsonProperty(value = "timezone")
+    private String timezone;
 
     @CreationTimestamp
     @Column(name = "creation_date", nullable = false, columnDefinition = "datetime")
@@ -55,9 +71,13 @@ public class User implements Serializable {
     private List<Group> groups = new ArrayList<>();
 
     public User(UserRequestVO userRequestVO) {
-        this.name = userRequestVO.getName().trim().replaceAll("\\s+", " ");
+        this.fullname = userRequestVO.getFullname().trim().replaceAll("\\s+", " ");
+        this.username = userRequestVO.getUsername().trim().replaceAll("\\s+", " ");
         this.email = userRequestVO.getEmail().trim().replaceAll("\\s+", " ");
         this.password = userRequestVO.getPassword().trim().replaceAll("\\s+", "");
+        this.languageCode = userRequestVO.getLanguageCode().trim().replaceAll("\\s+", "");
+        this.currencyCode = userRequestVO.getCurrencyCode().trim().replaceAll("\\s+", "");
+        this.timezone = userRequestVO.getTimezone().trim().replaceAll("\\s+", "");
         this.creationDate = LocalDateTime.now();
     }
 
@@ -65,10 +85,13 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", languageCode='" + languageCode + '\'' +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", timezone='" + timezone + '\'' +
                 ", creationDate=" + creationDate +
-//                ", groups=" + groups +
                 '}';
     }
 
@@ -77,12 +100,11 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(email, user.email);
+        return Objects.equals(username, user.username) || Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(email);
+        return Objects.hash(fullname, username);
     }
-
 }

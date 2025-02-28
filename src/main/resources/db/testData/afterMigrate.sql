@@ -5,6 +5,7 @@ DELETE FROM `group`;
 DELETE FROM `group_permission`;
 DELETE FROM `ordered_item`;
 DELETE FROM `kitchen`;
+DELETE FROM `oauth2_authorization`;
 DELETE FROM `order`;
 DELETE FROM `payment_method`;
 DELETE FROM `permission`;
@@ -54,6 +55,10 @@ INSERT INTO payment_method (description) VALUES
 ('CHECK');
 
 INSERT INTO permission (name, description) VALUES
+('CREATE_CITY', 'Allow an user to create a city'),
+('READ_CITY', 'Allow an user to read a city'),
+('UPDATE_CITY', 'Allow an user to update a city'),
+('DELETE_CITY', 'Allow an user to delete a city'),
 ('CREATE_ORDER', 'Allow an user to create an order'),
 ('READ_ORDER', 'Allow an user to read an order'),
 ('UPDATE_ORDER', 'Allow an user to update an order'),
@@ -135,12 +140,12 @@ INSERT INTO restaurant_payment_method (restaurant_id, payment_method_id) VALUES
 (4,1), (4,2), (4,3), (4,4), (4,5), (4,6), (4,7), (4,8), (4,9),
 (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (5,8), (5,9);
 
-INSERT INTO `user` (name, email, password, creation_date) VALUES
-("User One", "user.one@provider.com", "passPhrase", utc_timestamp),
-("User Two", "user.two@provider.com", "passPhrase", utc_timestamp),
-("User Three", "user.three@provider.com", "passPhrase", utc_timestamp),
-("User Four", "user.four@provider.com", "passPhrase", utc_timestamp),
-("User Five", "user.five@provider.com", "passPhrase", utc_timestamp);
+INSERT INTO `user` (fullname, username, email, password, language_code, currency_code, timezone, creation_date) VALUES
+("User One", "user_one", "user.one@provider.com", "$2a$12$/klLSaM6Xopqj.9yDrj.rOg6smSmx7Z1eyaJ599p7ykzDXKqdnF0S", "pt-br", "BRL", "-03:00", utc_timestamp),
+("User Two", "user_two", "user.two@provider.com", "$2a$12$/klLSaM6Xopqj.9yDrj.rOg6smSmx7Z1eyaJ599p7ykzDXKqdnF0S", "pt-br", "BRL", "-03:00", utc_timestamp),
+("User Three", "user_three", "user.three@provider.com", "$2a$12$/klLSaM6Xopqj.9yDrj.rOg6smSmx7Z1eyaJ599p7ykzDXKqdnF0S", "pt-br", "BRL", "-03:00", utc_timestamp),
+("User Four", "user_four", "user.four@provider.com", "$2a$12$/klLSaM6Xopqj.9yDrj.rOg6smSmx7Z1eyaJ599p7ykzDXKqdnF0S", "pt-br", "BRL", "-03:00", utc_timestamp),
+("User Five", "user_five", "user.five@provider.com", "$2a$12$/klLSaM6Xopqj.9yDrj.rOg6smSmx7Z1eyaJ599p7ykzDXKqdnF0S", "pt-br", "BRL", "-03:00", utc_timestamp);
 
 INSERT INTO `group` (name) VALUES
 ("Group 1"),
@@ -162,3 +167,16 @@ INSERT INTO ordered_item (order_id, product_id, observation, quantity, unit_pric
 (3, 3, "Observation 1", 1, 1.0, 1.0),
 (4, 4, "Observation 1", 1, 1.0, 1.0),
 (5, 5, "Observation 1", 1, 1.0, 1.0);
+
+INSERT INTO group_permission(group_id, permission_id) VALUES
+(1, 1), (1, 5),
+(2, 2), (2, 6),
+(3, 3), (3, 7),
+(4, 4), (4, 8);
+
+INSERT INTO user_group (user_id, group_id) VALUES
+(1, 1), (1, 2), (1, 3),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);

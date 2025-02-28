@@ -13,10 +13,14 @@ import java.time.LocalDateTime;
 @Data
 public class UserResponseVO {
 
-    public Long id;
-    public String name;
-    public String email;
-    public LocalDateTime creationDate;
+    private Long id;
+    private String fullname;
+    private String username;
+    private String email;
+    private String languageCode;
+    private String currencyCode;
+    private String timezone;
+    private LocalDateTime creationDate;
 
     public UserResponseVO(User user) {
         BeanUtils.copyProperties(user, this);
