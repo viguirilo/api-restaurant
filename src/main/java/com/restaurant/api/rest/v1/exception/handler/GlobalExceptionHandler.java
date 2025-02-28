@@ -8,6 +8,7 @@ import com.restaurant.api.rest.v1.exception.EntityAlreadyExistsException;
 import com.restaurant.api.rest.v1.exception.EntityInUseException;
 import com.restaurant.api.rest.v1.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static com.restaurant.api.rest.v1.exception.handler.ProblemType.*;
 
+@Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -96,7 +99,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleUncaughtException(Exception ex, WebRequest request) {
-        ex.printStackTrace();
+        log.error(ex.getMessage());
         ProblemDetail problemDetail = new ProblemDetail(
                 INTERNAL_SERVER_ERROR.getStatus().value(),
                 INTERNAL_SERVER_ERROR.getType(),
@@ -107,6 +110,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), INTERNAL_SERVER_ERROR.getStatus(), request);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<?> handleAuthorizationDeniedException(AuthorizationDeniedException ex, WebRequest request) {
+        log.error(ex.getMessage());
+        ProblemDetail problemDetail = new ProblemDetail(
+                AUTHORIZATION_DENIED.getStatus().value(),
+                AUTHORIZATION_DENIED.getType(),
+                AUTHORIZATION_DENIED.getTitle(),
+                AUTHORIZATION_DENIED.getDetail(),
+                AUTHORIZATION_DENIED.getDetail(),
+                LocalDateTime.now(),
+                null
+        );
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), AUTHORIZATION_DENIED.getStatus(), request);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

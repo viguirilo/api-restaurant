@@ -10,6 +10,7 @@ public enum ProblemType {
     ENTITY_ALREADY_EXISTS(HttpStatus.CONFLICT, "/entity-already-exists", "Entity Already Exists", "The entity you are trying to create already exists"),
     ENTITY_IN_USE(HttpStatus.CONFLICT, "/entity-in-use", "Entity in Use", "The entity you are trying to remove or update is already in use for one or more entities"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "/internal-server-error", "Internal Server Error", "Something unexpected happened. Try again and if the problem persists, be in touch with our support team"),
+    AUTHORIZATION_DENIED(HttpStatus.UNAUTHORIZED, "/authorization-denied", "Authorization Denied", "You are not allowed to access this resource"),
     HTTP_MESSAGE_NOT_READABLE(HttpStatus.BAD_REQUEST, "/http-message-not-readable", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
     METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "/bad-request", "Bad Request", "Something went wrong with your request. Please, check the syntax and try again"),
