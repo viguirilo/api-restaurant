@@ -6,6 +6,7 @@ DELETE FROM `group_permission`;
 DELETE FROM `ordered_item`;
 DELETE FROM `kitchen`;
 DELETE FROM `oauth2_authorization`;
+DELETE FROM `oauth2_registered_client`;
 DELETE FROM `order`;
 DELETE FROM `payment_method`;
 DELETE FROM `permission`;
@@ -180,3 +181,7 @@ INSERT INTO user_group (user_id, group_id) VALUES
 (3, 3),
 (4, 4),
 (5, 5);
+
+INSERT INTO oauth2_registered_client (id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, post_logout_redirect_uris, scopes, client_settings, token_settings) VALUES
+('1', 'app-restaurant', '2025-02-28 18:28:31', '$2a$10$XZFN0tn4p5ejyO.mCIgtGu/O0fqHSz8VZX2TZUC3f9Hb57ykqyDAG', NULL, '1', 'client_secret_basic', 'client_credentials','', '', 'READ', '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":false}', '{"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":true,"settings.token.x509-certificate-bound-access-tokens":false,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",1800.000000000],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat","value":"self-contained"},"settings.token.refresh-token-time-to-live":["java.time.Duration",3600.000000000],"settings.token.authorization-code-time-to-live":["java.time.Duration",300.000000000],"settings.token.device-code-time-to-live":["java.time.Duration",300.000000000]}'),
+('2', 'app-restaurant-mobile', '2025-02-28 18:28:31', '$2a$10$EtQhSw1NSosY.E5bxQFrEus9rWdrLdGHb5l7e2uJ0y1MqbH0F6OO2', NULL, '2', 'client_secret_basic', 'refresh_token,authorization_code', 'http://127.0.0.1:8000/authorized', 'http://127.0.0.1:8000/', 'READ,WRITE', '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":true}', '{"@class":"java.util.Collections$UnmodifiableMap","settings.token.reuse-refresh-tokens":false,"settings.token.x509-certificate-bound-access-tokens":false,"settings.token.id-token-signature-algorithm":["org.springframework.security.oauth2.jose.jws.SignatureAlgorithm","RS256"],"settings.token.access-token-time-to-live":["java.time.Duration",900.000000000],"settings.token.access-token-format":{"@class":"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat","value":"self-contained"},"settings.token.refresh-token-time-to-live":["java.time.Duration",86400.000000000],"settings.token.authorization-code-time-to-live":["java.time.Duration",300.000000000],"settings.token.device-code-time-to-live":["java.time.Duration",300.000000000]}');
