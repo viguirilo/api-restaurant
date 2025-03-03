@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -125,6 +126,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 null
         );
         return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), AUTHORIZATION_DENIED.getStatus(), request);
+    }
+
+    @ExceptionHandler(CannotCreateTransactionException.class)
+    public ResponseEntity<?> handleCannotCreateTransactionException(CannotCreateTransactionException ex, WebRequest request) {
+        log.error(ex.getMessage());
+        ProblemDetail problemDetail = new ProblemDetail(
+                CANNOT_CREATE_TRANSACTION.getStatus().value(),
+                CANNOT_CREATE_TRANSACTION.getType(),
+                CANNOT_CREATE_TRANSACTION.getTitle(),
+                CANNOT_CREATE_TRANSACTION.getDetail(),
+                CANNOT_CREATE_TRANSACTION.getDetail(),
+                LocalDateTime.now(),
+                null
+        );
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), CANNOT_CREATE_TRANSACTION.getStatus(), request);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
