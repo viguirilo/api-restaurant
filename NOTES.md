@@ -67,3 +67,4 @@
     authorization server também)
 55. Alterar o after migrate para incluir esses novos campos
 56. Rever aula sobre formato de data e hora
+57. Testar o método DELETE com IDS que não existem
