@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
@@ -46,7 +47,7 @@ class GroupIT {
 
     @AfterEach
     public void clearData() {
-        groupService.findAll(pageable).forEach(groupResponseVO1 -> groupService.delete(groupResponseVO1.getId()));
+        groupService.findAll(Pageable.ofSize(Integer.MAX_VALUE)).forEach(groupResponseVO1 -> groupService.delete(groupResponseVO1.getId()));
     }
 
     @Test

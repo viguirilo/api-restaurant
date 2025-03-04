@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
@@ -46,7 +47,7 @@ class PaymentMethodIT {
 
     @AfterEach
     public void clearData() {
-        paymentMethodService.findAll(pageable).forEach(paymentMethodResponseVO -> paymentMethodService.delete(paymentMethodResponseVO.getId()));
+        paymentMethodService.findAll(Pageable.ofSize(Integer.MAX_VALUE)).forEach(paymentMethodResponseVO -> paymentMethodService.delete(paymentMethodResponseVO.getId()));
     }
 
     @Test
