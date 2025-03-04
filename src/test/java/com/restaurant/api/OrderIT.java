@@ -93,7 +93,7 @@ class OrderIT {
                 "30.000-000",
                 cityResponseVO.getId()
         ));
-        userResponseVO = userService.save(new UserRequestVO("Name", "email@provider.com", "password"));
+        userResponseVO = userService.save(new UserRequestVO("fullname", "username", "email@provider.com", "password", "pt-br", "BRL", "-03:00"));
         paymentMethodResponseVO = paymentMethodService.save(new PaymentMethodRequestVO("Description"));
         orderResponseVO1 = orderService.save(new OrderRequestVO(
                 BigDecimal.ZERO,

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
@@ -78,10 +79,10 @@ class CityIT {
 
     @AfterEach
     public void clearData() {
-        restaurantService.findAll(pageable).forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
-        kitchenService.findAll(pageable).forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
-        cityService.findAll(pageable).forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
-        stateService.findAll(pageable).forEach(stateResponseVO1 -> stateService.delete(stateResponseVO1.getId()));
+        restaurantService.findAll(Pageable.ofSize(Integer.MAX_VALUE)).forEach(restaurantResponseVO -> restaurantService.delete(restaurantResponseVO.getId()));
+        kitchenService.findAll(Pageable.ofSize(Integer.MAX_VALUE)).forEach(kitchenResponseVO -> kitchenService.delete(kitchenResponseVO.getId()));
+        cityService.findAll(Pageable.ofSize(Integer.MAX_VALUE)).forEach(cityResponseVO -> cityService.delete(cityResponseVO.getId()));
+        stateService.findAll(Pageable.ofSize(Integer.MAX_VALUE)).forEach(stateResponseVO1 -> stateService.delete(stateResponseVO1.getId()));
     }
 
     @Test
