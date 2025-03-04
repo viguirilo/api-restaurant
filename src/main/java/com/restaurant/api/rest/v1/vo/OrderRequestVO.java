@@ -19,35 +19,6 @@ import java.time.LocalDateTime;
 @Data
 public class OrderRequestVO {
 
-    @Schema(description = "The address street or avenue of the order being saved or updated")
-    @NotBlank
-    @Size(max = 100)
-    public String addressStreetOrAvenue;
-
-    @Schema(description = "The address number of the order being saved or updated")
-    @NotBlank
-    @Size(max = 10)
-    public String addressNumber;
-
-    @Schema(description = "The address complement of the order being saved or updated")
-    @Size(max = 50)
-    public String addressComplement;
-
-    @Schema(description = "The address neighborhood of the order being saved or updated")
-    @NotBlank
-    @Size(max = 50)
-    public String addressNeighborhood;
-
-    @Schema(description = "The address zip code of the order being saved or updated")
-    @NotBlank
-    @Size(max = 50)
-    public String addressZipCode;
-
-    @Schema(description = "The address city ID of the order being saved or updated")
-    @NotNull
-    @Min(1)
-    public Long addressCityId;
-
     @Schema(description = "The subtotal of the order being saved or updated")
     @NotNull
     @Min(0)
@@ -94,5 +65,34 @@ public class OrderRequestVO {
     @NotNull
     @Min(1)
     private Long paymentMethodId;
+
+    @Schema(description = "The address street or avenue of the order being saved or updated")
+    @NotBlank
+    @Size(max = 100)
+    public String addressStreetOrAvenue;
+
+    @Schema(description = "The address number of the order being saved or updated")
+    @NotBlank
+    @Size(max = 10)
+    public String addressNumber;
+
+    @Schema(description = "The address complement of the order being saved or updated")
+    @Size(max = 50)
+    public String addressComplement;
+
+    @Schema(description = "The address neighborhood of the order being saved or updated")
+    @NotBlank
+    @Size(max = 50)
+    public String addressNeighborhood;
+
+    @Schema(description = "The address zip code of the order being saved or updated")
+    @NotBlank
+    @Size(max = 50)
+    public String addressZipCode;
+
+    @Schema(description = "The address city ID of the order being saved or updated")
+    @NotNull
+    @Min(1)
+    public Long addressCityId;
 
 }

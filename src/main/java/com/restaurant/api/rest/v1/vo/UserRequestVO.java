@@ -19,6 +19,11 @@ public class UserRequestVO {
     @Size(max = 80)
     public String fullname;
 
+    @Schema(description = "The username of the user being saved or updated")
+    @NotBlank
+    @Size(max = 50)
+    private String username;
+
     @Schema(description = "The email of the user being saved or updated")
     @NotBlank
     @Email
@@ -43,10 +48,5 @@ public class UserRequestVO {
     @NotBlank
     @Size(max = 6)
     public String timezone;
-
-    @Schema(description = "The username of the user being saved or updated")
-    @NotBlank
-    @Size(max = 50)
-    private String username;
 
 }
