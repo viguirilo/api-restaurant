@@ -155,7 +155,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <repository>api-restaurant</repository>
+                            <repository>viguirilo/api-restaurant</repository>
                             <buildArgs>
                                 <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                             </buildArgs>
