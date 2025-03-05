@@ -2,7 +2,9 @@ FROM openjdk:21-slim
 
 WORKDIR /workdir
 
-COPY target/api-restaurant-0.0.1-SNAPSHOT.jar /workdir/api-restaurant.jar
+ARG JAR_FILE
+
+COPY target/${JAR_FILE} /workdir/api-restaurant.jar
 
 EXPOSE 8080
 
