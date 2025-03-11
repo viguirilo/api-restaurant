@@ -16,12 +16,9 @@ services:
 
   authorization-server:
     image: authorization-server
-    container_name: authorization-server
     command: [ "/wait-for-it.sh", "restaurant-mysql:3306", "-t", "45", "--","java", "-jar", "authorization-server.jar" ]
     environment:
       DATABASE_HOST: restaurant-mysql
-    ports:
-      - "9000:9000"
     networks:
       - restaurant-network
     depends_on:
@@ -29,13 +26,10 @@ services:
 
   api-restaurant:
     image: api-restaurant
-    container_name: api-restaurant
     command: [ "/wait-for-it.sh", "authorization-server:9000", "-t", "150", "--","java", "-jar", "api-restaurant.jar" ]
     environment:
       DATABASE_HOST: restaurant-mysql
       AUTH_SERVER_HOST: authorization-server
-    ports:
-      - "8080:8080"
     networks:
       - restaurant-network
     depends_on:
