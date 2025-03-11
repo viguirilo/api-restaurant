@@ -34,3 +34,13 @@ services:
       - restaurant-network
     depends_on:
       - authorization-server
+
+  restaurant-reverse-proxy:
+    build: ./nginx
+    image: restaurant-reverse-proxy
+    ports:
+      - "80:80"
+    networks:
+      - restaurant-network
+    depends_on:
+      - api-restaurant
