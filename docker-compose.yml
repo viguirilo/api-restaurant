@@ -37,8 +37,6 @@ services:
     environment:
       DATABASE_HOST: restaurant-mysql
       AUTH_SERVER_HOST: authorization-server
-      SPRING_SESSION_STORE_TYPE: redis
-      SPRING_REDIS_HOST: restaurant-redis
     networks:
       - restaurant-network
     depends_on:
