@@ -14,6 +14,11 @@ services:
     networks:
       - restaurant-network
 
+  restaurant-redis:
+    image: redis:7.4.2-alpine
+    networks:
+      - restaurant-network
+
   authorization-server:
     image: authorization-server
     command: [ "/wait-for-it.sh", "restaurant-mysql:3306", "-t", "45", "--","java", "-jar", "authorization-server.jar" ]
