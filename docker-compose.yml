@@ -16,6 +16,7 @@ services:
 
   restaurant-redis:
     image: redis:7.4.2-alpine
+    container_name: restaurant-redis
     networks:
       - restaurant-network
 
@@ -24,8 +25,10 @@ services:
     command: [ "/wait-for-it.sh", "restaurant-mysql:3306", "-t", "45", "--","java", "-jar", "authorization-server.jar" ]
     environment:
       DATABASE_HOST: restaurant-mysql
+      AUTH_SERVER_HOST: authorization-server
       SPRING_SESSION_STORE_TYPE: redis
       SPRING_REDIS_HOST: restaurant-redis
+      SPRING_REDIS_PORT: 6379
     networks:
       - restaurant-network
     depends_on:
